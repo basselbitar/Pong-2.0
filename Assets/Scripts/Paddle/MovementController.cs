@@ -4,41 +4,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour {
-    private Rigidbody2D paddleBody;
+    private Rigidbody2D _rigidbody;
+    private Vector2 _direction;
     public float speed;
-
-    public float maxSpeed;
-
-    public float acceleration;
+    public int id;
 
     void Start() {
-        paddleBody = GetComponent<Rigidbody2D>();
-        speed = 0;
-        maxSpeed = 5;
-        acceleration = 150;
+        _rigidbody = GetComponent<Rigidbody2D>();
+        speed = 15;
     }
 
     void Update() {
+        //left paddle
+        if (id == 0) {
 
-        if (Input.GetKey(KeyCode.UpArrow)) {
-            speed += acceleration * Time.deltaTime;
+            if (Input.GetKey(KeyCode.W)) {
+                _direction = Vector2.up;
+            }
+            else if (Input.GetKey(KeyCode.S)) {
+                _direction = Vector2.down;
+            }
+            else {
+                _direction = Vector2.zero;
+            }
         }
 
-        if (Input.GetKey(KeyCode.DownArrow)) {
-            speed += -acceleration * Time.deltaTime;
+        //right paddle (testing purposes)
+        if (id == 1) {
+            if (Input.GetKey(KeyCode.UpArrow)) {
+                _direction = Vector2.up;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow)) {
+                _direction = Vector2.down;
+            } else {
+                _direction = Vector2.zero;
+            }
         }
 
+    }
 
-        transform.position += new Vector3(0, speed * Time.deltaTime, 0);
+    private void FixedUpdate() {
+        if (_direction.sqrMagnitude != 0) {
+            _rigidbody.AddForce(_direction * speed);
+        }
 
-        //adding force makes it sluggish. Next, I'll attempt to make the speed instantly change the position of the paddle
-        //if (Input.GetKey(KeyCode.UpArrow)) {
-        //    paddleBody.AddForce(new Vector2(0, speed * Time.deltaTime), ForceMode2D.Impulse);
-
-        //}
-        //if (Input.GetKey(KeyCode.DownArrow)) {
-        //    paddleBody.AddForce(new Vector2(0, -speed * Time.deltaTime), ForceMode2D.Impulse);
-        //}
     }
 
 }
