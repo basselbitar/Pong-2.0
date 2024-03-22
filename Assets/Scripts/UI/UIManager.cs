@@ -14,7 +14,13 @@ public class UIManager : MonoBehaviour
     private Multiplayer _multiplayer;
 
     public void Start() {
-        _multiplayer = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Multiplayer>();
+        _multiplayer = FindObjectOfType<Multiplayer>();
+    }
+
+
+    public void OnOtherPlayerRoomLeft() {
+        Debug.Log("THE OTHER PLAYER LEFT");
+        ActivateWaitingForPlayerPanel();
     }
 
     public void OnRoomJoined() {
@@ -27,6 +33,11 @@ public class UIManager : MonoBehaviour
 
     public void ActivateWaitingForPlayerPanel() {
         WaitingForPlayerPanel.SetActive(true);
+        ReadyCheckPanel.SetActive(false);
+    }
+
+    public void DeactivatePanels() {
+        WaitingForPlayerPanel.SetActive(false);
         ReadyCheckPanel.SetActive(false);
     }
 
