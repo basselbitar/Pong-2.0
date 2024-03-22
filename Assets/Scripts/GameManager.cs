@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour {
     public void PlayerConnected() {
         Multiplayer mp = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Multiplayer>();
         Debug.Log(mp);
+        foreach (var user in mp.CurrentRoom.Users)
+        {
+        Debug.Log(user);
+            
+        }
         Debug.Log("Someone joined the room");
     }
 }

@@ -1,3 +1,4 @@
+using Alteruna;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ public class Paddle : MonoBehaviour {
 
 
     private Alteruna.Avatar _avatar;
+    private Multiplayer _multiplayer;
 
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
@@ -22,6 +24,12 @@ public class Paddle : MonoBehaviour {
 
         _rigidbody = GetComponent<Rigidbody2D>();
         speed = 15;
+        _multiplayer = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Multiplayer>();
+        id = _multiplayer.Me.Index;
+        //Debug.Log("My ID is: " + id);
+        //Debug.Log("My name is: " + _multiplayer.Me.Name);
+        //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
+
     }
 
     void Update() {
