@@ -7,9 +7,12 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
+    private GameObject RoomMenuPanel;
+    [SerializeField]
     private GameObject WaitingForPlayerPanel;
     [SerializeField]
     private GameObject ReadyCheckPanel;
+
 
     private Multiplayer _multiplayer;
 
@@ -19,7 +22,6 @@ public class UIManager : MonoBehaviour
 
 
     public void OnOtherPlayerRoomLeft() {
-        Debug.Log("THE OTHER PLAYER LEFT");
         ActivateWaitingForPlayerPanel();
     }
 
@@ -31,17 +33,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ActivateRoomMenuPanel() {
+        RoomMenuPanel.SetActive(true);
+        WaitingForPlayerPanel.SetActive(false);
+        ReadyCheckPanel.SetActive(false);
+    }
+
     public void ActivateWaitingForPlayerPanel() {
+        RoomMenuPanel.SetActive(false);
         WaitingForPlayerPanel.SetActive(true);
         ReadyCheckPanel.SetActive(false);
     }
 
     public void DeactivatePanels() {
+        RoomMenuPanel.SetActive(false);
         WaitingForPlayerPanel.SetActive(false);
         ReadyCheckPanel.SetActive(false);
     }
 
     public void ActivateReadyCheckPanel() {
+        RoomMenuPanel.SetActive(false);
         ReadyCheckPanel.SetActive(true);
         WaitingForPlayerPanel.SetActive(false);
     }

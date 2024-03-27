@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using Alteruna.Trinity;
+using TMPro;
 
 namespace Alteruna
 {
 	public class RoomMenu : CommunicationBridge
 	{
-		[SerializeField] private Text TitleText;
+		[SerializeField] private TMP_Text TitleText;
 		[SerializeField] private GameObject LANEntryPrefab;
 		[SerializeField] private GameObject WANEntryPrefab;
 		[SerializeField] private GameObject ContentContainer;
@@ -313,7 +314,7 @@ namespace Alteruna
 		private struct RoomObject
 		{
 			public readonly GameObject GameObject;
-			public readonly Text Text;
+			public readonly TMP_Text Text;
 			public readonly Button Button;
 			public readonly uint ID;
 			public readonly bool Lan;
@@ -321,7 +322,7 @@ namespace Alteruna
 			public RoomObject(GameObject obj, uint id, bool lan = false)
 			{
 				GameObject = obj;
-				Text = obj.GetComponentInChildren<Text>();
+				Text = obj.GetComponentInChildren<TMP_Text>();
 				Button = obj.GetComponentInChildren<Button>();
 				ID = id;
 				Lan = lan;

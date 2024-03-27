@@ -4,13 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Paddle : MonoBehaviour {
+public class Paddle : AttributesSync {
     private Rigidbody2D _rigidbody;
     private Vector2 _direction;
+    [SynchronizableField]
     private bool _isPlayerReady;
     public float speed;
     public int id;
-
 
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
