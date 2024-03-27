@@ -22,10 +22,7 @@ public class Paddle : AttributesSync {
             return;
         }
 
-        _rigidbody = GetComponent<Rigidbody2D>();
-        speed = 15;
-        _multiplayer = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<Multiplayer>();
-        id = _multiplayer.Me.Index;
+        Initialize();
         //Debug.Log("My ID is: " + id);
         //Debug.Log("My name is: " + _multiplayer.Me.Name);
         //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
@@ -56,8 +53,23 @@ public class Paddle : AttributesSync {
 
     }
 
+    private void Initialize() {
+        _rigidbody = GetComponent<Rigidbody2D>();
+        speed = 15;
+        _multiplayer = FindObjectOfType<Multiplayer>();
+        id = _multiplayer.Me.Index;
+    }
+
+    [SynchronizableMethod]
     public void ResetPosition() {
+        Debug.LogError("TRYING TO INITIALIZE");
+
+        if (_rigidbody == null) {
+            Initialize();
+        }
+        Debug.LogError(_multiplayer.Me.Name + "  .. pos: " + _rigidbody.position);
         _rigidbody.position = new Vector2(_rigidbody.position.x, 0.0f);
+        Debug.LogError(_rigidbody.position);
         _rigidbody.velocity = Vector2.zero;
     }
 

@@ -20,8 +20,11 @@ public class GameManager : MonoBehaviour {
     private int _p2Score;
     private Multiplayer _multiplayer;
 
+    private bool _gameStarted;
+
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
+        _gameStarted = false;
     }
 
     public void Update() {
@@ -29,7 +32,7 @@ public class GameManager : MonoBehaviour {
         if (!AmITheHost()) {
             return;
         }
-        Debug.Log("I am indeed the host");
+        
         if (_multiplayer.CurrentRoom.Users.Count < 2)
         {
             return;
@@ -41,11 +44,17 @@ public class GameManager : MonoBehaviour {
         }
 
         // check if both players are ready
-        if(!p1Paddle.IsReady() || !p2Paddle.IsReady() ) {
+        if (!p1Paddle.IsReady() || !p2Paddle.IsReady() ) {
             return;
         }
 
+        Debug.Log(_gameStarted);
         // spawn the ball
+        if(!_gameStarted) {
+            _gameStarted = true;
+            ResetRound();
+            //TODO: set starting health points depending on paddle choice
+        }
     }
 
     private void InitializePaddles() {
@@ -87,8 +96,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void ResetRound() {
-        p1Paddle.ResetPosition();
-        p2Paddle.ResetPosition();
+        //p1Paddle.ResetPosition();
+        //p2Paddle.ResetPosition();
+        p1Paddle.BroadcastRemoteMethod("ResetPosition");
+        p2Paddle.BroadcastRemoteMethod("ResetPosition");
         ball.ResetPosition();
         ball.AddStartingForce();
     }

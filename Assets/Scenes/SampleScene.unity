@@ -4135,9 +4135,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 207235977}
-        m_TargetAssemblyTypeName: RoomHandler, Assembly-CSharp
-        m_MethodName: OnLeaveRoomClicked
+      - m_Target: {fileID: 50205870}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnQuit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5671,7 +5671,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7215286172521039867, guid: e58e617f5a4b025459713b3e6233e5f4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1370
+      value: -1092
       objectReference: {fileID: 0}
     - target: {fileID: 7215286172521039867, guid: e58e617f5a4b025459713b3e6233e5f4, type: 3}
       propertyPath: m_AnchoredPosition.y

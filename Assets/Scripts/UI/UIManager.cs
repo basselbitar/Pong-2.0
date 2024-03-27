@@ -55,5 +55,10 @@ public class UIManager : MonoBehaviour
         RoomMenuPanel.SetActive(false);
         ReadyCheckPanel.SetActive(true);
         WaitingForPlayerPanel.SetActive(false);
+        FindObjectOfType<ReadyButton>().Initialize();
+    }
+
+    public void OnQuit() {
+        Application.Quit();
     }
 }
