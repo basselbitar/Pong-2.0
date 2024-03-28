@@ -17,7 +17,6 @@ public class ReadyButton : MonoBehaviour
         _multiplayer = FindObjectOfType<Multiplayer>();
         _player = GameObject.Find("Paddle (" + _multiplayer.Me.Name + ")").GetComponent<Paddle>();
         _player.SetReady(false);
-        Debug.Log("initializing");
     }
 
     public void OnReadyClicked() {

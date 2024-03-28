@@ -62,14 +62,14 @@ public class Paddle : AttributesSync {
 
     [SynchronizableMethod]
     public void ResetPosition() {
-        Debug.LogError("TRYING TO INITIALIZE");
+        if (!_avatar.IsMe) {
+            return;
+        }
 
         if (_rigidbody == null) {
             Initialize();
         }
-        Debug.LogError(_multiplayer.Me.Name + "  .. pos: " + _rigidbody.position);
         _rigidbody.position = new Vector2(_rigidbody.position.x, 0.0f);
-        Debug.LogError(_rigidbody.position);
         _rigidbody.velocity = Vector2.zero;
     }
 

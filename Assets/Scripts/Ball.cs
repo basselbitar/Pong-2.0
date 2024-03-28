@@ -1,9 +1,11 @@
+using Alteruna;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour
+public class Ball : AttributesSync
 {
+    [SynchronizableField]
     public float speed;
     private Rigidbody2D _rigidbody;
 
@@ -33,5 +35,9 @@ public class Ball : MonoBehaviour
         _rigidbody.AddForce(force);
     }
 
+    public void DestroyBall() {
+        Spawner spawner = FindObjectOfType<Spawner>();
+        spawner.Despawn(gameObject);
+    }
    
 }
