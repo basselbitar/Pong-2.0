@@ -7,10 +7,10 @@ using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    public TMP_Text p1ScoreText;
-    public TMP_Text p2ScoreText;
+    
 
     private BallSpawner _ballSpawner;
+    private ScoreManager _scoreManager;
 
     private Paddle p1Paddle;
     private Paddle p2Paddle;
@@ -18,16 +18,17 @@ public class GameManager : MonoBehaviour {
     private Ball _ball;
 
     private int _p1Score;
-
     private int _p2Score;
     private Multiplayer _multiplayer;
 
     private bool _gameStarted;
+    private bool _livesAssigned;
 
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _gameStarted = false;
         _ballSpawner = GetComponent<BallSpawner>();
+        _scoreManager = FindObjectOfType<ScoreManager>();
     }
 
     public void Update() {
@@ -35,8 +36,14 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
+        if (!_livesAssigned)
+        {
+            AssignInitialLives();
+            _livesAssigned = true;
+        }
+
         // spawn the ball
-        if(!_gameStarted) {
+        if (!_gameStarted) {
             _gameStarted = true;
             ResetRound();
             //TODO: set starting health points depending on paddle choice
@@ -92,15 +99,34 @@ public class GameManager : MonoBehaviour {
         return _multiplayer.LowestUserIndex == _multiplayer.Me.Index;
     }
 
+    private void AssignInitialLives() {
+        if (_livesAssigned || !IsHostAndReadyToPlay())
+            return;
+
+        //depending on which paddle the players choose
+        _p1Score = 8;
+        _p2Score = 8;
+        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+
+    }
+
     public void Player1Scores() {
-        _p1Score++;
-        p1ScoreText.text = _p1Score.ToString();
+        if (!IsHostAndReadyToPlay()) {
+            return;
+        }
+        _p2Score--;
+        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
         ResetRound();
     }
 
     public void Player2Scores() {
-        _p2Score++;
-        p2ScoreText.text = _p2Score.ToString();
+        if (!IsHostAndReadyToPlay()) {
+            return;
+        }
+        _p1Score--;
+        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+
         ResetRound();
     }
 
