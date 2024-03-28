@@ -7,8 +7,6 @@ using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    
-
     private BallSpawner _ballSpawner;
     private ScoreManager _scoreManager;
 
@@ -22,6 +20,7 @@ public class GameManager : MonoBehaviour {
     private Multiplayer _multiplayer;
 
     private bool _gameStarted;
+    private bool _gameFinished;
     private bool _livesAssigned;
 
     public void Start() {
@@ -39,14 +38,12 @@ public class GameManager : MonoBehaviour {
         if (!_livesAssigned)
         {
             AssignInitialLives();
-            _livesAssigned = true;
         }
 
         // spawn the ball
         if (!_gameStarted) {
             _gameStarted = true;
             ResetRound();
-            //TODO: set starting health points depending on paddle choice
         }
     }
 
@@ -57,6 +54,7 @@ public class GameManager : MonoBehaviour {
         }
 
         if (_multiplayer.CurrentRoom.Users.Count < 2) {
+            DestroyRemainingBalls();
             return false;
         }
 
@@ -70,7 +68,21 @@ public class GameManager : MonoBehaviour {
             return false;
         }
 
+        // when game finishes, reset players Readiness
+        if(_gameFinished) {
+            DestroyRemainingBalls();
+            ResetGame();
+            return false;
+        }
+
         return true;
+    }
+
+    private void DestroyRemainingBalls() {
+        Ball remainingBall = FindObjectOfType<Ball>();
+        if (remainingBall != null) {
+            remainingBall.DestroyBall();
+        }
     }
 
     private void InitializePaddles() {
@@ -85,15 +97,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private bool AmITheHost() {
-        //if(_multiplayer.CurrentRoom != null) {
-        //    foreach (var user in _multiplayer.CurrentRoom.Users)
-        //    {
-        //        if(_multiplayer.Me.Name == user.Name) {
-        //            return user.IsHost;
-        //        }
-        //    }
-        //}
-        //return false;
         if (_multiplayer.CurrentRoom == null)
             return false;
         return _multiplayer.LowestUserIndex == _multiplayer.Me.Index;
@@ -104,11 +107,11 @@ public class GameManager : MonoBehaviour {
             return;
 
         //depending on which paddle the players choose
-        _p1Score = 8;
-        _p2Score = 8;
+        _p1Score = 3;
+        _p2Score = 3;
         _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
-
+        _livesAssigned = true;
     }
 
     public void Player1Scores() {
@@ -117,6 +120,9 @@ public class GameManager : MonoBehaviour {
         }
         _p2Score--;
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+        if(_p2Score <= 0) {
+            _gameFinished = true;
+        }
         ResetRound();
     }
 
@@ -126,7 +132,9 @@ public class GameManager : MonoBehaviour {
         }
         _p1Score--;
         _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
-
+        if (_p1Score <= 0) {
+            _gameFinished = true;
+        }
         ResetRound();
     }
 
@@ -142,14 +150,22 @@ public class GameManager : MonoBehaviour {
         _ball.AddStartingForce();
     }
 
-    public void PlayerConnected() {
-        Multiplayer mp = FindObjectOfType<Multiplayer>();
-        Debug.Log(mp);
-        foreach (var user in mp.CurrentRoom.Users)
-        {
-        Debug.Log(user);
-            
-        }
-        Debug.Log("Someone joined the room");
+    private void ResetGame() {
+        _gameStarted = false;
+        _gameFinished = false;
+        _livesAssigned = false;
+        p1Paddle.SetReady(false);
+        p2Paddle.SetReady(false);
     }
+
+    //public void PlayerConnected() {
+    //    Multiplayer mp = FindObjectOfType<Multiplayer>();
+    //    Debug.Log(mp);
+    //    foreach (var user in mp.CurrentRoom.Users)
+    //    {
+    //    Debug.Log(user);
+            
+    //    }
+    //    Debug.Log("Someone joined the room");
+    //}
 }

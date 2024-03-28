@@ -1,7 +1,5 @@
 using Alteruna;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -12,7 +10,8 @@ public class UIManager : MonoBehaviour
     private GameObject WaitingForPlayerPanel;
     [SerializeField]
     private GameObject ReadyCheckPanel;
-
+    [SerializeField]
+    private GameObject GameOverPanel;
 
     private Multiplayer _multiplayer;
 
@@ -34,28 +33,36 @@ public class UIManager : MonoBehaviour
     }
 
     public void ActivateRoomMenuPanel() {
+        DeactivatePanels();
         RoomMenuPanel.SetActive(true);
-        WaitingForPlayerPanel.SetActive(false);
-        ReadyCheckPanel.SetActive(false);
     }
 
     public void ActivateWaitingForPlayerPanel() {
-        RoomMenuPanel.SetActive(false);
+        DeactivatePanels();
         WaitingForPlayerPanel.SetActive(true);
-        ReadyCheckPanel.SetActive(false);
     }
 
     public void DeactivatePanels() {
         RoomMenuPanel.SetActive(false);
         WaitingForPlayerPanel.SetActive(false);
         ReadyCheckPanel.SetActive(false);
+        GameOverPanel.SetActive(false);
     }
 
     public void ActivateReadyCheckPanel() {
-        RoomMenuPanel.SetActive(false);
+        DeactivatePanels();
         ReadyCheckPanel.SetActive(true);
-        WaitingForPlayerPanel.SetActive(false);
         FindObjectOfType<ReadyButton>().Initialize();
+    }
+
+    public void ActivateGameOverPanel(int winnerIndex) {
+        DeactivatePanels();
+        GameOverPanel.SetActive(true);
+        if(winnerIndex == _multiplayer.Me.Index) {
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Win!";
+        }else {
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Lose!";
+        }
     }
 
     public void OnQuit() {
