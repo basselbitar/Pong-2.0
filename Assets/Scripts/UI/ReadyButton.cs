@@ -19,5 +19,6 @@ public class ReadyButton : MonoBehaviour
 
     public void OnReadyClicked() {
         _player.SetReady(true);
+        _player.SetPaddleTypeIndex(PaddleOption.selectedOption);
     }
 }

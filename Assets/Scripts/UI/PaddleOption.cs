@@ -33,7 +33,6 @@ public class PaddleOption : MonoBehaviour
         } else {
             OnPaddleOptionDeselected();
         }
-        Debug.LogError("Selected option is now: " + selectedOption);
     }
 
     private void OnPaddleOptionSelected() {

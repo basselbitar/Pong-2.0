@@ -7,18 +7,27 @@ using UnityEngine;
 public class Paddle : AttributesSync {
     private Rigidbody2D _rigidbody;
     private Vector2 _direction;
+
     [SynchronizableField]
     private bool _isPlayerReady;
     [SynchronizableField]
-    public float speed;
+    private int _paddleTypeIndex;
 
     [SynchronizableField]
+    public int startingLives;
+    [SynchronizableField]
+    public float startingSpeed;
+    [SynchronizableField]
+    public float speed;
+    [SynchronizableField]
     public float length;
+
 
     public int id;
 
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
+
 
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
@@ -49,9 +58,13 @@ public class Paddle : AttributesSync {
             _direction = Vector2.zero;
         }
 
+        //transform.localScale = new Vector3(transform.localScale.x, length, 1f);
+
     }
 
     private void FixedUpdate() {
+        speed = startingSpeed; //TODO: plus any buffs and minus any nerfs
+
         if (_direction.sqrMagnitude != 0) {
             _rigidbody.AddForce(_direction * speed);
         }
@@ -60,7 +73,6 @@ public class Paddle : AttributesSync {
 
     private void Initialize() {
         _rigidbody = GetComponent<Rigidbody2D>();
-        speed = 15;
         _multiplayer = FindObjectOfType<Multiplayer>();
         id = _multiplayer.Me.Index;
     }
@@ -84,5 +96,12 @@ public class Paddle : AttributesSync {
 
     public void SetReady(bool ready) {
         _isPlayerReady = ready;
+    }
+
+    public int GetPaddleTypeIndex() {
+        return _paddleTypeIndex;
+    }
+    public void SetPaddleTypeIndex(int paddleTypeIndex) {
+        _paddleTypeIndex = paddleTypeIndex;
     }
 }

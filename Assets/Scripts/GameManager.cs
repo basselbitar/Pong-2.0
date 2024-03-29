@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour {
 
         if (!_initialValuesAssigned)
         {
-            AssignPaddlesInitialValues();
+            AssignInitialValues();
         }
 
         // spawn the ball
@@ -102,18 +102,55 @@ public class GameManager : MonoBehaviour {
         return _multiplayer.LowestUserIndex == _multiplayer.Me.Index;
     }
 
-    private void AssignPaddlesInitialValues() {
+    private void AssignInitialValues() {
         if (_initialValuesAssigned || !IsHostAndReadyToPlay())
             return;
 
-        //depending on which paddle the players choose
-        _p1Score = 3;
-        _p2Score = 3;
-        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
-        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+        //depending on which paddle the players chooses, they get buffs/nerfs to their stats
+        SetPaddleValues(p1Paddle, p1Paddle.GetPaddleTypeIndex());
+        SetPaddleValues(p2Paddle, p2Paddle.GetPaddleTypeIndex());
+
+        SetStartingLives();
         _initialValuesAssigned = true;
     }
 
+    private void SetPaddleValues(Paddle p, int paddleTypeIndex) {
+        int defaultLives = 3;
+        float defaultSpeed = 10f;
+        float defaultLength = 0.1429687f;
+
+        p.startingSpeed = defaultSpeed;
+        p.startingLives = defaultLives;
+        p.length = defaultLength;
+
+        switch (p.GetPaddleTypeIndex()) {
+            case 0: // default values
+                // keep the default values of speed, length, and lives
+                break;
+            case 1: // speed
+                p.startingSpeed = defaultSpeed * 5f;
+                break;
+            case 2: // length
+                p.length = defaultLength * 2;
+                break;
+            case 3: // lives
+                p.startingLives = defaultLives * 2;
+                break;
+            default:
+                Debug.LogError("Unknown paddle selected!");
+                break;
+        }
+        p.transform.localScale = new Vector3(p.transform.localScale.x, p.length, 1f);
+        p.speed = p.startingSpeed;
+    }
+
+    private void SetStartingLives() {
+        _p1Score = p1Paddle.startingLives;
+        _p2Score = p2Paddle.startingLives;
+
+        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+    }
     public void Player1Scores() {
         if (!IsHostAndReadyToPlay()) {
             return;
