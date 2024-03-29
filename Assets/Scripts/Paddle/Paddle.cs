@@ -9,7 +9,12 @@ public class Paddle : AttributesSync {
     private Vector2 _direction;
     [SynchronizableField]
     private bool _isPlayerReady;
+    [SynchronizableField]
     public float speed;
+
+    [SynchronizableField]
+    public float length;
+
     public int id;
 
     private Alteruna.Avatar _avatar;

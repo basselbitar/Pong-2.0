@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 
     private bool _gameStarted;
     private bool _gameFinished;
-    private bool _livesAssigned;
+    private bool _initialValuesAssigned;
 
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
@@ -35,9 +35,9 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        if (!_livesAssigned)
+        if (!_initialValuesAssigned)
         {
-            AssignInitialLives();
+            AssignPaddlesInitialValues();
         }
 
         // spawn the ball
@@ -102,8 +102,8 @@ public class GameManager : MonoBehaviour {
         return _multiplayer.LowestUserIndex == _multiplayer.Me.Index;
     }
 
-    private void AssignInitialLives() {
-        if (_livesAssigned || !IsHostAndReadyToPlay())
+    private void AssignPaddlesInitialValues() {
+        if (_initialValuesAssigned || !IsHostAndReadyToPlay())
             return;
 
         //depending on which paddle the players choose
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour {
         _p2Score = 3;
         _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
-        _livesAssigned = true;
+        _initialValuesAssigned = true;
     }
 
     public void Player1Scores() {
@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour {
     private void ResetGame() {
         _gameStarted = false;
         _gameFinished = false;
-        _livesAssigned = false;
+        _initialValuesAssigned = false;
         p1Paddle.SetReady(false);
         p2Paddle.SetReady(false);
     }
