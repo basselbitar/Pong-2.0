@@ -93,6 +93,9 @@ public class GameManager : MonoBehaviour {
 
         p1Paddle = playerList[0].GetComponent<Paddle>();
         p2Paddle = playerList[1].GetComponent<Paddle>();
+
+        p1Paddle.id = 0;
+        p2Paddle.id = 1;
      
     }
 
@@ -140,7 +143,7 @@ public class GameManager : MonoBehaviour {
                 Debug.LogError("Unknown paddle selected!");
                 break;
         }
-        p.transform.localScale = new Vector3(p.transform.localScale.x, p.length, 1f);
+        p.BroadcastRemoteMethod("ModifyLength");
         p.speed = p.startingSpeed;
     }
 

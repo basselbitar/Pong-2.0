@@ -28,6 +28,7 @@ public class Paddle : AttributesSync {
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
 
+    private int _lastTouchedBy;
 
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
@@ -74,7 +75,14 @@ public class Paddle : AttributesSync {
     private void Initialize() {
         _rigidbody = GetComponent<Rigidbody2D>();
         _multiplayer = FindObjectOfType<Multiplayer>();
-        id = _multiplayer.Me.Index;
+        _lastTouchedBy = -1;
+        //id = _multiplayer.Me.Index;
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.collider.CompareTag("Ball")) {
+            _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
+        }
     }
 
     [SynchronizableMethod]
@@ -88,6 +96,15 @@ public class Paddle : AttributesSync {
         }
         _rigidbody.position = new Vector2(_rigidbody.position.x, 0.0f);
         _rigidbody.velocity = Vector2.zero;
+    }
+
+    [SynchronizableMethod]
+    public void ModifyLength() {
+        if (!_avatar.IsMe) {
+            return;
+        }
+
+        transform.localScale = new Vector3(transform.localScale.x, length, 1f);
     }
 
     public bool IsReady() {
