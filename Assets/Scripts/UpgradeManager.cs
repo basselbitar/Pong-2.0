@@ -21,10 +21,11 @@ public class UpgradeManager : MonoBehaviour
 
     private void PopulateUpgrades() {
         Upgrades = new List<Upgrade>();
+        
     }
 
     private void Update() {
-        if (Input.GetKey(KeyCode.J)) {
+        if (Input.GetKeyDown(KeyCode.J)) {
             SpawnUpgrade();
         }
     }
@@ -35,9 +36,13 @@ public class UpgradeManager : MonoBehaviour
 
         Upgrade upgrade = upgradeGO.GetComponent<Upgrade>();
 
-        upgrade.SetType((Upgrade.Type) Random.Range(0, 3));
-        upgrade.ColorUpgrade();
+        upgrade.BroadcastRemoteMethod("SetUpgradeType", (UpgradeData.Type)Random.Range(0, 3));
+        upgrade.BroadcastRemoteMethod("ColorUpgrade");
 
+    }
+
+    public void DestroyUpgrade(Upgrade upgrade) {
+        _spawner.Despawn(upgrade.gameObject);
     }
 
 }

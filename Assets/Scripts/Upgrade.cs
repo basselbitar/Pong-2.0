@@ -1,31 +1,27 @@
+using Alteruna;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Upgrade : MonoBehaviour
+public class Upgrade : AttributesSync
 {
-    [SerializeField] private int _id;
-    [SerializeField] private string _name;
-
-    public enum Type { Buff, Nerf, Neutral};
-    public enum Aoe { Self, Other, Both, Field };
-    [SerializeField]
-    private Type _type;
-    private Aoe _aoe;
-    
-    private Vector3 _position;
+    private UpgradeData _data;
+    private UpgradeManager _upgradeManager;
 
     void Start()
     {
         
+        _upgradeManager = FindObjectOfType<UpgradeManager>();
     }
 
+    [SynchronizableMethod]
     public void ColorUpgrade() {
         Color color;
-        if (_type == Type.Buff) {
+        if (_data.GetUpgradeType() == UpgradeData.Type.Buff) {
             color = new Color(0.36f, 0.75f, 0.4f);
         }
-        else if (_type == Type.Nerf) {
+        else if (_data.GetUpgradeType() == UpgradeData.Type.Nerf) {
             color = new Color(0.75f, 0.2f, 0.2f);
         }
         else {
@@ -34,11 +30,28 @@ public class Upgrade : MonoBehaviour
         GetComponent<SpriteRenderer>().color = color;
     }
 
-    public Type GetType() {
-        return _type;
+    [SynchronizableMethod]
+    public void PickupUpgrade() {
+        DestroyUpgrade();
     }
 
-    public void SetType(Type type) {
-        _type = type;
+    private void DestroyUpgrade() {
+        _upgradeManager.DestroyUpgrade(this);
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.CompareTag("Ball")) {
+            PickupUpgrade();
+        }
+    }
+
+    public UpgradeData.Type GetUpgradeType() {
+        return _data.GetUpgradeType();
+    }
+
+    [SynchronizableMethod]
+    public void SetUpgradeType(UpgradeData.Type type) {
+        _data = new UpgradeData();
+        _data.SetUpgradeType(type);
     }
 }

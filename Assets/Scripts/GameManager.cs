@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour {
                 p.startingSpeed = defaultSpeed * 5f;
                 break;
             case 2: // length
-                p.length = defaultLength * 2;
+                p.length = defaultLength * 5;
                 break;
             case 3: // lives
                 p.startingLives = defaultLives * 2;
