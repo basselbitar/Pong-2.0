@@ -27,19 +27,18 @@ public class Paddle : AttributesSync {
 
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
+    private GameManager _gameManager;
 
     private int _lastTouchedBy;
 
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
 
-        if (!_avatar.IsMe) {
-            return;
-        }
+        //if (!_avatar.IsMe) {
+        //    return;
+        //}
 
         Initialize();
-        //Debug.Log("My ID is: " + id);
-        //Debug.Log("My name is: " + _multiplayer.Me.Name);
         //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
 
     }
@@ -69,19 +68,20 @@ public class Paddle : AttributesSync {
         if (_direction.sqrMagnitude != 0) {
             _rigidbody.AddForce(_direction * speed);
         }
-
     }
 
     private void Initialize() {
         _rigidbody = GetComponent<Rigidbody2D>();
         _multiplayer = FindObjectOfType<Multiplayer>();
+        _gameManager = FindObjectOfType<GameManager>();
         _lastTouchedBy = -1;
         //id = _multiplayer.Me.Index;
     }
 
     public void OnCollisionEnter2D(Collision2D collision) {
-        if(collision.collider.CompareTag("Ball")) {
+        if (collision.collider.CompareTag("Ball")) {
             _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
+            _gameManager.SetTouchedBy(_lastTouchedBy);
         }
     }
 
@@ -103,7 +103,6 @@ public class Paddle : AttributesSync {
         if (!_avatar.IsMe) {
             return;
         }
-
         transform.localScale = new Vector3(transform.localScale.x, length, 1f);
     }
 

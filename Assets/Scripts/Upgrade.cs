@@ -6,12 +6,13 @@ using UnityEngine;
 
 public class Upgrade : AttributesSync
 {
+    [SerializeField]
     private UpgradeData _data;
     private UpgradeManager _upgradeManager;
 
+
     void Start()
     {
-        
         _upgradeManager = FindObjectOfType<UpgradeManager>();
     }
 
@@ -32,6 +33,7 @@ public class Upgrade : AttributesSync
 
     [SynchronizableMethod]
     public void PickupUpgrade() {
+        _upgradeManager.PickupUpgrade(this);
         DestroyUpgrade();
     }
 
@@ -51,7 +53,15 @@ public class Upgrade : AttributesSync
 
     [SynchronizableMethod]
     public void SetUpgradeType(UpgradeData.Type type) {
-        _data = new UpgradeData();
         _data.SetUpgradeType(type);
+    }
+
+    [SynchronizableMethod]
+    public void SetData(UpgradeData data) {
+        _data = data;
+    }
+
+    public UpgradeData GetData() {
+        return _data;
     }
 }

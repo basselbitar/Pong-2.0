@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
+using static UpgradeData;
 
 public class GameManager : MonoBehaviour {
     private BallSpawner _ballSpawner;
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour {
     private bool _gameStarted;
     private bool _gameFinished;
     private bool _initialValuesAssigned;
+
+    private int _ballTouchedBy;
 
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
@@ -45,6 +48,34 @@ public class GameManager : MonoBehaviour {
             _gameStarted = true;
             ResetRound();
         }
+    }
+    public void Player1Scores() {
+        if (!IsHostAndReadyToPlay()) {
+            return;
+        }
+        _p2Score--;
+        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+        if (_p2Score <= 0) {
+            _gameFinished = true;
+        }
+        ResetRound();
+    }
+
+    public void Player2Scores() {
+        if (!IsHostAndReadyToPlay()) {
+            return;
+        }
+        _p1Score--;
+        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+        if (_p1Score <= 0) {
+            _gameFinished = true;
+        }
+        ResetRound();
+    }
+
+
+    public void SetTouchedBy(int index) {
+        _ballTouchedBy = index;
     }
 
     private bool IsHostAndReadyToPlay() {
@@ -96,7 +127,6 @@ public class GameManager : MonoBehaviour {
 
         p1Paddle.id = 0;
         p2Paddle.id = 1;
-     
     }
 
     private bool AmITheHost() {
@@ -126,7 +156,7 @@ public class GameManager : MonoBehaviour {
         p.startingLives = defaultLives;
         p.length = defaultLength;
 
-        switch (p.GetPaddleTypeIndex()) {
+        switch (paddleTypeIndex) {
             case 0: // default values
                 // keep the default values of speed, length, and lives
                 break;
@@ -134,7 +164,7 @@ public class GameManager : MonoBehaviour {
                 p.startingSpeed = defaultSpeed * 5f;
                 break;
             case 2: // length
-                p.length = defaultLength * 5;
+                p.length = defaultLength * 3f;
                 break;
             case 3: // lives
                 p.startingLives = defaultLives * 2;
@@ -154,30 +184,7 @@ public class GameManager : MonoBehaviour {
         _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
     }
-    public void Player1Scores() {
-        if (!IsHostAndReadyToPlay()) {
-            return;
-        }
-        _p2Score--;
-        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
-        if(_p2Score <= 0) {
-            _gameFinished = true;
-        }
-        ResetRound();
-    }
-
-    public void Player2Scores() {
-        if (!IsHostAndReadyToPlay()) {
-            return;
-        }
-        _p1Score--;
-        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
-        if (_p1Score <= 0) {
-            _gameFinished = true;
-        }
-        ResetRound();
-    }
-
+   
     private void ResetRound() {
         if (!IsHostAndReadyToPlay()) {
             return;
@@ -198,13 +205,18 @@ public class GameManager : MonoBehaviour {
         p2Paddle.SetReady(false);
     }
 
+public int GetBallTouchedBy() { return _ballTouchedBy; }
+
+    public Paddle GetPaddle1() { return p1Paddle; }
+    public Paddle GetPaddle2() {  return p2Paddle; }
+
     //public void PlayerConnected() {
     //    Multiplayer mp = FindObjectOfType<Multiplayer>();
     //    Debug.Log(mp);
     //    foreach (var user in mp.CurrentRoom.Users)
     //    {
     //    Debug.Log(user);
-            
+
     //    }
     //    Debug.Log("Someone joined the room");
     //}
