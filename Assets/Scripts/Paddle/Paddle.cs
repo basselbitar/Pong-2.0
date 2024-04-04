@@ -63,7 +63,10 @@ public class Paddle : AttributesSync {
     }
 
     private void FixedUpdate() {
-        speed = startingSpeed; //TODO: plus any buffs and minus any nerfs
+        if ((speed == -1))
+        {
+            speed = startingSpeed; //TODO: plus any buffs and minus any nerfs
+        }
 
         if (_direction.sqrMagnitude != 0) {
             _rigidbody.AddForce(_direction * speed);

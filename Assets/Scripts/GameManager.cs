@@ -25,12 +25,15 @@ public class GameManager : MonoBehaviour {
     private bool _initialValuesAssigned;
 
     private int _ballTouchedBy;
-
+    public bool debugMode;
+    [SerializeField]
+    private GameObject[] walls;
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _gameStarted = false;
         _ballSpawner = GetComponent<BallSpawner>();
         _scoreManager = FindObjectOfType<ScoreManager>();
+        debugMode = true;
     }
 
     public void Update() {
@@ -47,6 +50,18 @@ public class GameManager : MonoBehaviour {
         if (!_gameStarted) {
             _gameStarted = true;
             ResetRound();
+        }
+
+        if (Input.GetKeyDown(KeyCode.U)) {
+            debugMode = !debugMode;
+            if(walls.Length == 0) {
+                walls = GameObject.FindGameObjectsWithTag("Debug");
+
+            }
+            Debug.LogError(walls.Length);
+            foreach (GameObject wall in walls) {
+                wall.SetActive(debugMode);
+            }
         }
     }
     public void Player1Scores() {
