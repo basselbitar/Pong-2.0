@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UpgradeData;
 
-public class UpgradeManager : MonoBehaviour
-{
+public class UpgradeManager : MonoBehaviour {
     [SerializeField]
     private GameManager _gameManager;
     public List<UpgradeData> upgrades;
@@ -22,8 +21,7 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField]
     public int upgradeIndex;
 
-    void Start()
-    {
+    void Start() {
         upgradeIndex = 0;
         PopulateUpgrades();
         _spawner = FindObjectOfType<Spawner>();
@@ -46,7 +44,7 @@ public class UpgradeManager : MonoBehaviour
         //buffs
         upgrades.Add(longerPaddle);
         upgrades.Add(fasterPaddle);
-       
+
         //nerfs
         upgrades.Add(shorterEnemyPaddle);
         upgrades.Add(slowerEnemyPaddle);
@@ -61,7 +59,6 @@ public class UpgradeManager : MonoBehaviour
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            Debug.Log(KeyCode.Alpha1 - 49);
             upgradeIndex = 0;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
@@ -116,7 +113,7 @@ public class UpgradeManager : MonoBehaviour
     }
 
     public void PickupUpgrade(Upgrade upgrade) {
-        if(p1Paddle == null || p2Paddle == null)
+        if (p1Paddle == null || p2Paddle == null)
             Initialize();
 
         string upgradeName = upgrade.GetData().GetName();
@@ -125,7 +122,6 @@ public class UpgradeManager : MonoBehaviour
         float duration = upgrade.GetData().GetDuration();
 
         Paddle targetPaddle = GetTargetPaddle(aoe);
-        Debug.LogError(targetPaddle);
         //start the timer on the picked up upgrade
 
         switch (upgradeName) {
@@ -169,7 +165,7 @@ public class UpgradeManager : MonoBehaviour
     private IEnumerator ModifyLength(Paddle p, float amount, float duration) {
         ModifyLength(p, amount);
         yield return new WaitForSeconds(duration);
-        ModifyLength(p, 1f/amount);
+        ModifyLength(p, 1f / amount);
     }
     private IEnumerator ModifySpeed(Paddle p, float amount, float duration) {
         ModifySpeed(p, amount);
@@ -186,7 +182,7 @@ public class UpgradeManager : MonoBehaviour
     }
 
     public void ModifyLength(Paddle p, float amount) {
-        
+
         p.length *= amount;
         p1Paddle.BroadcastRemoteMethod("ModifyLength");
         p2Paddle.BroadcastRemoteMethod("ModifyLength");
