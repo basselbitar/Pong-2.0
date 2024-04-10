@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2697591086974703546}
   - component: {fileID: 5972739407929782590}
   - component: {fileID: 251174906809023529}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball
   m_TagString: Ball
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &2697591086974703546
 BoxCollider2D:
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Multiplayer: {fileID: 0}
-  _uidString: 6a6de949-9fd5-4c55-8e97-7153210adf17
+  _uidString: cff8ff3c-bbd0-4a68-91a9-a75cb2759ed1
   Reliability: 1
   LocalMethodBehavior: 1
   speed: 80

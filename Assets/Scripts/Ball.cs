@@ -1,4 +1,5 @@
 using Alteruna;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Ball : AttributesSync
@@ -14,8 +15,8 @@ public class Ball : AttributesSync
     private void Start()
     {
         ResetPosition();
-        //AddStartingForce();
     }
+
     public void ResetPosition() {
         _rigidbody.position = Vector3.zero;
         _rigidbody.velocity = Vector3.zero;

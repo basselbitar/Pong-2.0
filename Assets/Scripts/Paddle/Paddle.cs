@@ -31,12 +31,17 @@ public class Paddle : AttributesSync {
 
     private int _lastTouchedBy;
 
+    public bool debug = false;
+
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
 
-        //if (!_avatar.IsMe) {
-        //    return;
-        //}
+        //debug code
+        if (debug) {
+            length = 0.2f;
+            transform.localScale = new Vector3(transform.localScale.x, length, 1f);
+        }
+
 
         Initialize();
         //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
@@ -44,7 +49,7 @@ public class Paddle : AttributesSync {
     }
 
     void Update() {
-        if (!_avatar.IsMe) {
+        if (!_avatar.IsMe && !debug) {
             return;
         }
 
@@ -82,11 +87,40 @@ public class Paddle : AttributesSync {
     }
 
     public void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.collider.CompareTag("Ball")) {
+        Debug.Log("Collision Occured");
+        if(collision.collider.CompareTag("Ball")) {
+            Transform ballTransform = collision.collider.transform;
+            Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
+            float velocityX = ballRigidBody.velocity.x;
+            float velocityY = ballRigidBody.velocity.y;
+            float velocityBefore = new Vector2(velocityX, velocityY).magnitude;
+            float dist = ballTransform.position.y - transform.position.y;
+            float y = (dist / (length * 10f / 2f));
+            Vector2 direction = new(0f, y);
+            collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
+            float velocityAfter = new Vector2(ballRigidBody.velocity.x, ballRigidBody.velocity.y).magnitude;
+
+            //Debug.Log("Paddle coordinate is: " + transform.position.y);
+            //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
+            //Debug.Log("Ball touched paddle at: " + dist);
+            //Debug.Log("Length of paddle is: " + length);
+
+            Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
+            Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
+        }
+
+        if (collision.collider.CompareTag("Ball") && _gameManager != null) {
+            //float dist = collision.collider.transform.position.y - transform.position.y;
+            //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
+            //float y = (dist / (length * 10f / 2f));
+            //Vector2 direction = new(0f, y);
+            //collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
+
             _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
             _gameManager.SetTouchedBy(_lastTouchedBy);
         }
     }
+
 
     [SynchronizableMethod]
     public void ResetPosition() {
