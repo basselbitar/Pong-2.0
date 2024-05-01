@@ -87,7 +87,6 @@ public class Paddle : AttributesSync {
     }
 
     public void OnCollisionEnter2D(Collision2D collision) {
-        Debug.Log("Collision Occured");
         if(collision.collider.CompareTag("Ball")) {
             Transform ballTransform = collision.collider.transform;
             Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
@@ -105,8 +104,8 @@ public class Paddle : AttributesSync {
             //Debug.Log("Ball touched paddle at: " + dist);
             //Debug.Log("Length of paddle is: " + length);
 
-            Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
-            Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
+            //Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
+            //Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
         }
 
         if (collision.collider.CompareTag("Ball") && _gameManager != null) {

@@ -8,6 +8,7 @@ public class UpgradeData
 {
     [SerializeField] private int _id;
     [SerializeField] private string _name;
+    private int _iconIndex;
 
     private float _amount;
     private float _duration;
@@ -18,13 +19,14 @@ public class UpgradeData
     private Type _upgradeType;
     private Aoe _aoe;
 
-    public UpgradeData(int id, string name, Type t, Aoe a, float amount, float duration) {
+    public UpgradeData(int id, string name, Type t, Aoe a, float amount, float duration, int iconIndex) {
         _id = id;
         _name = name;
         _upgradeType = t;
         _aoe = a;
         _amount = amount;
         _duration = duration;
+        _iconIndex = iconIndex;
     }
 
     public Type GetUpgradeType() {
@@ -39,6 +41,10 @@ public class UpgradeData
     public void SetId(int id) { _id = id; }
     public string GetName() { return _name; }
     public void SetName(string name) { _name = name;}
+
+    public int GetIconIndex() { return _iconIndex; }
+
+    public void SetIconIndex(int iconIndex) { _iconIndex = iconIndex; }
 
     public Aoe GetAoe() { return _aoe;}
 

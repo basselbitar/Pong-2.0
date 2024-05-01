@@ -18,8 +18,10 @@ public class UpgradeManager : MonoBehaviour {
     private Paddle p1Paddle;
     private Paddle p2Paddle;
 
+    public Sprite[] upgradeIcons;
+
     [SerializeField]
-    public int upgradeIndex;
+    public int upgradeIndex; //debug purposes
 
     void Start() {
         upgradeIndex = 0;
@@ -30,16 +32,16 @@ public class UpgradeManager : MonoBehaviour {
     private void PopulateUpgrades() {
         upgrades = new List<UpgradeData>();
 
-        UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f);
-        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f);
+        UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 1);
+        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 2);
 
-        UpgradeData shorterEnemyPaddle = new(201, "Shorter Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f);
-        UpgradeData slowerEnemyPaddle = new(202, "Slower Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f);
+        UpgradeData shorterEnemyPaddle = new(201, "Shorter Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 3);
+        UpgradeData slowerEnemyPaddle = new(202, "Slower Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 4);
 
-        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f);
-        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f);
-        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f);
-        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f);
+        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 0);
+        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 0);
+        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 0);
+        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 0);
 
         //buffs
         upgrades.Add(longerPaddle);

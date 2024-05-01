@@ -2909,6 +2909,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 17280673}
   upgrades: []
+  upgradeIcons:
+  - {fileID: 21300000, guid: 5a8777e279af3b748a055d7dbe2d20ba, type: 3}
+  - {fileID: 21300000, guid: ebdaa773850bae54a8c93c624cf87203, type: 3}
+  - {fileID: 21300000, guid: 9407e11295ffe374eac538e1bed6fbbc, type: 3}
+  - {fileID: 21300000, guid: 364b87fdaae5745428b651833d7c1f51, type: 3}
+  - {fileID: 21300000, guid: cfb42ebcf714a404eaeb0ce594cb8a8f, type: 3}
   upgradeIndex: 0
 --- !u!1 &748424726
 GameObject:
