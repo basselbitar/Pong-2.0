@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 885168837573172310}
   - component: {fileID: 2697591086974703546}
   - component: {fileID: 5972739407929782590}
-  - component: {fileID: 251174906809023529}
+  - component: {fileID: 3134867329255799469}
   m_Layer: 6
   m_Name: Ball
   m_TagString: Ball
@@ -111,7 +111,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -177,20 +177,20 @@ MonoBehaviour:
   Reliability: 1
   LocalMethodBehavior: 1
   speed: 80
---- !u!114 &251174906809023529
+--- !u!114 &3134867329255799469
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1697923262295624041}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1351115797, guid: 0ae8d181602a00248a82f64a684a1c88, type: 3}
+  m_Script: {fileID: 1315754324, guid: 0ae8d181602a00248a82f64a684a1c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Multiplayer: {fileID: 0}
-  _uidString: 3a281ecc-3677-4255-83eb-c4bd6d16058c
+  _uidString: 0e09bc39-b1fb-4345-9d72-5fc48d756982
   BucketBehaviors:
   - Name: Min
     NetLOD: 0
@@ -207,6 +207,9 @@ MonoBehaviour:
   - Name: Max
     NetLOD: 4
     Frequency: 120
-  UseGlobalPosition: 0
-  refreshRate: 100
-  SyncedAxes: 203
+  SyncEveryNUpdates: 2
+  FullSyncEveryNSync: 4
+  SendData: 1
+  ApplyAsTransform: 0
+  AllowCollisionToAssumeOwner: 1
+  Rigidbody: {fileID: 885168837573172310}

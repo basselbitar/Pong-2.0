@@ -219,6 +219,9 @@ public class GameManager : MonoBehaviour {
         _ball = _ballGO.GetComponent<Ball>();
         _ball.ResetPosition();
         _ball.AddStartingForce();
+        // turn on the ball's Rigidbody2DSynchronizable script on the host's side ONLY
+        _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
+
     }
 
     private void ResetGame() {

@@ -1,15 +1,20 @@
 using Alteruna;
 using Unity.VisualScripting;
 using UnityEngine;
+using Alteruna.Trinity;
 
 public class Ball : AttributesSync
 {
     [SynchronizableField]
     public float speed;
     private Rigidbody2D _rigidbody;
+    //private InterpolationTransformSynchronizable _its;
+    private Rigidbody2DSynchronizable _r2Ds;
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
+        //_its = GetComponent<InterpolationTransformSynchronizable>();
+        _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
     }
 
     private void Start()
@@ -37,6 +42,16 @@ public class Ball : AttributesSync
     public void DestroyBall() {
         Spawner spawner = FindObjectOfType<Spawner>();
         spawner.Despawn(gameObject);
+    }
+
+    public void Update() {
+        //if(Input.GetKeyUp(KeyCode.L)) {
+        //    _its.MovePosition(new Vector2(5f,-2f));
+
+        //}
+        //if (Input.GetKeyUp(KeyCode.K)) {
+        //    _its.MovePosition(new Vector2(-5f, -2f));
+        //}
     }
    
 }
