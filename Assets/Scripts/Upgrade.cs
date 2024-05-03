@@ -30,8 +30,8 @@ public class Upgrade : AttributesSync
         else {
             color = new Color(0.75f, 0.65f, 0.2f);
         }
-        Debug.LogError("Trying to set the icon: " + _data.GetIconIndex());
-        Debug.LogError("Found as: " + _upgradeManager.upgradeIcons[_data.GetIconIndex()]);
+        //Debug.LogError("Trying to set the icon: " + _data.GetIconIndex());
+        //Debug.LogError("Found as: " + _upgradeManager.upgradeIcons[_data.GetIconIndex()]);
         GetComponent<SpriteRenderer>().sprite = _upgradeManager.upgradeIcons[_data.GetIconIndex()];
         GetComponent<SpriteRenderer>().color = color;
     }

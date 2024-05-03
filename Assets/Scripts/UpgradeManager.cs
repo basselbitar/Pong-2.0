@@ -34,18 +34,20 @@ public class UpgradeManager : MonoBehaviour {
 
         UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 1);
         UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 2);
+        UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 3);
 
-        UpgradeData shorterEnemyPaddle = new(201, "Shorter Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 3);
-        UpgradeData slowerEnemyPaddle = new(202, "Slower Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 4);
+        UpgradeData shorterEnemyPaddle = new(201, "Shorter Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 11);
+        UpgradeData slowerEnemyPaddle = new(202, "Slower Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 12);
 
-        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 0);
-        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 0);
-        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 0);
-        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 0);
+        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 21);
+        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 22);
+        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 23);
+        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 24);
 
         //buffs
         upgrades.Add(longerPaddle);
         upgrades.Add(fasterPaddle);
+        upgrades.Add(bonusLife);
 
         //nerfs
         upgrades.Add(shorterEnemyPaddle);
@@ -124,7 +126,6 @@ public class UpgradeManager : MonoBehaviour {
         float duration = upgrade.GetData().GetDuration();
 
         Paddle targetPaddle = GetTargetPaddle(aoe);
-        //start the timer on the picked up upgrade
 
         switch (upgradeName) {
             case "Longer Paddle":
@@ -132,6 +133,9 @@ public class UpgradeManager : MonoBehaviour {
                 break;
             case "Faster Paddle":
                 StartCoroutine(ModifySpeed(targetPaddle, amount, duration));
+                break;
+            case "Bonus Life":
+                StartCoroutine(IncrementLives(targetPaddle));
                 break;
             case "Shorter Enemy Paddle":
                 StartCoroutine(ModifyLength(targetPaddle, amount, duration));
@@ -173,6 +177,15 @@ public class UpgradeManager : MonoBehaviour {
         ModifySpeed(p, amount);
         yield return new WaitForSeconds(duration);
         ModifySpeed(p, 1f / amount);
+    }
+
+    private IEnumerator IncrementLives(Paddle p) {
+        if (p == p1Paddle) {
+            _gameManager.Player1GainsLife();
+        } else if (p == p2Paddle) {
+            _gameManager.Player2GainsLife();
+        }
+        yield return null;
     }
 
     private Paddle GetTargetPaddle(Aoe aoe) {

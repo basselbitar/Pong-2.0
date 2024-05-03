@@ -88,6 +88,15 @@ public class GameManager : MonoBehaviour {
         ResetRound();
     }
 
+    public void Player1GainsLife() {
+        _p1Score++;
+        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+    }
+
+    public void Player2GainsLife() {
+        _p2Score++;
+        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+    }
 
     public void SetTouchedBy(int index) {
         _ballTouchedBy = index;

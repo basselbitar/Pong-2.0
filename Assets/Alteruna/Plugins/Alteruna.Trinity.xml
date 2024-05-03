@@ -176,6 +176,7 @@
             Chose how local methods behave when sending.
             </summary>
     </member>
+    <member name="M:Alteruna.AttributesSync.Register"></member>
     <member name="F:Alteruna.AttributesSync.Reliability">
       <summary>
             Chose how to send data. Reliable or Unreliable.
@@ -430,6 +431,7 @@
       <param name="newUID">The new Guid.</param>
       <param name="deregisterOld">Should this <c>Synchronizable</c> be deregistered from the <c>SerializableManager</c> before re-registering with the new ID?</param>
     </member>
+    <member name="M:Alteruna.CommunicationBridgeUID.Register"></member>
     <member name="M:Alteruna.CommunicationBridgeUID.ReleaseOwnership">
       <summary>
             Release ownership of this <c>Synchronizable so that others can take ownership of it.</c></summary>
@@ -2591,6 +2593,7 @@
             The highest NetLOD value a Synchronizable can have.
             </summary>
     </member>
+    <member name="M:Alteruna.Synchronizable.Register"></member>
     <member name="F:Alteruna.Synchronizable.Reliability">
       <summary>
             Reliability of the Synchronizable.
@@ -2641,7 +2644,6 @@
     <member name="M:Alteruna.TransformSynchronizable.DisassembleData(Alteruna.Reader,System.Byte)"></member>
     <member name="M:Alteruna.TransformSynchronizable.Reset"></member>
     <member name="M:Alteruna.TransformSynchronizable.Start"></member>
-    <member name="M:Alteruna.TransformSynchronizable.Unserialize(Alteruna.Trinity.ITransportStreamReader,System.Byte,System.UInt32)"></member>
     <member name="M:Alteruna.TransformSynchronizable.Update"></member>
     <member name="T:Alteruna.TransformSynchronizable2D">
       <summary>
