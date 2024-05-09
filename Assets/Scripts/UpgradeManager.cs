@@ -32,32 +32,42 @@ public class UpgradeManager : MonoBehaviour {
     private void PopulateUpgrades() {
         upgrades = new List<UpgradeData>();
 
-        UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 1);
-        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 2);
-        UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 3);
-
-        UpgradeData shorterEnemyPaddle = new(201, "Shorter Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 11);
-        UpgradeData slowerEnemyPaddle = new(202, "Slower Enemy Paddle", Type.Nerf, Aoe.Other, 0.5f, 3f, 12);
-
-        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 21);
-        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 22);
-        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 23);
-        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 24);
-
         //buffs
+        UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 1);                     //id = 0
+        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 2);                       //id = 1
+        UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 3);                              //id = 2
+        UpgradeData shorterEnemyPaddle = new(104, "Shorter Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 11);      //id = 3
+        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 12);        //id = 4
+        UpgradeData flipEnemyControls = new(106, "Flip Enemy Controls", Type.Buff, Aoe.Other, 0, 3f, 4);            //id = 5
+
         upgrades.Add(longerPaddle);
         upgrades.Add(fasterPaddle);
         upgrades.Add(bonusLife);
-
-        //nerfs
         upgrades.Add(shorterEnemyPaddle);
         upgrades.Add(slowerEnemyPaddle);
+        upgrades.Add(flipEnemyControls);
+
+        //nerfs
+        UpgradeData shorterPaddle = new(201, "Shorter Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 11);                   //id = 6
+        UpgradeData slowerPaddle = new(202, "Slower Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 12);                     //id = 7
+        UpgradeData flipControls = new(203, "Flip Controls", Type.Nerf, Aoe.Self, 0, 3f, 4);                         //id = 8
+
+        upgrades.Add(shorterPaddle);
+        upgrades.Add(slowerPaddle);
+        upgrades.Add(flipControls);
 
         //neutrals
+        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 11);     //id = 9
+        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 1);        //id = 10
+        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 2);          //id = 11
+        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 12);       //id = 12
+        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 4);             //id = 13
+
         upgrades.Add(shorterBothPaddles);
         upgrades.Add(longerBothPaddles);
         upgrades.Add(fasterBothPaddles);
         upgrades.Add(slowerBothPaddles);
+        upgrades.Add(flipBothControls);
 
     }
 
@@ -90,10 +100,13 @@ public class UpgradeManager : MonoBehaviour {
             upgradeIndex = 8;
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            upgradeIndex += 10;
+        }
+
         if (Input.GetKeyDown(KeyCode.J)) {
             SpawnUpgrade();
         }
-
     }
 
     public void SpawnUpgrade() {
@@ -102,7 +115,6 @@ public class UpgradeManager : MonoBehaviour {
 
         Upgrade upgrade = upgradeGO.GetComponent<Upgrade>();
         //UpgradeData upgradeData = upgrades[Random.Range(0, upgrades.Count)]; //TODO: make upgrades not equally probably from each other
-        Debug.Log(upgradeIndex);
         UpgradeData upgradeData = upgrades[upgradeIndex]; //TODO: make upgrades not equally probably from each other
 
         upgrade.BroadcastRemoteMethod("SetData", upgradeData);
@@ -128,6 +140,7 @@ public class UpgradeManager : MonoBehaviour {
         Paddle targetPaddle = GetTargetPaddle(aoe);
 
         switch (upgradeName) {
+            //buffs
             case "Longer Paddle":
                 StartCoroutine(ModifyLength(targetPaddle, amount, duration));
                 break;
@@ -143,6 +156,22 @@ public class UpgradeManager : MonoBehaviour {
             case "Slower Enemy Paddle":
                 StartCoroutine(ModifySpeed(targetPaddle, amount, duration));
                 break;
+            case "Flip Enemy Controls":
+                StartCoroutine(FlipControls(targetPaddle, duration));
+                break;
+
+            //nerfs
+            case "Shorter Paddle":
+                StartCoroutine(ModifyLength(targetPaddle, amount, duration));
+                break;
+            case "Slower Paddle":
+                StartCoroutine(ModifySpeed(targetPaddle, amount, duration));
+                break;
+            case "Flip Controls":
+                StartCoroutine(FlipControls(targetPaddle, duration));
+                break;
+
+            //neutrals
             case "Shorter Both Paddles":
                 StartCoroutine(ModifyLength(p1Paddle, amount, duration));
                 StartCoroutine(ModifyLength(p2Paddle, amount, duration));
@@ -188,6 +217,12 @@ public class UpgradeManager : MonoBehaviour {
         yield return null;
     }
 
+    private IEnumerator FlipControls(Paddle p, float duration) {
+        FlipControls(p);
+        yield return new WaitForSeconds(duration);
+        FlipControls(p);
+    }
+
     private Paddle GetTargetPaddle(Aoe aoe) {
         // If aoe is self, we keep the targetIndex as the paddle that touched the ball last
         // If aoe is other, we swap by doing (1 - index)
@@ -205,9 +240,13 @@ public class UpgradeManager : MonoBehaviour {
 
     public void ModifySpeed(Paddle p, float amount) {
 
-        Debug.Log("Modifying the speed of:" + p);
+        //Debug.Log("Modifying the speed of:" + p);
         p.speed *= amount;
-        Debug.Log("Speed is now:" + p.speed);
+        //Debug.Log("Speed is now:" + p.speed);
+    }
+
+    public void FlipControls(Paddle p) {
+        p.isInvertedControls = !p.isInvertedControls;
     }
 
 }

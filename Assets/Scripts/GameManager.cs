@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour {
                 walls = GameObject.FindGameObjectsWithTag("Debug");
 
             }
-            Debug.LogError(walls.Length);
             foreach (GameObject wall in walls) {
                 wall.SetActive(debugMode);
             }

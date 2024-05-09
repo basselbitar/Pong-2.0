@@ -14,8 +14,6 @@ public class Upgrade : AttributesSync
     void Awake()
     {
         _upgradeManager = FindObjectOfType<UpgradeManager>();
-        Debug.LogError("UM Is: " + _upgradeManager);
-
     }
 
     [SynchronizableMethod]

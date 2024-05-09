@@ -21,6 +21,8 @@ public class Paddle : AttributesSync {
     public float speed;
     [SynchronizableField]
     public float length;
+    [SynchronizableField]
+    public bool isInvertedControls;
 
 
     public int id;
@@ -54,10 +56,10 @@ public class Paddle : AttributesSync {
         }
 
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-            _direction = Vector2.up;
+            _direction = isInvertedControls? Vector2.down : Vector2.up;
         }
         else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
-            _direction = Vector2.down;
+            _direction = isInvertedControls ? Vector2.up : Vector2.down;
         }
         else {
             _direction = Vector2.zero;
@@ -76,6 +78,12 @@ public class Paddle : AttributesSync {
         if (_direction.sqrMagnitude != 0) {
             _rigidbody.AddForce(_direction * speed);
         }
+
+        if(this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
+            Debug.LogError("Paddle has left the building");
+            this.BroadcastRemoteMethod("ResetPosition");
+        }
+
     }
 
     private void Initialize() {
@@ -88,16 +96,6 @@ public class Paddle : AttributesSync {
 
     public void OnCollisionEnter2D(Collision2D collision) {
         if(collision.collider.CompareTag("Ball")) {
-            Transform ballTransform = collision.collider.transform;
-            Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
-            float velocityX = ballRigidBody.velocity.x;
-            float velocityY = ballRigidBody.velocity.y;
-            float velocityBefore = new Vector2(velocityX, velocityY).magnitude;
-            float dist = ballTransform.position.y - transform.position.y;
-            float y = (dist / (length * 10f / 2f));
-            Vector2 direction = new(0f, y);
-            collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
-            float velocityAfter = new Vector2(ballRigidBody.velocity.x, ballRigidBody.velocity.y).magnitude;
 
             //Debug.Log("Paddle coordinate is: " + transform.position.y);
             //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
@@ -109,11 +107,17 @@ public class Paddle : AttributesSync {
         }
 
         if (collision.collider.CompareTag("Ball") && _gameManager != null) {
-            //float dist = collision.collider.transform.position.y - transform.position.y;
-            //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
-            //float y = (dist / (length * 10f / 2f));
-            //Vector2 direction = new(0f, y);
-            //collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
+            Transform ballTransform = collision.collider.transform;
+            Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
+            float velocityX = ballRigidBody.velocity.x;
+            float velocityY = ballRigidBody.velocity.y;
+            float velocityBefore = new Vector2(velocityX, velocityY).magnitude;
+            float dist = ballTransform.position.y - transform.position.y;
+            float normalizedDist = (dist / (length * 10f / 2f)); //due to number of pixels
+            Vector2 direction = new(0f, normalizedDist);
+            collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
+
+            float velocityAfter = new Vector2(ballRigidBody.velocity.x, ballRigidBody.velocity.y).magnitude;
 
             _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
             _gameManager.SetTouchedBy(_lastTouchedBy);
