@@ -15,6 +15,12 @@ public class UpgradeManager : MonoBehaviour {
     private const float MAX_X = 5;
     private const float MAX_Y = 4;
 
+    private const float initialSpawnUpgradeThreshold = 2f;
+    private float spawnUpgradeThreshold;
+    private float timeSinceLastSpawnedUpgrade = 0f;
+
+    private int totalWeight = 0;
+
     private Paddle p1Paddle;
     private Paddle p2Paddle;
 
@@ -27,18 +33,24 @@ public class UpgradeManager : MonoBehaviour {
         upgradeIndex = 0;
         PopulateUpgrades();
         _spawner = FindObjectOfType<Spawner>();
+        spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
+    }
+
+    private void Initialize() {
+        p1Paddle = _gameManager.GetPaddle1();
+        p2Paddle = _gameManager.GetPaddle2();
     }
 
     private void PopulateUpgrades() {
         upgrades = new List<UpgradeData>();
 
-        //buffs
-        UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 1);                     //id = 0
-        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 2);                       //id = 1
-        UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 3);                              //id = 2
-        UpgradeData shorterEnemyPaddle = new(104, "Shorter Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 11);      //id = 3
-        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 12);        //id = 4
-        UpgradeData flipEnemyControls = new(106, "Flip Enemy Controls", Type.Buff, Aoe.Other, 0, 3f, 4);            //id = 5
+        //buffs                                                                amount, duration, weight, iconIndex
+        UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 4, 1);                     //id = 0
+        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 4, 2);                       //id = 1
+        UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 1, 3);                              //id = 2
+        UpgradeData shorterEnemyPaddle = new(104, "Shorter Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 3, 11);      //id = 3
+        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 0, 12);        //id = 4
+        UpgradeData flipEnemyControls = new(106, "Flip Enemy Controls", Type.Buff, Aoe.Other, 0, 3f, 0, 4);            //id = 5
 
         upgrades.Add(longerPaddle);
         upgrades.Add(fasterPaddle);
@@ -47,21 +59,21 @@ public class UpgradeManager : MonoBehaviour {
         upgrades.Add(slowerEnemyPaddle);
         upgrades.Add(flipEnemyControls);
 
-        //nerfs
-        UpgradeData shorterPaddle = new(201, "Shorter Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 11);                   //id = 6
-        UpgradeData slowerPaddle = new(202, "Slower Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 12);                     //id = 7
-        UpgradeData flipControls = new(203, "Flip Controls", Type.Nerf, Aoe.Self, 0, 3f, 4);                         //id = 8
+        //nerfs                                                                     //amount, duration, weight, iconIndex
+        UpgradeData shorterPaddle = new(201, "Shorter Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 2, 11);                   //id = 6
+        UpgradeData slowerPaddle = new(202, "Slower Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 2, 12);                     //id = 7
+        UpgradeData flipControls = new(203, "Flip Controls", Type.Nerf, Aoe.Self, 0, 3f, 1, 4);                         //id = 8
 
         upgrades.Add(shorterPaddle);
         upgrades.Add(slowerPaddle);
         upgrades.Add(flipControls);
 
         //neutrals
-        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 11);     //id = 9
-        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 1);        //id = 10
-        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 2);          //id = 11
-        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 12);       //id = 12
-        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 4);             //id = 13
+        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 0, 11);     //id = 9
+        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 3, 1);        //id = 10
+        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 0, 2);          //id = 11
+        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 0, 12);       //id = 12
+        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 0, 4);             //id = 13
 
         upgrades.Add(shorterBothPaddles);
         upgrades.Add(longerBothPaddles);
@@ -107,6 +119,20 @@ public class UpgradeManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.J)) {
             SpawnUpgrade();
         }
+        if (_gameManager.IsGamePlaying()) {
+            CheckSpawnUpgrade();
+        }
+    }
+    // ticks the timer and spawns random upgrades at a set interval
+    public void CheckSpawnUpgrade() {
+        timeSinceLastSpawnedUpgrade += Time.deltaTime;
+
+        if (timeSinceLastSpawnedUpgrade >= spawnUpgradeThreshold) {
+            //randomize and announce an index
+            upgradeIndex = GenerateRandomUpgradeIndex();
+            SpawnUpgrade();
+            timeSinceLastSpawnedUpgrade = 0;
+        }
     }
 
     public void SpawnUpgrade() {
@@ -120,13 +146,31 @@ public class UpgradeManager : MonoBehaviour {
         upgrade.BroadcastRemoteMethod("SetData", upgradeData);
 
         upgrade.BroadcastRemoteMethod("ColorUpgrade");
-
     }
 
-    private void Initialize() {
-        p1Paddle = _gameManager.GetPaddle1();
-        p2Paddle = _gameManager.GetPaddle2();
+    public int GenerateRandomUpgradeIndex() {
+        // use the upgrades' weights to return a weighted random choice of an upgrade
+        if (totalWeight == 0) {
+            foreach (var upgrade in upgrades) {
+                totalWeight += upgrade.GetWeight();
+            }
+            Debug.Log("Total weight is: " + totalWeight);
+        }
+        int randIndex = Random.Range(0, totalWeight);
+        int cumulativeWeight = 0;
+        for (int i = 0; i < upgrades.Count; i++) {
+            cumulativeWeight += upgrades[i].GetWeight();
+            if (randIndex < cumulativeWeight) {
+                //Debug.Log("Random upgrade chosen has index: " + i); //useful when debugging to check prob distribution is working nicely
+                return i;
+            }
+        }
+
+        return -1;
     }
+
+
+
 
     public void PickupUpgrade(Upgrade upgrade) {
         if (p1Paddle == null || p2Paddle == null)
@@ -211,7 +255,8 @@ public class UpgradeManager : MonoBehaviour {
     private IEnumerator IncrementLives(Paddle p) {
         if (p == p1Paddle) {
             _gameManager.Player1GainsLife();
-        } else if (p == p2Paddle) {
+        }
+        else if (p == p2Paddle) {
             _gameManager.Player2GainsLife();
         }
         yield return null;

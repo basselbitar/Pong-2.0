@@ -19,7 +19,9 @@ public class UpgradeData
     private Type _upgradeType;
     private Aoe _aoe;
 
-    public UpgradeData(int id, string name, Type t, Aoe a, float amount, float duration, int iconIndex) {
+    private int _weight;
+
+    public UpgradeData(int id, string name, Type t, Aoe a, float amount, float duration, int weight, int iconIndex) {
         _id = id;
         _name = name;
         _upgradeType = t;
@@ -27,6 +29,7 @@ public class UpgradeData
         _amount = amount;
         _duration = duration;
         _iconIndex = iconIndex;
+        _weight = weight;
     }
 
     public Type GetUpgradeType() {
@@ -56,4 +59,8 @@ public class UpgradeData
 
     public float GetDuration() { return _duration; }
     public void SetDuration(float duration) { _duration = duration; }
+
+    public int GetWeight() { return _weight;}
+
+    public void SetWeight(int weight) { _weight = weight; }
 }

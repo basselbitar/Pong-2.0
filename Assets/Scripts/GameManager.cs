@@ -41,8 +41,7 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        if (!_initialValuesAssigned)
-        {
+        if (!_initialValuesAssigned) {
             AssignInitialValues();
         }
 
@@ -54,7 +53,7 @@ public class GameManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.U)) {
             debugMode = !debugMode;
-            if(walls.Length == 0) {
+            if (walls.Length == 0) {
                 walls = GameObject.FindGameObjectsWithTag("Debug");
 
             }
@@ -123,7 +122,7 @@ public class GameManager : MonoBehaviour {
         }
 
         // when game finishes, reset players Readiness
-        if(_gameFinished) {
+        if (_gameFinished) {
             DestroyRemainingBalls();
             ResetGame();
             return false;
@@ -141,7 +140,7 @@ public class GameManager : MonoBehaviour {
 
     private void InitializePaddles() {
         var playerList = GameObject.FindGameObjectsWithTag("Player");
-        if(playerList.Length < 2) {
+        if (playerList.Length < 2) {
             return;
         }
 
@@ -207,7 +206,7 @@ public class GameManager : MonoBehaviour {
         _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
     }
-   
+
     private void ResetRound() {
         if (!IsHostAndReadyToPlay()) {
             return;
@@ -231,10 +230,10 @@ public class GameManager : MonoBehaviour {
         p2Paddle.SetReady(false);
     }
 
-public int GetBallTouchedBy() { return _ballTouchedBy; }
+    public int GetBallTouchedBy() { return _ballTouchedBy; }
 
     public Paddle GetPaddle1() { return p1Paddle; }
-    public Paddle GetPaddle2() {  return p2Paddle; }
+    public Paddle GetPaddle2() { return p2Paddle; }
 
     //public void PlayerConnected() {
     //    Multiplayer mp = FindObjectOfType<Multiplayer>();
@@ -246,4 +245,10 @@ public int GetBallTouchedBy() { return _ballTouchedBy; }
     //    }
     //    Debug.Log("Someone joined the room");
     //}
+
+    public bool IsGamePlaying() {
+        return _gameStarted && !_gameFinished;
+    }
 }
+
+
