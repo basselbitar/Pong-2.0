@@ -11,10 +11,14 @@ public class Ball : AttributesSync
     //private InterpolationTransformSynchronizable _its;
     private Rigidbody2DSynchronizable _r2Ds;
 
+    private AudioManager _audioManager;
+
+
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
         //_its = GetComponent<InterpolationTransformSynchronizable>();
         _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
+        _audioManager = FindObjectOfType<AudioManager>();
     }
 
     private void Start()
@@ -53,5 +57,17 @@ public class Ball : AttributesSync
         //    _its.MovePosition(new Vector2(-5f, -2f));
         //}
     }
-   
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        var collisionGO = collision.gameObject;
+
+        if (collisionGO.CompareTag("Wall")) {
+            _audioManager.OnWallBounce();
+        }
+        else if(collisionGO.CompareTag("Player")) {
+            _audioManager.OnPaddleBounce();
+
+        }
+    }
+
 }

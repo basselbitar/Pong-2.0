@@ -330,7 +330,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7911800999253987399, guid: e4c413268050d364f8395d0b176aea7e, type: 3}
       propertyPath: forceTop
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7911800999253987399, guid: e4c413268050d364f8395d0b176aea7e, type: 3}
       propertyPath: forceRight
