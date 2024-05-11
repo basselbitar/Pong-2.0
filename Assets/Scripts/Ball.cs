@@ -11,14 +11,14 @@ public class Ball : AttributesSync
     //private InterpolationTransformSynchronizable _its;
     private Rigidbody2DSynchronizable _r2Ds;
 
-    private AudioManager _audioManager;
+    private BounceAudioManager _audioManager;
 
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
         //_its = GetComponent<InterpolationTransformSynchronizable>();
         _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
-        _audioManager = FindObjectOfType<AudioManager>();
+        _audioManager = FindObjectOfType<BounceAudioManager>();
     }
 
     private void Start()

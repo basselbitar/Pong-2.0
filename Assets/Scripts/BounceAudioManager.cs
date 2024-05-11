@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class BounceAudioManager : MonoBehaviour
 {
     [SerializeField]
     private List<AudioClip> wallBounces;
@@ -20,14 +20,14 @@ public class AudioManager : MonoBehaviour
 
     public void OnWallBounce() {
         int randIndex = Random.Range(0, wallBounces.Count);
-        Debug.LogError("Playing wall bounce number: " + randIndex);
+        //Debug.LogError("Playing wall bounce number: " + randIndex);
         _audioSource.clip = wallBounces[randIndex];
         _audioSource.Play();
     }
 
     public void OnPaddleBounce() {
         int randIndex = Random.Range(0, paddleBounces.Count);
-        Debug.LogError("Playing paddle bounce number: " + randIndex);
+        //Debug.LogError("Playing paddle bounce number: " + randIndex);
         _audioSource.clip = paddleBounces[randIndex];
         _audioSource.Play();
     }

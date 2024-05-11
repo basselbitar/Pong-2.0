@@ -29,11 +29,14 @@ public class UpgradeManager : MonoBehaviour {
     [SerializeField]
     public int upgradeIndex; //debug purposes
 
+    private UpgradeAudioManager _upgradeAudioManager;
+
     void Start() {
         upgradeIndex = 0;
         PopulateUpgrades();
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
+        _upgradeAudioManager = FindObjectOfType<UpgradeAudioManager>();
     }
 
     private void Initialize() {
@@ -49,8 +52,8 @@ public class UpgradeManager : MonoBehaviour {
         UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 4, 2);                       //id = 1
         UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 1, 3);                              //id = 2
         UpgradeData shorterEnemyPaddle = new(104, "Shorter Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 3, 11);      //id = 3
-        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 0, 12);        //id = 4
-        UpgradeData flipEnemyControls = new(106, "Flip Enemy Controls", Type.Buff, Aoe.Other, 0, 3f, 0, 4);            //id = 5
+        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 1, 12);        //id = 4
+        UpgradeData flipEnemyControls = new(106, "Flip Enemy Controls", Type.Buff, Aoe.Other, 0, 3f, 2, 4);            //id = 5
 
         upgrades.Add(longerPaddle);
         upgrades.Add(fasterPaddle);
@@ -69,11 +72,11 @@ public class UpgradeManager : MonoBehaviour {
         upgrades.Add(flipControls);
 
         //neutrals
-        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 0, 11);     //id = 9
-        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 3, 1);        //id = 10
-        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 0, 2);          //id = 11
-        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 0, 12);       //id = 12
-        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 0, 4);             //id = 13
+        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 1, 11);     //id = 9
+        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 2, 1);        //id = 10
+        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 1, 2);          //id = 11
+        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 1, 12);       //id = 12
+        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 1, 4);             //id = 13
 
         upgrades.Add(shorterBothPaddles);
         upgrades.Add(longerBothPaddles);
@@ -176,6 +179,9 @@ public class UpgradeManager : MonoBehaviour {
         if (p1Paddle == null || p2Paddle == null)
             Initialize();
 
+        //play the appropriate sound
+        _upgradeAudioManager.OnCollectUpgrade(upgrade);
+
         string upgradeName = upgrade.GetData().GetName();
         UpgradeData.Aoe aoe = upgrade.GetData().GetAoe();
         float amount = upgrade.GetData().GetAmount();
@@ -232,6 +238,12 @@ public class UpgradeManager : MonoBehaviour {
                 StartCoroutine(ModifySpeed(p1Paddle, amount, duration));
                 StartCoroutine(ModifySpeed(p2Paddle, amount, duration));
                 break;
+
+            case "Flip Both Controls":
+                StartCoroutine(FlipControls(p1Paddle, duration));
+                StartCoroutine(FlipControls(p2Paddle, duration));
+                break;
+
             default:
                 Debug.LogError("Unknown Upgrade has been picked up");
                 break;
