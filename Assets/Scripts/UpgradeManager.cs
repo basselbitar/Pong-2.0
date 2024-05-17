@@ -204,9 +204,7 @@ public class UpgradeManager : MonoBehaviour {
             return;
 
         if (p1Paddle == null || p2Paddle == null) {
-            Debug.LogError("STILL NULL");
             Initialize();
-
         }
 
         //play the appropriate sound

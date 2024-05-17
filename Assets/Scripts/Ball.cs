@@ -67,6 +67,7 @@ public class Ball : AttributesSync {
         else if (collisionGO.CompareTag("Player")) {
             _bounceAudioManager.OnPaddleBounce();
         }
+        GetComponentInChildren<ParticleSystem>().Play();
     }
 
 }
