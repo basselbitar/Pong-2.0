@@ -158,4 +158,9 @@ public class Paddle : AttributesSync {
     public void SetPaddleTypeIndex(int paddleTypeIndex) {
         _paddleTypeIndex = paddleTypeIndex;
     }
+
+    [SynchronizableMethod]
+    public void BlowWind(bool direction) {
+        FindObjectOfType<EffectsManager>().PlayWindEffect(direction);
+    }
 }

@@ -52,7 +52,6 @@ public class UpgradeManager : MonoBehaviour {
             _balls = FindObjectsOfType<Ball>();
             foreach (var _ball in _balls) {
                 _ball.AddForce(new Vector2(windDirection * windsActiveCount * 5, 0));
-                Debug.Log("Wind Blowing");
             }
         }
     }
@@ -322,7 +321,6 @@ public class UpgradeManager : MonoBehaviour {
         SetWind(p, windsActiveCount);
         yield return new WaitForSeconds(duration);
         windsActiveCount--;
-        DeactivateWind(windsActiveCount);
     }
 
     private Paddle GetTargetPaddle(Aoe aoe) {
@@ -347,22 +345,17 @@ public class UpgradeManager : MonoBehaviour {
         //Debug.Log("Speed is now:" + p.speed);
     }
 
+
     public void SetWind(Paddle p, int windsActiveCount) {
         windEffect.SetActive(true);
         if (p == p1Paddle) {
             windDirection = 1;
-            windEffect.transform.SetPositionAndRotation(new Vector3(-9.2f, 0, 0), Quaternion.Euler(0, 90f, 0));
         }
         else {
             windDirection = -1;
-            windEffect.transform.SetPositionAndRotation(new Vector3(9.2f, 0, 0), Quaternion.Euler(0, -90f, 0));
         }
-        windEffect.GetComponent<ParticleSystem>().Play();
-    }
-
-    public void DeactivateWind(int timesActivated) {
-        bool isActive = timesActivated > 0;
-        //windEffect.SetActive(isActive);
+        p1Paddle.BroadcastRemoteMethod("BlowWind", windDirection == 1);
+        p2Paddle.BroadcastRemoteMethod("BlowWind", windDirection == 1);
     }
 
     public void FlipControls(Paddle p) {
