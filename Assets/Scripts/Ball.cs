@@ -3,26 +3,24 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Alteruna.Trinity;
 
-public class Ball : AttributesSync
-{
+public class Ball : AttributesSync {
     [SynchronizableField]
     public float speed;
     private Rigidbody2D _rigidbody;
     //private InterpolationTransformSynchronizable _its;
     private Rigidbody2DSynchronizable _r2Ds;
 
-    private BounceAudioManager _audioManager;
-
+    private BounceAudioManager _bounceAudioManager;
+    private float minVelocityXThreshold = 4f;
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
         //_its = GetComponent<InterpolationTransformSynchronizable>();
         _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
-        _audioManager = FindObjectOfType<BounceAudioManager>();
+        _bounceAudioManager = FindObjectOfType<BounceAudioManager>();
     }
 
-    private void Start()
-    {
+    private void Start() {
         ResetPosition();
     }
 
@@ -36,6 +34,8 @@ public class Ball : AttributesSync
         float y = Random.value < 0.5f ? Random.Range(-1.0f, -0.5f) : Random.Range(0.5f, 1.0f);
 
         Vector2 direction = new Vector2(x, y);
+        //debug mode
+        direction = new Vector2(-1, 0);
         _rigidbody.AddForce(direction * speed);
     }
 
@@ -49,24 +49,23 @@ public class Ball : AttributesSync
     }
 
     public void Update() {
-        //if(Input.GetKeyUp(KeyCode.L)) {
-        //    _its.MovePosition(new Vector2(5f,-2f));
-
-        //}
-        //if (Input.GetKeyUp(KeyCode.K)) {
-        //    _its.MovePosition(new Vector2(-5f, -2f));
-        //}
+        if (Mathf.Abs(_rigidbody.velocity.x) < minVelocityXThreshold) {
+            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x * 1.05f, _rigidbody.velocity.y);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
         var collisionGO = collision.gameObject;
 
-        if (collisionGO.CompareTag("Wall")) {
-            _audioManager.OnWallBounce();
-        }
-        else if(collisionGO.CompareTag("Player")) {
-            _audioManager.OnPaddleBounce();
 
+        if (_bounceAudioManager == null) {
+            return;
+        }
+        if (collisionGO.CompareTag("Wall")) {
+            _bounceAudioManager.OnWallBounce();
+        }
+        else if (collisionGO.CompareTag("Player")) {
+            _bounceAudioManager.OnPaddleBounce();
         }
     }
 

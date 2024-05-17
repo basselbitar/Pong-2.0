@@ -20,6 +20,9 @@ public class UpgradeAudioManager : MonoBehaviour
     [SerializeField]
     private List<AudioClip> flipControlsSounds;
 
+    [SerializeField]
+    private List<AudioClip> windSounds;
+
     private float timeOfLastSound;
     private float threshold;
 
@@ -81,6 +84,10 @@ public class UpgradeAudioManager : MonoBehaviour
                     audioClipList = flipControlsSounds;
                     break;
 
+                case "Wind With Player":
+                case "Wind Against Player":
+                    audioClipList = windSounds;
+                    break;
                 default:
                     Debug.LogError("Something went wrong, can't find correct audio list");
                     audioClipList = new();

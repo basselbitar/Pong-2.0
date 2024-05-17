@@ -275,7 +275,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4739786067999589619, guid: d828d9f7813810e48bb722f046ceb44c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -330,11 +331,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7911800999253987399, guid: e4c413268050d364f8395d0b176aea7e, type: 3}
       propertyPath: forceTop
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7911800999253987399, guid: e4c413268050d364f8395d0b176aea7e, type: 3}
       propertyPath: forceRight
-      value: -1
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8678040215180772603, guid: e4c413268050d364f8395d0b176aea7e, type: 3}
       propertyPath: m_Name

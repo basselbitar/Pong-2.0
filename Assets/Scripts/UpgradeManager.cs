@@ -1,6 +1,7 @@
 using Alteruna;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static UpgradeData;
 
@@ -25,11 +26,15 @@ public class UpgradeManager : MonoBehaviour {
     private Paddle p2Paddle;
 
     public Sprite[] upgradeIcons;
+    public GameObject windEffect;
+    private int windsActiveCount = 0;
+    private int windDirection = 1; //becomes -1 if flipped direction
 
     [SerializeField]
     public int upgradeIndex; //debug purposes
 
     private UpgradeAudioManager _upgradeAudioManager;
+    private Ball[] _balls;
 
     void Start() {
         upgradeIndex = 0;
@@ -37,6 +42,19 @@ public class UpgradeManager : MonoBehaviour {
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
         _upgradeAudioManager = FindObjectOfType<UpgradeAudioManager>();
+    }
+
+    private void FixedUpdate() {
+        //disable scripts on the non-host player
+        if (!_gameManager.IsGamePlaying())
+            return;
+        if (windsActiveCount > 0) {
+            _balls = FindObjectsOfType<Ball>();
+            foreach (var _ball in _balls) {
+                _ball.AddForce(new Vector2(windDirection * windsActiveCount * 5, 0));
+                Debug.Log("Wind Blowing");
+            }
+        }
     }
 
     private void Initialize() {
@@ -49,11 +67,12 @@ public class UpgradeManager : MonoBehaviour {
 
         //buffs                                                                amount, duration, weight, iconIndex
         UpgradeData longerPaddle = new(101, "Longer Paddle", Type.Buff, Aoe.Self, 1.2f, 3f, 4, 1);                     //id = 0
-        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 4f, 8f, 4, 2);                       //id = 1
+        UpgradeData fasterPaddle = new(102, "Faster Paddle", Type.Buff, Aoe.Self, 1.5f, 8f, 4, 2);                     //id = 1
         UpgradeData bonusLife = new(103, "Bonus Life", Type.Buff, Aoe.Self, 1, 0f, 1, 3);                              //id = 2
-        UpgradeData shorterEnemyPaddle = new(104, "Shorter Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 3, 11);      //id = 3
-        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.5f, 3f, 1, 12);        //id = 4
+        UpgradeData shorterEnemyPaddle = new(104, "Shorter Enemy Paddle", Type.Buff, Aoe.Other, 0.8f, 3f, 3, 11);      //id = 3
+        UpgradeData slowerEnemyPaddle = new(105, "Slower Enemy Paddle", Type.Buff, Aoe.Other, 0.7f, 3f, 1, 12);        //id = 4
         UpgradeData flipEnemyControls = new(106, "Flip Enemy Controls", Type.Buff, Aoe.Other, 0, 3f, 2, 4);            //id = 5
+        UpgradeData windBuff = new(107, "Wind With Player", Type.Buff, Aoe.Self, 0, 8f, 2, 5);                         //id = 6
 
         upgrades.Add(longerPaddle);
         upgrades.Add(fasterPaddle);
@@ -61,22 +80,25 @@ public class UpgradeManager : MonoBehaviour {
         upgrades.Add(shorterEnemyPaddle);
         upgrades.Add(slowerEnemyPaddle);
         upgrades.Add(flipEnemyControls);
+        upgrades.Add(windBuff);
 
         //nerfs                                                                     //amount, duration, weight, iconIndex
-        UpgradeData shorterPaddle = new(201, "Shorter Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 2, 11);                   //id = 6
-        UpgradeData slowerPaddle = new(202, "Slower Paddle", Type.Nerf, Aoe.Self, 0.5f, 3f, 2, 12);                     //id = 7
-        UpgradeData flipControls = new(203, "Flip Controls", Type.Nerf, Aoe.Self, 0, 3f, 1, 4);                         //id = 8
+        UpgradeData shorterPaddle = new(201, "Shorter Paddle", Type.Nerf, Aoe.Self, 0.8f, 3f, 2, 11);                   //id = 7
+        UpgradeData slowerPaddle = new(202, "Slower Paddle", Type.Nerf, Aoe.Self, 0.7f, 3f, 2, 12);                     //id = 8
+        UpgradeData flipControls = new(203, "Flip Controls", Type.Nerf, Aoe.Self, 0, 3f, 1, 4);                         //id = 9
+        UpgradeData windNerf = new(204, "Wind Against Player", Type.Nerf, Aoe.Other, 0, 8f, 2, 5);                      //id = 10
 
         upgrades.Add(shorterPaddle);
         upgrades.Add(slowerPaddle);
         upgrades.Add(flipControls);
+        upgrades.Add(windNerf);
 
         //neutrals
-        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.5f, 3f, 1, 11);     //id = 9
-        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.5f, 3f, 2, 1);        //id = 10
-        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 3f, 3f, 1, 2);          //id = 11
-        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.1f, 3f, 1, 12);       //id = 12
-        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 1, 4);             //id = 13
+        UpgradeData shorterBothPaddles = new(301, "Shorter Both Paddles", Type.Neutral, Aoe.Both, 0.8f, 3f, 1, 11);     //id = 11
+        UpgradeData longerBothPaddles = new(302, "Longer Both Paddles", Type.Neutral, Aoe.Both, 1.2f, 3f, 2, 1);        //id = 12
+        UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 1.4f, 3f, 1, 2);          //id = 13
+        UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.7f, 3f, 1, 12);       //id = 14
+        UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 1, 4);             //id = 15
 
         upgrades.Add(shorterBothPaddles);
         upgrades.Add(longerBothPaddles);
@@ -87,11 +109,13 @@ public class UpgradeManager : MonoBehaviour {
     }
 
     private void Update() {
+        if (!_gameManager.IsGamePlaying())
+            return;
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            upgradeIndex = 0;
+            upgradeIndex = 6;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            upgradeIndex = 1;
+            upgradeIndex = 10;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
             upgradeIndex = 2;
@@ -176,8 +200,15 @@ public class UpgradeManager : MonoBehaviour {
 
 
     public void PickupUpgrade(Upgrade upgrade) {
-        if (p1Paddle == null || p2Paddle == null)
+        //disable on non-host player
+        if (!_gameManager.IsGamePlaying())
+            return;
+
+        if (p1Paddle == null || p2Paddle == null) {
+            Debug.LogError("STILL NULL");
             Initialize();
+
+        }
 
         //play the appropriate sound
         _upgradeAudioManager.OnCollectUpgrade(upgrade);
@@ -209,6 +240,9 @@ public class UpgradeManager : MonoBehaviour {
             case "Flip Enemy Controls":
                 StartCoroutine(FlipControls(targetPaddle, duration));
                 break;
+            case "Wind With Player":
+                StartCoroutine(ActivateWind(targetPaddle, duration));
+                break;
 
             //nerfs
             case "Shorter Paddle":
@@ -219,6 +253,9 @@ public class UpgradeManager : MonoBehaviour {
                 break;
             case "Flip Controls":
                 StartCoroutine(FlipControls(targetPaddle, duration));
+                break;
+            case "Wind Against Player":
+                StartCoroutine(ActivateWind(targetPaddle, duration));
                 break;
 
             //neutrals
@@ -280,6 +317,14 @@ public class UpgradeManager : MonoBehaviour {
         FlipControls(p);
     }
 
+    private IEnumerator ActivateWind(Paddle p, float duration) {
+        windsActiveCount++;
+        SetWind(p, windsActiveCount);
+        yield return new WaitForSeconds(duration);
+        windsActiveCount--;
+        DeactivateWind(windsActiveCount);
+    }
+
     private Paddle GetTargetPaddle(Aoe aoe) {
         // If aoe is self, we keep the targetIndex as the paddle that touched the ball last
         // If aoe is other, we swap by doing (1 - index)
@@ -300,6 +345,24 @@ public class UpgradeManager : MonoBehaviour {
         //Debug.Log("Modifying the speed of:" + p);
         p.speed *= amount;
         //Debug.Log("Speed is now:" + p.speed);
+    }
+
+    public void SetWind(Paddle p, int windsActiveCount) {
+        windEffect.SetActive(true);
+        if (p == p1Paddle) {
+            windDirection = 1;
+            windEffect.transform.SetPositionAndRotation(new Vector3(-9.2f, 0, 0), Quaternion.Euler(0, 90f, 0));
+        }
+        else {
+            windDirection = -1;
+            windEffect.transform.SetPositionAndRotation(new Vector3(9.2f, 0, 0), Quaternion.Euler(0, -90f, 0));
+        }
+        windEffect.GetComponent<ParticleSystem>().Play();
+    }
+
+    public void DeactivateWind(int timesActivated) {
+        bool isActive = timesActivated > 0;
+        //windEffect.SetActive(isActive);
     }
 
     public void FlipControls(Paddle p) {

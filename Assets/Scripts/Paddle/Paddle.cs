@@ -56,7 +56,7 @@ public class Paddle : AttributesSync {
         }
 
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-            _direction = isInvertedControls? Vector2.down : Vector2.up;
+            _direction = isInvertedControls ? Vector2.down : Vector2.up;
         }
         else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
             _direction = isInvertedControls ? Vector2.up : Vector2.down;
@@ -70,8 +70,7 @@ public class Paddle : AttributesSync {
     }
 
     private void FixedUpdate() {
-        if ((speed == -1))
-        {
+        if ((speed == -1)) {
             speed = startingSpeed; //TODO: plus any buffs and minus any nerfs
         }
 
@@ -79,7 +78,7 @@ public class Paddle : AttributesSync {
             _rigidbody.AddForce(_direction * speed);
         }
 
-        if(this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
+        if (this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
             Debug.LogError("Paddle has left the building");
             this.BroadcastRemoteMethod("ResetPosition");
         }
@@ -95,18 +94,7 @@ public class Paddle : AttributesSync {
     }
 
     public void OnCollisionEnter2D(Collision2D collision) {
-        if(collision.collider.CompareTag("Ball")) {
-
-            //Debug.Log("Paddle coordinate is: " + transform.position.y);
-            //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
-            //Debug.Log("Ball touched paddle at: " + dist);
-            //Debug.Log("Length of paddle is: " + length);
-
-            //Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
-            //Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
-        }
-
-        if (collision.collider.CompareTag("Ball") && _gameManager != null) {
+        if (collision.collider.CompareTag("Ball")) {
             Transform ballTransform = collision.collider.transform;
             Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
             float velocityX = ballRigidBody.velocity.x;
@@ -119,8 +107,18 @@ public class Paddle : AttributesSync {
 
             float velocityAfter = new Vector2(ballRigidBody.velocity.x, ballRigidBody.velocity.y).magnitude;
 
-            _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
-            _gameManager.SetTouchedBy(_lastTouchedBy);
+            //Debug.Log("Paddle coordinate is: " + transform.position.y);
+            //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
+            //Debug.Log("Ball touched paddle at: " + dist);
+            //Debug.Log("Length of paddle is: " + length);
+
+            //Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
+            //Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
+
+            if (_gameManager != null) {
+                _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
+                _gameManager.SetTouchedBy(_lastTouchedBy);
+            }
         }
     }
 
