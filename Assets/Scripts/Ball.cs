@@ -2,6 +2,7 @@ using Alteruna;
 using Unity.VisualScripting;
 using UnityEngine;
 using Alteruna.Trinity;
+using System.Collections;
 
 public class Ball : AttributesSync {
     [SynchronizableField]
@@ -12,6 +13,8 @@ public class Ball : AttributesSync {
 
     private BounceAudioManager _bounceAudioManager;
     private float minVelocityXThreshold = 4f;
+
+    private float tweenTime = 1.4f;
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -56,7 +59,8 @@ public class Ball : AttributesSync {
 
     private void OnCollisionEnter2D(Collision2D collision) {
         var collisionGO = collision.gameObject;
-
+        TweenBall();
+        GetComponentInChildren<ParticleSystem>().Play();
 
         if (_bounceAudioManager == null) {
             return;
@@ -67,7 +71,14 @@ public class Ball : AttributesSync {
         else if (collisionGO.CompareTag("Player")) {
             _bounceAudioManager.OnPaddleBounce();
         }
-        GetComponentInChildren<ParticleSystem>().Play();
+ 
     }
 
+    private void TweenBall() {
+
+        LeanTween.cancel(gameObject);
+        transform.localScale = new(0.4f, 0.4f, 1f);
+
+        LeanTween.scale(gameObject, Vector3.one * 0.58f, tweenTime).setEasePunch();
+    }
 }
