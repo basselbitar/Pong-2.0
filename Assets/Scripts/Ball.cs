@@ -14,7 +14,7 @@ public class Ball : AttributesSync {
     private BounceAudioManager _bounceAudioManager;
     private float minVelocityXThreshold = 4f;
 
-    private float tweenTime = 1.4f;
+    private float tweenTime = 1.2f;
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();

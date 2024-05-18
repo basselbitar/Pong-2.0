@@ -26,6 +26,7 @@ public class Paddle : AttributesSync {
 
 
     public int id;
+    private float tweenTime = 1.2f;
 
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
@@ -47,10 +48,14 @@ public class Paddle : AttributesSync {
 
         Initialize();
         //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
-
     }
 
     void Update() {
+
+        if (Input.GetKeyUp(KeyCode.T)) {
+            TweenPaddle();
+        }
+
         if (!_avatar.IsMe && !debug) {
             return;
         }
@@ -132,8 +137,7 @@ public class Paddle : AttributesSync {
         if (_rigidbody == null) {
             Initialize();
         }
-        _rigidbody.position = new Vector2(_rigidbody.position.x, 0.0f);
-        _rigidbody.velocity = Vector2.zero;
+        TweenPaddle();
     }
 
     [SynchronizableMethod]
@@ -162,5 +166,22 @@ public class Paddle : AttributesSync {
     [SynchronizableMethod]
     public void BlowWind(bool direction) {
         FindObjectOfType<EffectsManager>().PlayWindEffect(direction);
+    }
+
+    private void TweenPaddle() {
+        LeanTween.cancel(gameObject);
+        transform.localScale = new(0.01187452f, length, 1f);
+
+        LeanTween.scale(gameObject, new(0, 0, 0), 0.3f).setEaseInBack().setOnComplete(() => {
+            _rigidbody.position = new Vector2(_rigidbody.position.x, 0.0f);
+            _rigidbody.velocity = Vector2.zero;
+
+            LeanTween.scale(gameObject, new(0.01187452f, length, 1f), 0.3f).setEaseInBack().setOnComplete(() => {
+                //transform.localScale = new(0.01187452f, length, 1f);
+                LeanTween.scale(gameObject, new(0.02f, length * 1.3f, 1f), tweenTime).setEasePunch();
+            });
+        });
+
+        //LeanTween.scale(gameObject, new(0f, 0f, 0f), 3f * tweenTime).setEasePunch();
     }
 }
