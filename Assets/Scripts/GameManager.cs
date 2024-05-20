@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour {
     private bool _gameFinished;
     private bool _initialValuesAssigned;
 
-    private int _ballTouchedBy;
     public bool debugMode;
     [SerializeField]
     private GameObject[] walls;
@@ -48,7 +47,7 @@ public class GameManager : MonoBehaviour {
         // spawn the ball
         if (!_gameStarted) {
             _gameStarted = true;
-            ResetRound();
+            StartCoroutine(ResetRound());
         }
 
         if (Input.GetKeyDown(KeyCode.U)) {
@@ -71,7 +70,7 @@ public class GameManager : MonoBehaviour {
         if (_p2Score <= 0) {
             _gameFinished = true;
         }
-        ResetRound();
+        StartCoroutine(ResetRound());
     }
 
     public void Player2Scores() {
@@ -83,7 +82,7 @@ public class GameManager : MonoBehaviour {
         if (_p1Score <= 0) {
             _gameFinished = true;
         }
-        ResetRound();
+        StartCoroutine(ResetRound());
     }
 
     public void Player1GainsLife() {
@@ -96,10 +95,6 @@ public class GameManager : MonoBehaviour {
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
     }
 
-    public void SetTouchedBy(int index) {
-        _ballTouchedBy = index;
-    }
-
     private bool IsHostAndReadyToPlay() {
         //only the host should manage the game
         if (!AmITheHost()) {
@@ -108,6 +103,7 @@ public class GameManager : MonoBehaviour {
 
         if (_multiplayer.CurrentRoom.Users.Count < 2) {
             DestroyRemainingBalls();
+            DestroyRemainingUpgrades();
             return false;
         }
 
@@ -124,6 +120,7 @@ public class GameManager : MonoBehaviour {
         // when game finishes, reset players Readiness
         if (_gameFinished) {
             DestroyRemainingBalls();
+            DestroyRemainingUpgrades();
             ResetGame();
             return false;
         }
@@ -132,9 +129,16 @@ public class GameManager : MonoBehaviour {
     }
 
     private void DestroyRemainingBalls() {
-        Ball remainingBall = FindObjectOfType<Ball>();
-        if (remainingBall != null) {
-            remainingBall.DestroyBall();
+        Ball[] remainingBalls = FindObjectsOfType<Ball>();
+        foreach (var ball in remainingBalls) {
+            ball.DestroyBall();
+        }
+    }
+
+    private void DestroyRemainingUpgrades() {
+        Upgrade[] remainingUpgrades = FindObjectsOfType<Upgrade>();
+        foreach (var upgrade in remainingUpgrades) {
+            upgrade.DestroyUpgrade();
         }
     }
 
@@ -170,7 +174,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetPaddleValues(Paddle p, int paddleTypeIndex) {
-        int defaultLives = 3;
+        int defaultLives = 10;
         float defaultSpeed = 10f;
         float defaultLength = 0.1429687f;
 
@@ -207,19 +211,30 @@ public class GameManager : MonoBehaviour {
         _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
     }
 
-    private void ResetRound() {
+    private IEnumerator ResetRound() {
         if (!IsHostAndReadyToPlay()) {
-            return;
+            StopCoroutine(ResetRound());
+            yield return null;
         }
-        p1Paddle.BroadcastRemoteMethod("ResetPosition");
-        p2Paddle.BroadcastRemoteMethod("ResetPosition");
-        _ballGO = _ballSpawner.SpawnBall();
-        _ball = _ballGO.GetComponent<Ball>();
-        _ball.ResetPosition();
-        _ball.AddStartingForce();
-        // turn on the ball's Rigidbody2DSynchronizable script on the host's side ONLY
-        _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
 
+        yield return new WaitForSeconds(0.4f);
+        //if there are more balls, no need to reset the round
+        bool outOfBalls = FindObjectsOfType<Ball>().Length < 1; //destroying a ball is slow
+        if (outOfBalls) {
+
+            p1Paddle.BroadcastRemoteMethod("ResetPosition");
+            p2Paddle.BroadcastRemoteMethod("ResetPosition");
+
+            yield return new WaitForSeconds(0.8f);
+            if (IsHostAndReadyToPlay()) {
+
+                _ballGO = _ballSpawner.SpawnBall();
+                _ball = _ballGO.GetComponent<Ball>();
+                _ball.ResetPosition();
+                _ball.AddStartingForce();
+                _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
+            }
+        }
     }
 
     private void ResetGame() {
@@ -229,8 +244,6 @@ public class GameManager : MonoBehaviour {
         p1Paddle.SetReady(false);
         p2Paddle.SetReady(false);
     }
-
-    public int GetBallTouchedBy() { return _ballTouchedBy; }
 
     public Paddle GetPaddle1() { return p1Paddle; }
     public Paddle GetPaddle2() { return p2Paddle; }

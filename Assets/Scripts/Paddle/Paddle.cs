@@ -32,8 +32,6 @@ public class Paddle : AttributesSync {
     private Multiplayer _multiplayer;
     private GameManager _gameManager;
 
-    private int _lastTouchedBy;
-
     public bool debug = false;
 
     void Start() {
@@ -60,15 +58,9 @@ public class Paddle : AttributesSync {
             return;
         }
 
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-            _direction = isInvertedControls ? Vector2.down : Vector2.up;
-        }
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
-            _direction = isInvertedControls ? Vector2.up : Vector2.down;
-        }
-        else {
-            _direction = Vector2.zero;
-        }
+        handleInputs();
+
+
 
         //transform.localScale = new Vector3(transform.localScale.x, length, 1f);
 
@@ -84,7 +76,6 @@ public class Paddle : AttributesSync {
         }
 
         if (this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
-            Debug.LogError("Paddle has left the building");
             this.BroadcastRemoteMethod("ResetPosition");
         }
 
@@ -94,8 +85,19 @@ public class Paddle : AttributesSync {
         _rigidbody = GetComponent<Rigidbody2D>();
         _multiplayer = FindObjectOfType<Multiplayer>();
         _gameManager = FindObjectOfType<GameManager>();
-        _lastTouchedBy = -1;
         //id = _multiplayer.Me.Index;
+    }
+
+    private void handleInputs() {
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
+            _direction = isInvertedControls ? Vector2.down : Vector2.up;
+        }
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+            _direction = isInvertedControls ? Vector2.up : Vector2.down;
+        }
+        else {
+            _direction = Vector2.zero;
+        }
     }
 
     public void OnCollisionEnter2D(Collision2D collision) {
@@ -119,11 +121,6 @@ public class Paddle : AttributesSync {
 
             //Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
             //Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
-
-            if (_gameManager != null) {
-                _lastTouchedBy = collision.otherCollider.GetComponent<Paddle>().id;
-                _gameManager.SetTouchedBy(_lastTouchedBy);
-            }
         }
     }
 
@@ -145,7 +142,7 @@ public class Paddle : AttributesSync {
         if (!_avatar.IsMe) {
             return;
         }
-        transform.localScale = new Vector3(transform.localScale.x, length, 1f);
+        LeanTween.scale(gameObject, new(0.01187452f, length, 1f), 0.6f).setEaseInBack();
     }
 
     public bool IsReady() {
@@ -182,6 +179,6 @@ public class Paddle : AttributesSync {
             });
         });
 
-        //LeanTween.scale(gameObject, new(0f, 0f, 0f), 3f * tweenTime).setEasePunch();
+        //LeanTween.scale(gameObject, new(0f, 0f, 0f), 3f * _tweenTime).setEasePunch();
     }
 }

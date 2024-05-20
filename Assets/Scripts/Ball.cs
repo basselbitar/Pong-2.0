@@ -12,9 +12,15 @@ public class Ball : AttributesSync {
     private Rigidbody2DSynchronizable _r2Ds;
 
     private BounceAudioManager _bounceAudioManager;
-    private float minVelocityXThreshold = 4f;
+    private float _minVelocityXThreshold = 4f;
 
-    private float tweenTime = 1.2f;
+    private float _tweenTime = 1.2f;
+
+    private int _lastTouchedBy;
+
+    public int GetLastTouchedBy() { return  _lastTouchedBy; }
+
+    public void SetLastTouchedBy(int lastTouchedIndex) {  _lastTouchedBy = lastTouchedIndex; } 
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -36,9 +42,9 @@ public class Ball : AttributesSync {
         float x = Random.value < 0.5f ? -1.0f : 1.0f;
         float y = Random.value < 0.5f ? Random.Range(-1.0f, -0.5f) : Random.Range(0.5f, 1.0f);
 
-        Vector2 direction = new Vector2(x, y);
+        Vector2 direction = new(x, y);
         //debug mode
-        direction = new Vector2(-1, 0);
+        //direction = new Vector2(-1, 0);
         _rigidbody.AddForce(direction * speed);
     }
 
@@ -52,7 +58,7 @@ public class Ball : AttributesSync {
     }
 
     public void Update() {
-        if (Mathf.Abs(_rigidbody.velocity.x) < minVelocityXThreshold) {
+        if (Mathf.Abs(_rigidbody.velocity.x) < _minVelocityXThreshold) {
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x * 1.05f, _rigidbody.velocity.y);
         }
     }
@@ -69,6 +75,7 @@ public class Ball : AttributesSync {
             _bounceAudioManager.OnWallBounce();
         }
         else if (collisionGO.CompareTag("Player")) {
+            _lastTouchedBy = collisionGO.GetComponent<Paddle>().id;
             _bounceAudioManager.OnPaddleBounce();
         }
  
@@ -79,6 +86,6 @@ public class Ball : AttributesSync {
         LeanTween.cancel(gameObject);
         transform.localScale = new(0.4f, 0.4f, 1f);
 
-        LeanTween.scale(gameObject, Vector3.one * 0.58f, tweenTime).setEasePunch();
+        LeanTween.scale(gameObject, Vector3.one * 0.58f, _tweenTime).setEasePunch();
     }
 }

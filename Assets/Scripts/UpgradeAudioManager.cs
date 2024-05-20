@@ -23,6 +23,9 @@ public class UpgradeAudioManager : MonoBehaviour
     [SerializeField]
     private List<AudioClip> windSounds;
 
+    [SerializeField]
+    private List<AudioClip> splitBallSounds;
+
     private float timeOfLastSound;
     private float threshold;
 
@@ -87,6 +90,10 @@ public class UpgradeAudioManager : MonoBehaviour
                 case "Wind With Player":
                 case "Wind Against Player":
                     audioClipList = windSounds;
+                    break;
+
+                case "Split Ball":
+                    audioClipList = splitBallSounds;
                     break;
                 default:
                     Debug.LogError("Something went wrong, can't find correct audio list");

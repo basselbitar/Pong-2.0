@@ -35,18 +35,18 @@ public class Upgrade : AttributesSync
     }
 
     [SynchronizableMethod]
-    public void PickupUpgrade() {
-        _upgradeManager.PickupUpgrade(this);
+    public void PickupUpgrade(Ball ball) {
+        _upgradeManager.PickupUpgrade(this, ball);
         DestroyUpgrade();
     }
 
-    private void DestroyUpgrade() {
+    public void DestroyUpgrade() {
         _upgradeManager.DestroyUpgrade(this);
     }
 
     public void OnTriggerEnter2D(Collider2D collision) {
         if (collision.CompareTag("Ball")) {
-            PickupUpgrade();
+            PickupUpgrade(collision.GetComponent<Ball>());
         }
     }
 

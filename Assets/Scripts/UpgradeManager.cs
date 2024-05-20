@@ -98,12 +98,14 @@ public class UpgradeManager : MonoBehaviour {
         UpgradeData fasterBothPaddles = new(303, "Faster Both Paddles", Type.Neutral, Aoe.Both, 1.4f, 3f, 1, 2);          //id = 13
         UpgradeData slowerBothPaddles = new(304, "Slower Both Paddles", Type.Neutral, Aoe.Both, 0.7f, 3f, 1, 12);       //id = 14
         UpgradeData flipBothControls = new(305, "Flip Both Controls", Type.Neutral, Aoe.Both, 0, 3f, 1, 4);             //id = 15
+        UpgradeData splitBall = new(306, "Split Ball", Type.Neutral, Aoe.Both, 0, 0, 1, 21);                           //id = 16
 
         upgrades.Add(shorterBothPaddles);
         upgrades.Add(longerBothPaddles);
         upgrades.Add(fasterBothPaddles);
         upgrades.Add(slowerBothPaddles);
         upgrades.Add(flipBothControls);
+        upgrades.Add(splitBall);
 
     }
 
@@ -111,19 +113,19 @@ public class UpgradeManager : MonoBehaviour {
         if (!_gameManager.IsGamePlaying())
             return;
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            upgradeIndex = 6;
+            upgradeIndex = 16;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            upgradeIndex = 10;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            upgradeIndex = 2;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) {
             upgradeIndex = 3;
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            upgradeIndex = 7;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            upgradeIndex = 11;
+        }
         if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            upgradeIndex = 4;
+            upgradeIndex = 12;
         }
         if (Input.GetKeyDown(KeyCode.Alpha6)) {
             upgradeIndex = 5;
@@ -198,7 +200,7 @@ public class UpgradeManager : MonoBehaviour {
 
 
 
-    public void PickupUpgrade(Upgrade upgrade) {
+    public void PickupUpgrade(Upgrade upgrade, Ball ball) {
         //disable on non-host player
         if (!_gameManager.IsGamePlaying())
             return;
@@ -215,7 +217,7 @@ public class UpgradeManager : MonoBehaviour {
         float amount = upgrade.GetData().GetAmount();
         float duration = upgrade.GetData().GetDuration();
 
-        Paddle targetPaddle = GetTargetPaddle(aoe);
+        Paddle targetPaddle = GetTargetPaddle(aoe, ball);
 
         switch (upgradeName) {
             //buffs
@@ -278,6 +280,10 @@ public class UpgradeManager : MonoBehaviour {
                 StartCoroutine(FlipControls(p2Paddle, duration));
                 break;
 
+            case "Split Ball":
+                SplitBall(ball);
+                break;
+
             default:
                 Debug.LogError("Unknown Upgrade has been picked up");
                 break;
@@ -321,10 +327,10 @@ public class UpgradeManager : MonoBehaviour {
         windsActiveCount--;
     }
 
-    private Paddle GetTargetPaddle(Aoe aoe) {
+    private Paddle GetTargetPaddle(Aoe aoe, Ball ball) {
         // If aoe is self, we keep the targetIndex as the paddle that touched the ball last
         // If aoe is other, we swap by doing (1 - index)
-        int ballTouchedBy = _gameManager.GetBallTouchedBy();
+        int ballTouchedBy = ball.GetLastTouchedBy();
         int targetIndex = (aoe == Aoe.Self) ? ballTouchedBy : (1 - ballTouchedBy);
         return targetIndex == 0 ? p1Paddle : p2Paddle;
     }
@@ -332,7 +338,7 @@ public class UpgradeManager : MonoBehaviour {
     public void ModifyLength(Paddle p, float amount) {
 
         p.length *= amount;
-        p1Paddle.BroadcastRemoteMethod("ModifyLength");
+        p1Paddle.BroadcastRemoteMethod(nameof(Paddle.ModifyLength));
         p2Paddle.BroadcastRemoteMethod("ModifyLength");
     }
 
@@ -354,6 +360,26 @@ public class UpgradeManager : MonoBehaviour {
         }
         p1Paddle.BroadcastRemoteMethod("BlowWind", windDirection == 1);
         p2Paddle.BroadcastRemoteMethod("BlowWind", windDirection == 1);
+    }
+
+    public void SplitBall(Ball ball) {
+        Rigidbody2D ballRB = ball.GetComponent<Rigidbody2D>();
+
+        float offset = ballRB.velocity.x > 0 ? -0.5f : 0.5f;
+
+        Vector3 ballPosition = ball.transform.position + new Vector3(offset, 0,0);
+        //Spawn a ball
+        GameObject newBall = _spawner.Spawn(0, ballPosition, Quaternion.identity, new Vector3(0.4f, 0.4f, 1f));
+        newBall.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
+
+
+        //ensure that the new ball moves away from the old ball
+        float x = ballRB.velocity.x > 0 ? -1.0f : 1.0f;
+        float y = Random.value < 0.5f ? Random.Range(-1.0f, -0.5f) : Random.Range(0.5f, 1.0f);
+
+        Vector2 direction = new(x, y);
+        newBall.GetComponent<Rigidbody2D>().AddForce(direction * ball.speed);
+
     }
 
     public void FlipControls(Paddle p) {
