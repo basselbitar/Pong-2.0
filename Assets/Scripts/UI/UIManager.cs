@@ -34,7 +34,8 @@ public class UIManager : MonoBehaviour
 
     public void ActivateRoomMenuPanel() {
         DeactivatePanels();
-        RoomMenuPanel.SetActive(true);
+        // TODO:make the Tween Manager the new UI Manager
+        // RoomMenuPanel.SetActive(true);
     }
 
     public void ActivateWaitingForPlayerPanel() {
@@ -63,9 +64,5 @@ public class UIManager : MonoBehaviour
         }else {
             GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Lose!";
         }
-    }
-
-    public void OnQuit() {
-        Application.Quit();
     }
 }
