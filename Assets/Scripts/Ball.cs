@@ -16,11 +16,12 @@ public class Ball : AttributesSync {
 
     private float _tweenTime = 1.2f;
 
+    [SerializeField] private ParticleSystem collisionParticlesPrefab;
     private int _lastTouchedBy;
 
-    public int GetLastTouchedBy() { return  _lastTouchedBy; }
+    public int GetLastTouchedBy() { return _lastTouchedBy; }
 
-    public void SetLastTouchedBy(int lastTouchedIndex) {  _lastTouchedBy = lastTouchedIndex; } 
+    public void SetLastTouchedBy(int lastTouchedIndex) { _lastTouchedBy = lastTouchedIndex; }
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -36,7 +37,6 @@ public class Ball : AttributesSync {
     public void ResetPosition() {
         _rigidbody.position = Vector3.zero;
         _rigidbody.velocity = Vector3.zero;
-
     }
     public void AddStartingForce() {
         float x = Random.value < 0.5f ? -1.0f : 1.0f;
@@ -66,7 +66,11 @@ public class Ball : AttributesSync {
     private void OnCollisionEnter2D(Collision2D collision) {
         var collisionGO = collision.gameObject;
         TweenBall();
-        GetComponentInChildren<ParticleSystem>().Play();
+        Quaternion rotation = Quaternion.FromToRotation(Vector2.right, collision.contacts[0].normal);
+
+        ParticleSystem collisionParticles = GetComponentInChildren<ParticleSystem>();
+        collisionParticles.transform.SetPositionAndRotation(collision.contacts[0].point, rotation);
+        collisionParticles.Play();
 
         if (_bounceAudioManager == null) {
             return;
@@ -78,7 +82,6 @@ public class Ball : AttributesSync {
             _lastTouchedBy = collisionGO.GetComponent<Paddle>().id;
             _bounceAudioManager.OnPaddleBounce();
         }
- 
     }
 
     private void TweenBall() {

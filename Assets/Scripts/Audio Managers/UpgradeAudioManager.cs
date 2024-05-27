@@ -46,7 +46,10 @@ public class UpgradeAudioManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.L)) {
+            //_audioSource.pitch = Random.Range(0.8f, 1.2f);
+            _audioSource.Play();
+        }
     }
 
     public void OnCollectUpgrade(Upgrade upgrade) {
@@ -111,6 +114,7 @@ public class UpgradeAudioManager : MonoBehaviour
             return;
         int randIndex = Random.Range(0, sounds.Count);
         _audioSource.clip = sounds[randIndex];
+        _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
     }
 }

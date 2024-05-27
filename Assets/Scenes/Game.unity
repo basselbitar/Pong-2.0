@@ -2784,8 +2784,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9828ebd5d45f2e64180de4298733d02c, type: 3}
   fasterSounds: []
   slowerSounds: []
-  bonusLifeSounds: []
-  flipControlsSounds: []
+  bonusLifeSounds:
+  - {fileID: 8300000, guid: ebe127b548776fa4fb57b499e5c7d472, type: 3}
+  flipControlsSounds:
+  - {fileID: 8300000, guid: 303513e3b72b79d459e10579535bdd33, type: 3}
   windSounds: []
   splitBallSounds: []
 --- !u!82 &682478558
