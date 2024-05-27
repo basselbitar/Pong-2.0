@@ -1,13 +1,15 @@
 using Alteruna;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class TweenUIManager : MonoBehaviour
 {
 
     [SerializeField]
-    GameObject BigPanel, PlayButton, OptionsButton, QuitButton, volumeSlider,
-    vibrToggle, BackButton, BackPanel, MainMenuPanel, OptionsPanel;
+    GameObject BigPanel, PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider,
+    BackButton, BackPanel, MainMenuPanel, OptionsPanel;
 
     // Room List Panel
     [SerializeField]
@@ -33,8 +35,9 @@ public class TweenUIManager : MonoBehaviour
     void Awake()
     {
         MainMenuPanel.SetActive(true);
+        InitializeVolumeSliders();
         Deactivate(OptionsPanel, RoomListPanel, WaitingForPlayerPanel, PaddleSelectorPanel, GameOverPanel);
-        SetScaleToZero(PlayButton, OptionsButton, QuitButton, volumeSlider, vibrToggle, BackButton, BackPanel,
+        SetScaleToZero(PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
             PSP_Options, PSP_InRoomText, PSP_ReadyButton, PSP_BackButton, GOP_WinLoseText, GOP_RematchButton, GOP_BackButton);
 
@@ -44,6 +47,12 @@ public class TweenUIManager : MonoBehaviour
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
         //_multiplayer.OnRoomJoined.AddListener(JoinedRoom);
+    }
+
+    void InitializeVolumeSliders() {
+        MusicSlider.GetComponent<UnityEngine.UI.Slider>().value = PlayerPrefs.GetFloat("musicVolume");
+        SFXSlider.GetComponent<UnityEngine.UI.Slider>().value = PlayerPrefs.GetFloat("bounceVolume");
+        UpgradeSlider.GetComponent<UnityEngine.UI.Slider>().value = PlayerPrefs.GetFloat("upgradeVolume");
     }
 
     // utility
@@ -75,9 +84,10 @@ public class TweenUIManager : MonoBehaviour
 
     public void BackFromOptions()
     {
-        LeanTween.scale(volumeSlider, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
-        LeanTween.scale(vibrToggle, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
-        LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART).setOnComplete(DeactivateOptionsPanel);
+        LeanTween.scale(MusicSlider, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
+        LeanTween.scale(SFXSlider, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
+        LeanTween.scale(UpgradeSlider, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
+        LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART).setOnComplete(DeactivateOptionsPanel);
         ShowMainMenuButtons();
     }
 
@@ -106,7 +116,10 @@ public class TweenUIManager : MonoBehaviour
         OptionsPanel.SetActive(false);
     }
 
-
+    public void Rematch() {
+        HideGameOverButtons();
+        ShowPaddleSelectorButtons();
+    }
     void PlayGame()
     {
         HidePaddleSelectorButtons();
@@ -156,9 +169,10 @@ public class TweenUIManager : MonoBehaviour
     void ShowOptionsButtons() {
         HideMainMenuButtons();
         OptionsPanel.SetActive(true);
-        LeanTween.scale(volumeSlider, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(vibrToggle, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(BackButton, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(MusicSlider, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(SFXSlider, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(UpgradeSlider, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
     }
 
     void ShowRoomListButtons() {
@@ -179,7 +193,7 @@ public class TweenUIManager : MonoBehaviour
 
     }
 
-    void ShowPaddleSelectorButtons() {
+    public void ShowPaddleSelectorButtons() {
         HideRoomListButtons();
         HideWaitingForPlayerButtons();
         PaddleSelectorPanel.SetActive(true);
@@ -244,7 +258,7 @@ public class TweenUIManager : MonoBehaviour
         LeanTween.scale(GOP_WinLoseText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(GOP_RematchButton, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
         LeanTween.scale(GOP_BackButton, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART)
-            .setOnComplete(DisablePaddleSelector);
+            .setOnComplete(DisableGameOver);
     }
 
     // When joining a room, it might be empty or it might have one player waiting

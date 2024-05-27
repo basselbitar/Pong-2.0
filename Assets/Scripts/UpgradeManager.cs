@@ -113,19 +113,19 @@ public class UpgradeManager : MonoBehaviour {
         if (!_gameManager.IsGamePlaying())
             return;
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            upgradeIndex = 16;
+            upgradeIndex = 0;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            upgradeIndex = 3;
+            upgradeIndex = 1;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            upgradeIndex = 7;
+            upgradeIndex = 2;
         }
         if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            upgradeIndex = 11;
+            upgradeIndex = 3;
         }
         if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            upgradeIndex = 12;
+            upgradeIndex = 4;
         }
         if (Input.GetKeyDown(KeyCode.Alpha6)) {
             upgradeIndex = 5;

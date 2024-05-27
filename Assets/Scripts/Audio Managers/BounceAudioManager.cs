@@ -9,6 +9,8 @@ public class BounceAudioManager : MonoBehaviour
     [SerializeField]
     private List<AudioClip> paddleBounces;
 
+    private float _bounceVolume;
+
     private AudioSource _audioSource;
     void Start()
     {
@@ -28,7 +30,14 @@ public class BounceAudioManager : MonoBehaviour
     public void OnPaddleBounce() {
         int randIndex = Random.Range(0, paddleBounces.Count);
         //Debug.LogError("Playing paddle bounce number: " + randIndex);
+        _audioSource.volume = _bounceVolume;
         _audioSource.clip = paddleBounces[randIndex];
+        _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
+    }
+
+    public void SetBounceVolume(float volume) {
+        _bounceVolume = volume;
+        PlayerPrefs.SetFloat("bounceVolume", _bounceVolume);
     }
 }

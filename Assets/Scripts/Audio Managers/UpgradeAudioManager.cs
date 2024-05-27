@@ -29,6 +29,8 @@ public class UpgradeAudioManager : MonoBehaviour
     private float timeOfLastSound;
     private float threshold;
 
+    private float _upgradeVolume;
+
     private AudioSource _audioSource;
 
 
@@ -114,7 +116,14 @@ public class UpgradeAudioManager : MonoBehaviour
             return;
         int randIndex = Random.Range(0, sounds.Count);
         _audioSource.clip = sounds[randIndex];
+        _audioSource.volume = _upgradeVolume;
         _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
+    }
+
+    public void SetUpgradeVolume(float volume) {
+        _upgradeVolume = volume;
+        PlayerPrefs.SetFloat("upgradeVolume", _upgradeVolume);
+
     }
 }
