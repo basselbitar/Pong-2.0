@@ -51,11 +51,8 @@ public class TweenUIManager : MonoBehaviour
 
     void InitializeVolumeSliders() {
         float musicVolume = PlayerPrefs.GetFloat("musicVolume");
-        Debug.Log(musicVolume);
         float sfxVolume = PlayerPrefs.GetFloat("sfxVolume");
-        Debug.Log(sfxVolume);
         float upgradeVolume = PlayerPrefs.GetFloat("upgradeVolume");
-        Debug.Log(upgradeVolume);
 
         MusicSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(musicVolume);
         SFXSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(sfxVolume);

@@ -19,6 +19,8 @@ public class Ball : AttributesSync {
     [SerializeField] private ParticleSystem collisionParticlesPrefab;
     private int _lastTouchedBy;
 
+    private TrailRenderer _trailRenderer;
+
     public int GetLastTouchedBy() { return _lastTouchedBy; }
 
     public void SetLastTouchedBy(int lastTouchedIndex) { _lastTouchedBy = lastTouchedIndex; }
@@ -28,6 +30,7 @@ public class Ball : AttributesSync {
         //_its = GetComponent<InterpolationTransformSynchronizable>();
         _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
         _bounceAudioManager = FindObjectOfType<BounceAudioManager>();
+        _trailRenderer = GetComponent<TrailRenderer>();
     }
 
     private void Start() {
@@ -60,6 +63,12 @@ public class Ball : AttributesSync {
     public void Update() {
         if (Mathf.Abs(_rigidbody.velocity.x) < _minVelocityXThreshold) {
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x * 1.05f, _rigidbody.velocity.y);
+        }
+
+        if(Mathf.Abs(_rigidbody.velocity.x) + Mathf.Abs(_rigidbody.velocity.y) > 12f) {
+            _trailRenderer.enabled = true;
+        } else {
+            _trailRenderer.enabled = false;
         }
     }
 
