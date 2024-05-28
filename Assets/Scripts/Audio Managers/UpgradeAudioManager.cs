@@ -125,5 +125,8 @@ public class UpgradeAudioManager : MonoBehaviour
         _upgradeVolume = volume;
         PlayerPrefs.SetFloat("upgradeVolume", _upgradeVolume);
 
+        //play a sound for the user
+        UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
+        uIAudioManager.PlayPlingSound(_upgradeVolume);
     }
 }

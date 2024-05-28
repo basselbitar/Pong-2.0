@@ -50,9 +50,16 @@ public class TweenUIManager : MonoBehaviour
     }
 
     void InitializeVolumeSliders() {
-        MusicSlider.GetComponent<UnityEngine.UI.Slider>().value = PlayerPrefs.GetFloat("musicVolume");
-        SFXSlider.GetComponent<UnityEngine.UI.Slider>().value = PlayerPrefs.GetFloat("bounceVolume");
-        UpgradeSlider.GetComponent<UnityEngine.UI.Slider>().value = PlayerPrefs.GetFloat("upgradeVolume");
+        float musicVolume = PlayerPrefs.GetFloat("musicVolume");
+        Debug.Log(musicVolume);
+        float sfxVolume = PlayerPrefs.GetFloat("sfxVolume");
+        Debug.Log(sfxVolume);
+        float upgradeVolume = PlayerPrefs.GetFloat("upgradeVolume");
+        Debug.Log(upgradeVolume);
+
+        MusicSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(musicVolume);
+        SFXSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(sfxVolume);
+        UpgradeSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(upgradeVolume);
     }
 
     // utility
@@ -129,9 +136,6 @@ public class TweenUIManager : MonoBehaviour
         //TODO: Start the game
     }
 
-
-   
-
     void DisableMainMenu()
     {
         MainMenuPanel.SetActive(false);
@@ -169,6 +173,7 @@ public class TweenUIManager : MonoBehaviour
     void ShowOptionsButtons() {
         HideMainMenuButtons();
         OptionsPanel.SetActive(true);
+        
         LeanTween.scale(MusicSlider, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(SFXSlider, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(UpgradeSlider, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
@@ -297,19 +302,17 @@ public class TweenUIManager : MonoBehaviour
 
 
     public void ActivateGameOverPanel(int winnerIndex) {
-        //DeactivatePanels();
-        Debug.LogError("Game is over");
-        ShowBigPanel();
-        ShowGameOverButtons();
         if (winnerIndex == _multiplayer.Me.Index) {
             GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Win!";
-            Debug.LogError("You win");
-
+            FindObjectOfType<UIAudioManager>().PlayYouWinSound();
         }
         else {
             GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Lose!";
-            Debug.LogError("You lose");
+            FindObjectOfType<UIAudioManager>().PlayYouLoseSound();
 
         }
+        Invoke(nameof(ShowBigPanel), 0.5f);
+        Invoke(nameof(ShowGameOverButtons), 0.7f);
     }
+
 }

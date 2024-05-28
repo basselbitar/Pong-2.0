@@ -17,6 +17,8 @@ public class BounceAudioManager : MonoBehaviour
         if(!TryGetComponent<AudioSource>(out _audioSource)) {
             _audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        _bounceVolume = PlayerPrefs.GetFloat("sfxVolume");
     }
 
 
@@ -38,6 +40,10 @@ public class BounceAudioManager : MonoBehaviour
 
     public void SetBounceVolume(float volume) {
         _bounceVolume = volume;
-        PlayerPrefs.SetFloat("bounceVolume", _bounceVolume);
+        PlayerPrefs.SetFloat("sfxVolume", _bounceVolume);
+
+        //play a sound for the user
+        UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
+        uIAudioManager.PlayPlingSound(_bounceVolume);
     }
 }

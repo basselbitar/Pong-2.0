@@ -18,6 +18,7 @@ public class MusicAudioManager : MonoBehaviour {
         if (!TryGetComponent<AudioSource>(out _audioSource)) {
             _audioSource = gameObject.AddComponent<AudioSource>();
         }
+        _musicVolume = PlayerPrefs.GetFloat("musicVolume");
     }
 
     void Update() {
@@ -29,6 +30,7 @@ public class MusicAudioManager : MonoBehaviour {
             return;
         int randIndex = Random.Range(0, songs.Count);
         _audioSource.clip = songs[randIndex];
+        _audioSource.volume = _musicVolume;
         _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
     }
@@ -36,5 +38,9 @@ public class MusicAudioManager : MonoBehaviour {
     public void SetMusicVolume(float volume) {
         _musicVolume = volume;
         PlayerPrefs.SetFloat("musicVolume", _musicVolume);
+
+        //play a sound for the user
+        UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
+        uIAudioManager.PlayPlingSound(_musicVolume);
     }
 }
