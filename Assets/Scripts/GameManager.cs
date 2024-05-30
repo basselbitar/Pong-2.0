@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour {
         if (!IsHostAndReadyToPlay()) {
             return;
         }
-
         if (!_initialValuesAssigned) {
             AssignInitialValues();
         }
@@ -98,12 +97,18 @@ public class GameManager : MonoBehaviour {
     private bool IsHostAndReadyToPlay() {
         //only the host should manage the game
         if (!AmITheHost()) {
+            Debug.Log("I'm not the host");
             return false;
         }
 
         if (_multiplayer.CurrentRoom.Users.Count < 2) {
-            DestroyRemainingBalls();
-            DestroyRemainingUpgrades();
+            if (_gameStarted) {
+                ResetGame();
+            }
+            else {
+                DestroyRemainingBalls();
+                DestroyRemainingUpgrades();
+            }
             return false;
         }
 
@@ -119,8 +124,7 @@ public class GameManager : MonoBehaviour {
 
         // when game finishes, reset players Readiness
         if (_gameFinished) {
-            DestroyRemainingBalls();
-            DestroyRemainingUpgrades();
+
             ResetGame();
             return false;
         }
@@ -176,7 +180,7 @@ public class GameManager : MonoBehaviour {
     private void SetPaddleValues(Paddle p, int paddleTypeIndex) {
         int defaultLives = 3;
         float defaultSpeed = 10f;
-        float defaultLength = 0.1429687f;
+        float defaultLength = 0.3f;
 
         p.startingSpeed = defaultSpeed;
         p.startingLives = defaultLives;
@@ -199,7 +203,7 @@ public class GameManager : MonoBehaviour {
                 Debug.LogError("Unknown paddle selected!");
                 break;
         }
-        p.BroadcastRemoteMethod("ModifyLength");
+        p.BroadcastRemoteMethod(nameof(p.ModifyLength));
         p.speed = p.startingSpeed;
     }
 
@@ -207,8 +211,8 @@ public class GameManager : MonoBehaviour {
         _p1Score = p1Paddle.startingLives;
         _p2Score = p2Paddle.startingLives;
 
-        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
-        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP1Score), _p1Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP2Score), _p2Score);
     }
 
     private IEnumerator ResetRound() {
@@ -238,11 +242,15 @@ public class GameManager : MonoBehaviour {
     }
 
     private void ResetGame() {
+        DestroyRemainingBalls();
+        DestroyRemainingUpgrades();
         _gameStarted = false;
         _gameFinished = false;
         _initialValuesAssigned = false;
         p1Paddle.SetReady(false);
         p2Paddle.SetReady(false);
+        p1Paddle = null;
+        p2Paddle = null;
     }
 
     public Paddle GetPaddle1() { return p1Paddle; }
@@ -261,6 +269,17 @@ public class GameManager : MonoBehaviour {
 
     public bool IsGamePlaying() {
         return _gameStarted && !_gameFinished;
+    }
+
+    public void SetGameFinished(bool gameFinished) {
+        _gameFinished = gameFinished;
+    }
+
+    public void OnLeaveRoom() {
+        if (!AmITheHost()) {
+            return;
+        }
+        ResetGame();
     }
 }
 

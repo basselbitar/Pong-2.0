@@ -39,7 +39,7 @@ public class Paddle : AttributesSync {
 
         //debug code
         if (debug) {
-            length = 0.2f;
+            length = 0.3f;
             transform.localScale = new Vector3(transform.localScale.x, length, 1f);
         }
 
@@ -167,15 +167,15 @@ public class Paddle : AttributesSync {
 
     private void TweenPaddle() {
         LeanTween.cancel(gameObject);
-        transform.localScale = new(0.01187452f, length, 1f);
+        transform.localScale = new(0.2f, length, 1f);
 
         LeanTween.scale(gameObject, new(0, 0, 0), 0.3f).setEaseInBack().setOnComplete(() => {
             _rigidbody.position = new Vector2(_rigidbody.position.x, 0.0f);
             _rigidbody.velocity = Vector2.zero;
 
-            LeanTween.scale(gameObject, new(0.01187452f, length, 1f), 0.3f).setEaseInBack().setOnComplete(() => {
+            LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.3f).setEaseInBack().setOnComplete(() => {
                 //transform.localScale = new(0.01187452f, length, 1f);
-                LeanTween.scale(gameObject, new(0.02f, length * 1.3f, 1f), tweenTime).setEasePunch();
+                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), tweenTime).setEasePunch();
             });
         });
 
