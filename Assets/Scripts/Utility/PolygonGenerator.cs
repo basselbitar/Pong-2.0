@@ -6,21 +6,24 @@ public class PolygonGenerator : MonoBehaviour {
     #region setup
     //mesh properties
     Mesh mesh;
-    public Vector3[] polygonPoints;
-    public int[] polygonTriangles;
+    private Vector3[] polygonPoints;
+    private int[] polygonTriangles;
 
     //polygon properties
-    public bool isFilled;
-    public int polygonSides;
-    public float polygonRadius;
-    public float centerRadius;
+    private bool isFilled = false;
+    private int polygonSides = 35;
+    private float polygonRadius = 0.6f;
+    private float centerRadius = 0.5f;
+
+    [SerializeField]
+    private Material[] materials;
+    [SerializeField]
+    private MeshRenderer _meshRenderer;
 
     void Start() {
         mesh = new Mesh();
         this.GetComponent<MeshFilter>().mesh = mesh;
-    }
 
-    void Update() {
         if (isFilled) {
             DrawFilled(polygonSides, polygonRadius);
         }
@@ -28,6 +31,20 @@ public class PolygonGenerator : MonoBehaviour {
             DrawHollow(polygonSides, polygonRadius, centerRadius);
         }
     }
+
+    //0 for green, 1 for red, 2 for neutral
+    public void ColorMaterial(int index) {
+        _meshRenderer.material = materials[index];
+    }
+
+    //void Update() {
+    //    if (isFilled) {
+    //        DrawFilled(polygonSides, polygonRadius);
+    //    }
+    //    else {
+    //        DrawHollow(polygonSides, polygonRadius, centerRadius);
+    //    }
+    //}
     #endregion
 
     void DrawFilled(int sides, float radius) {

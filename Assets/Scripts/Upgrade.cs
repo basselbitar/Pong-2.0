@@ -10,6 +10,8 @@ public class Upgrade : AttributesSync
     private UpgradeData _data;
     private UpgradeManager _upgradeManager;
 
+    [SerializeField]
+    private PolygonGenerator _polygonGenerator;
 
     void Awake()
     {
@@ -18,20 +20,23 @@ public class Upgrade : AttributesSync
 
     [SynchronizableMethod]
     public void ColorUpgrade() {
-        Color color;
+        //Color color;
         if (_data.GetUpgradeType() == UpgradeData.Type.Buff) {
-            color = new Color(0.36f, 0.75f, 0.4f); //green
+            //color = new Color(0.36f, 0.75f, 0.4f); //green
+            _polygonGenerator.ColorMaterial(0);
         }
         else if (_data.GetUpgradeType() == UpgradeData.Type.Nerf) {
-            color = new Color(0.75f, 0.2f, 0.2f); //red
+            //color = new Color(0.75f, 0.2f, 0.2f); //red
+            _polygonGenerator.ColorMaterial(1);
         }
         else {
-            color = new Color(0.75f, 0.65f, 0.2f);
+            //color = new Color(0.75f, 0.65f, 0.2f);
+            _polygonGenerator.ColorMaterial(2);
         }
         //Debug.LogError("Trying to set the icon: " + _data.GetIconIndex());
         //Debug.LogError("Found as: " + _upgradeManager.upgradeIcons[_data.GetIconIndex()]);
         GetComponent<SpriteRenderer>().sprite = _upgradeManager.upgradeIcons[_data.GetIconIndex()];
-        GetComponent<SpriteRenderer>().color = color;
+        //GetComponent<SpriteRenderer>().color = color;
     }
 
     [SynchronizableMethod]

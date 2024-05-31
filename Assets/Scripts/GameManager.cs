@@ -97,7 +97,6 @@ public class GameManager : MonoBehaviour {
     private bool IsHostAndReadyToPlay() {
         //only the host should manage the game
         if (!AmITheHost()) {
-            Debug.Log("I'm not the host");
             return false;
         }
 

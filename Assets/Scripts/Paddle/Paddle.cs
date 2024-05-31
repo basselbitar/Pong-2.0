@@ -40,7 +40,6 @@ public class Paddle : AttributesSync {
 
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
-
         //debug code
         if (debug) {
             length = 0.3f;
@@ -84,7 +83,7 @@ public class Paddle : AttributesSync {
         }
 
         if (this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
-            this.BroadcastRemoteMethod("ResetPosition");
+            this.BroadcastRemoteMethod(nameof(ResetPosition));
         }
 
     }
@@ -111,9 +110,15 @@ public class Paddle : AttributesSync {
     private int GetSkinIndex() {
 
         if (isInvertedControls) {
-            Debug.LogError("Skin index is 1");
             return 1;
         }
+
+        if(speed > startingSpeed * 1.01) {
+            return 2;
+        } else if(speed < startingSpeed * 0.99) {
+            return 3;
+        }
+
         return 0;
     }
 
