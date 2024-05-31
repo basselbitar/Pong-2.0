@@ -20,10 +20,10 @@ public class Upgrade : AttributesSync
     public void ColorUpgrade() {
         Color color;
         if (_data.GetUpgradeType() == UpgradeData.Type.Buff) {
-            color = new Color(0.36f, 0.75f, 0.4f);
+            color = new Color(0.36f, 0.75f, 0.4f); //green
         }
         else if (_data.GetUpgradeType() == UpgradeData.Type.Nerf) {
-            color = new Color(0.75f, 0.2f, 0.2f);
+            color = new Color(0.75f, 0.2f, 0.2f); //red
         }
         else {
             color = new Color(0.75f, 0.65f, 0.2f);

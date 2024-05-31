@@ -112,6 +112,11 @@ MonoBehaviour:
   isInvertedControls: 0
   id: 0
   debug: 0
+  skins:
+  - {fileID: 21300000, guid: 96654100995c27b4997f262359492050, type: 3}
+  - {fileID: 21300000, guid: 33575580ddba5844fb7471b892327dad, type: 3}
+  - {fileID: 21300000, guid: cfa41a636d0cf1449ac36c59a69ccc6d, type: 3}
+  - {fileID: 21300000, guid: 901b7087ce10fcc44af672b3bc31f665, type: 3}
 --- !u!50 &5237842685977034883
 Rigidbody2D:
   serializedVersion: 4

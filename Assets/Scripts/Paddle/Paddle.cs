@@ -34,6 +34,10 @@ public class Paddle : AttributesSync {
 
     public bool debug = false;
 
+    [SerializeField]
+    private Sprite[] skins;
+    private int currentSkinIndex;
+
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
 
@@ -58,12 +62,16 @@ public class Paddle : AttributesSync {
             return;
         }
 
-        handleInputs();
+        HandleInputs();
 
+        int skinIndex = GetSkinIndex();
 
+        if(skinIndex != currentSkinIndex) {
+            currentSkinIndex = skinIndex;
+        this.BroadcastRemoteMethod(nameof(ModifySkin), skinIndex);
+        }
 
         //transform.localScale = new Vector3(transform.localScale.x, length, 1f);
-
     }
 
     private void FixedUpdate() {
@@ -88,7 +96,7 @@ public class Paddle : AttributesSync {
         //id = _multiplayer.Me.Index;
     }
 
-    private void handleInputs() {
+    private void HandleInputs() {
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
             _direction = isInvertedControls ? Vector2.down : Vector2.up;
         }
@@ -99,6 +107,17 @@ public class Paddle : AttributesSync {
             _direction = Vector2.zero;
         }
     }
+
+    private int GetSkinIndex() {
+
+        if (isInvertedControls) {
+            Debug.LogError("Skin index is 1");
+            return 1;
+        }
+        return 0;
+    }
+
+
 
     public void OnCollisionEnter2D(Collision2D collision) {
         if (collision.collider.CompareTag("Ball")) {
@@ -142,7 +161,12 @@ public class Paddle : AttributesSync {
         if (!_avatar.IsMe) {
             return;
         }
-        LeanTween.scale(gameObject, new(0.01187452f, length, 1f), 0.6f).setEaseInBack();
+        LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.6f).setEaseInBack();
+    }
+
+    [SynchronizableMethod]
+    public void ModifySkin(int index) {
+        GetComponent<SpriteRenderer>().sprite = skins[index];
     }
 
     public bool IsReady() {

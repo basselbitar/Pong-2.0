@@ -171,9 +171,9 @@ public class UpgradeManager : MonoBehaviour {
         //UpgradeData upgradeData = upgrades[Random.Range(0, upgrades.Count)]; //TODO: make upgrades not equally probably from each other
         UpgradeData upgradeData = upgrades[upgradeIndex]; //TODO: make upgrades not equally probably from each other
 
-        upgrade.BroadcastRemoteMethod("SetData", upgradeData);
+        upgrade.BroadcastRemoteMethod(nameof(upgrade.SetData), upgradeData);
 
-        upgrade.BroadcastRemoteMethod("ColorUpgrade");
+        upgrade.BroadcastRemoteMethod(nameof(upgrade.ColorUpgrade));
     }
 
     public int GenerateRandomUpgradeIndex() {
@@ -339,7 +339,7 @@ public class UpgradeManager : MonoBehaviour {
 
         p.length *= amount;
         p1Paddle.BroadcastRemoteMethod(nameof(Paddle.ModifyLength));
-        p2Paddle.BroadcastRemoteMethod("ModifyLength");
+        p2Paddle.BroadcastRemoteMethod(nameof(p2Paddle.ModifyLength));
     }
 
     public void ModifySpeed(Paddle p, float amount) {
