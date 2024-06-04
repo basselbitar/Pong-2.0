@@ -63,6 +63,9 @@ public class Ball : AttributesSync {
     public void Update() {
         if (Mathf.Abs(_rigidbody.velocity.x) < _minVelocityXThreshold) {
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x * 1.05f, _rigidbody.velocity.y);
+            if(_rigidbody.velocity.x == 0) {
+                _rigidbody.velocity = new Vector2(0.05f, _rigidbody.velocity.y);
+            }
         }
 
         if(Mathf.Abs(_rigidbody.velocity.x) + Mathf.Abs(_rigidbody.velocity.y) > 12f) {

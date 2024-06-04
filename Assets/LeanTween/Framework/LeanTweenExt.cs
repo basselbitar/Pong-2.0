@@ -35,9 +35,9 @@ public static class LeanTweenExt
     public static bool LeanIsPaused(this GameObject gameObject) { return LeanTween.isPaused(gameObject); }
     public static bool LeanIsPaused(this RectTransform rectTransform) { return LeanTween.isPaused(rectTransform); }
 
-    //LeanTween.isTweening
+    //LeanTween._isTweening
     public static bool LeanIsTweening(this GameObject gameObject) { return LeanTween.isTweening(gameObject); }
-    //LeanTween.isTweening
+    //LeanTween._isTweening
     //LeanTween.move
     public static LTDescr LeanMove(this GameObject gameObject, Vector3 to, float time) { return LeanTween.move(gameObject, to, time); }
     public static LTDescr LeanMove(this Transform transform, Vector3 to, float time) { return LeanTween.move(transform.gameObject, to, time); }

@@ -38,6 +38,7 @@ public class Paddle : AttributesSync {
     private Sprite[] skins;
     private int currentSkinIndex;
 
+    private bool _isTweening;
     void Start() {
         _avatar = GetComponent<Alteruna.Avatar>();
         //debug code
@@ -52,24 +53,15 @@ public class Paddle : AttributesSync {
     }
 
     void Update() {
+        if (!_avatar.IsMe && !debug) {
+            return;
+        }
 
         if (Input.GetKeyUp(KeyCode.T)) {
             TweenPaddle();
         }
 
-        if (!_avatar.IsMe && !debug) {
-            return;
-        }
-
         HandleInputs();
-
-        int skinIndex = GetSkinIndex();
-
-        if(skinIndex != currentSkinIndex) {
-            currentSkinIndex = skinIndex;
-        this.BroadcastRemoteMethod(nameof(ModifySkin), skinIndex);
-        }
-
         //transform.localScale = new Vector3(transform.localScale.x, length, 1f);
     }
 
@@ -83,9 +75,17 @@ public class Paddle : AttributesSync {
         }
 
         if (this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
-            this.BroadcastRemoteMethod(nameof(ResetPosition));
+            Debug.Log("Out of bounds paddle");
+            if (!this._isTweening) {
+                this.BroadcastRemoteMethod(nameof(ResetPosition));
+            }
         }
 
+        int skinIndex = GetSkinIndex();
+        if (skinIndex != currentSkinIndex) {
+            currentSkinIndex = skinIndex;
+            this.BroadcastRemoteMethod(nameof(ModifySkin), skinIndex);
+        }
     }
 
     private void Initialize() {
@@ -113,9 +113,14 @@ public class Paddle : AttributesSync {
             return 1;
         }
 
-        if(speed > startingSpeed * 1.01) {
+        //check if game hasn't started yet, stick to default skin
+        if (startingSpeed == 0 ) {
+            return 0;
+        }
+        if (speed > startingSpeed * 1.01) {
             return 2;
-        } else if(speed < startingSpeed * 0.99) {
+        }
+        else if (speed < startingSpeed * 0.99) {
             return 3;
         }
 
@@ -158,7 +163,9 @@ public class Paddle : AttributesSync {
         if (_rigidbody == null) {
             Initialize();
         }
-        TweenPaddle();
+        if (!_isTweening) {
+            TweenPaddle();
+        }
     }
 
     [SynchronizableMethod]
@@ -195,6 +202,7 @@ public class Paddle : AttributesSync {
     }
 
     private void TweenPaddle() {
+        _isTweening = true;
         LeanTween.cancel(gameObject);
         transform.localScale = new(0.2f, length, 1f);
 
@@ -204,7 +212,7 @@ public class Paddle : AttributesSync {
 
             LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.3f).setEaseInBack().setOnComplete(() => {
                 //transform.localScale = new(0.01187452f, length, 1f);
-                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), tweenTime).setEasePunch();
+                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), tweenTime).setEasePunch().setOnComplete(() => { _isTweening = false; });
             });
         });
 

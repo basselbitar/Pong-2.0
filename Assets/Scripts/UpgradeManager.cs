@@ -36,12 +36,15 @@ public class UpgradeManager : MonoBehaviour {
     private UpgradeAudioManager _upgradeAudioManager;
     private Ball[] _balls;
 
+    private bool _debugMode;
+
     void Start() {
         upgradeIndex = 0;
         PopulateUpgrades();
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
         _upgradeAudioManager = FindObjectOfType<UpgradeAudioManager>();
+        _debugMode = true;
     }
 
     private void FixedUpdate() {
@@ -155,7 +158,7 @@ public class UpgradeManager : MonoBehaviour {
     public void CheckSpawnUpgrade() {
         timeSinceLastSpawnedUpgrade += Time.deltaTime;
 
-        if (timeSinceLastSpawnedUpgrade >= spawnUpgradeThreshold) {
+        if (timeSinceLastSpawnedUpgrade >= spawnUpgradeThreshold && !_debugMode) {
             //randomize and announce an index
             upgradeIndex = GenerateRandomUpgradeIndex();
             SpawnUpgrade();
@@ -164,7 +167,10 @@ public class UpgradeManager : MonoBehaviour {
     }
 
     public void SpawnUpgrade() {
-        Vector3 pos = new(Random.Range(MIN_X, MAX_X), Random.Range(MIN_Y, MAX_Y), 0f);
+
+        float xCoord = _debugMode ? 0 : Random.Range(MIN_X, MAX_X);
+        float yCoord = Random.Range(MIN_Y, MAX_Y);
+        Vector3 pos = new(xCoord, yCoord, 0f);
         GameObject upgradeGO = _spawner.Spawn(1, pos, Quaternion.identity, new Vector3(1f, 1f, 1f));
 
         Upgrade upgrade = upgradeGO.GetComponent<Upgrade>();
@@ -352,14 +358,9 @@ public class UpgradeManager : MonoBehaviour {
 
     public void SetWind(Paddle p, int windsActiveCount) {
         windEffect.SetActive(true);
-        if (p == p1Paddle) {
-            windDirection = 1;
-        }
-        else {
-            windDirection = -1;
-        }
-        p1Paddle.BroadcastRemoteMethod("BlowWind", windDirection == 1);
-        p2Paddle.BroadcastRemoteMethod("BlowWind", windDirection == 1);
+        windDirection = p.transform.position.x < 0 ? 1 : -1;
+        p1Paddle.BroadcastRemoteMethod(nameof(p1Paddle.BlowWind), windDirection == 1);
+        p2Paddle.BroadcastRemoteMethod(nameof(p2Paddle.BlowWind), windDirection == 1);
     }
 
     public void SplitBall(Ball ball) {

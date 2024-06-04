@@ -866,7 +866,7 @@ public class LeanTween : MonoBehaviour {
     /**
     * <summary>Test whether or not a tween is active on a GameObject</summary>
     * 
-    * @method LeanTween.isTweening
+    * @method LeanTween._isTweening
     * @param {GameObject} gameObject:GameObject GameObject that you want to test if it is tweening
     */
     public static bool isTweening( GameObject gameObject = null ){
@@ -892,11 +892,11 @@ public class LeanTween : MonoBehaviour {
     /**
     * <summary>Test whether or not a tween is active or not</summary>
     * 
-    * @method LeanTween.isTweening
+    * @method LeanTween._isTweening
     * @param {GameObject} id:int id of the tween that you want to test if it is tweening
     * @example
     * int id = LeanTween.moveX(gameObject, 1f, 3f).id;<br />
-    * if(LeanTween.isTweening( id ))<br />
+    * if(LeanTween._isTweening( id ))<br />
     * &#160;&#160; &#160;&#160;Debug.Log("I am tweening!");<br />
     */  
     public static bool isTweening( int uniqueId ){

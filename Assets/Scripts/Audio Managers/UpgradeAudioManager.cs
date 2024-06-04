@@ -43,6 +43,7 @@ public class UpgradeAudioManager : MonoBehaviour
         if (!TryGetComponent<AudioSource>(out _audioSource)) {
             _audioSource = gameObject.AddComponent<AudioSource>();
         }
+        _upgradeVolume = PlayerPrefs.GetFloat("upgradeVolume");
     }
 
     // Update is called once per frame
