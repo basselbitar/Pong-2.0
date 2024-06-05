@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour {
         foreach (var upgrade in remainingUpgrades) {
             upgrade.DestroyUpgrade();
         }
+        FindObjectOfType<UpgradeManager>().spawnedUpgrades = new List<GameObject>();
     }
 
     private void InitializePaddles() {

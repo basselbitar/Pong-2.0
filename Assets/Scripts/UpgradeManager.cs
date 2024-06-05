@@ -1,7 +1,6 @@
 using Alteruna;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static UpgradeData;
 
@@ -10,6 +9,8 @@ public class UpgradeManager : MonoBehaviour {
     private GameManager _gameManager;
     public List<UpgradeData> upgrades;
     private Spawner _spawner;
+
+    public List<GameObject> spawnedUpgrades;
 
     private const float MIN_X = -5;
     private const float MIN_Y = -4;
@@ -40,6 +41,7 @@ public class UpgradeManager : MonoBehaviour {
 
     void Start() {
         upgradeIndex = 0;
+        spawnedUpgrades = new List<GameObject>();
         PopulateUpgrades();
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
@@ -168,18 +170,43 @@ public class UpgradeManager : MonoBehaviour {
 
     public void SpawnUpgrade() {
 
-        float xCoord = _debugMode ? 0 : Random.Range(MIN_X, MAX_X);
-        float yCoord = Random.Range(MIN_Y, MAX_Y);
-        Vector3 pos = new(xCoord, yCoord, 0f);
-        GameObject upgradeGO = _spawner.Spawn(1, pos, Quaternion.identity, new Vector3(1f, 1f, 1f));
+        float xCoord = 0;
+        float yCoord = 0;
+        Vector3 pos;
+        bool validPosition = false;
+        int attempts = 0;
+        while (!validPosition && attempts < 50) {
+            validPosition = true;
+            //xCoord = _debugMode ? 0 : Random.Range(MIN_X, MAX_X);
+            xCoord = Random.Range(MIN_X, MAX_X);
+            yCoord = Random.Range(MIN_Y, MAX_Y);
+            pos = new(xCoord, yCoord, 0f);
+            foreach (GameObject spawnedUpgradeGO in spawnedUpgrades) {
+                if (spawnedUpgradeGO != null) {
+                    float distance = Vector3.Distance(pos, spawnedUpgradeGO.transform.position);
+                    // if the distance is less than the sum of the radii of both upgrades, then it's an invalid position
+                    if (distance < 0.6f + 0.6f) {
+                        validPosition = false;
+                        break;
+                    }
+                }
+            }
+            attempts++;
+        }
+        if (validPosition) {
 
-        Upgrade upgrade = upgradeGO.GetComponent<Upgrade>();
-        //UpgradeData upgradeData = upgrades[Random.Range(0, upgrades.Count)]; //TODO: make upgrades not equally probably from each other
-        UpgradeData upgradeData = upgrades[upgradeIndex]; //TODO: make upgrades not equally probably from each other
+            pos = new(xCoord, yCoord, 0f);
+            GameObject upgradeGO = _spawner.Spawn(1, pos, Quaternion.identity, new Vector3(1f, 1f, 1f));
+            spawnedUpgrades.Add(upgradeGO);
 
-        upgrade.BroadcastRemoteMethod(nameof(upgrade.SetData), upgradeData);
-
-        upgrade.BroadcastRemoteMethod(nameof(upgrade.ColorUpgrade));
+            Upgrade upgrade = upgradeGO.GetComponent<Upgrade>();
+            UpgradeData upgradeData = upgrades[upgradeIndex];
+            upgrade.BroadcastRemoteMethod(nameof(upgrade.SetData), upgradeData);
+            upgrade.BroadcastRemoteMethod(nameof(upgrade.ColorUpgrade));
+        }
+        else {
+            Debug.LogError("No valid positions for the upgrade");
+        }
     }
 
     public int GenerateRandomUpgradeIndex() {
@@ -214,6 +241,8 @@ public class UpgradeManager : MonoBehaviour {
         if (p1Paddle == null || p2Paddle == null) {
             Initialize();
         }
+
+        spawnedUpgrades.Remove(upgrade.gameObject);
 
         //play the appropriate sound
         _upgradeAudioManager.OnCollectUpgrade(upgrade);
@@ -368,7 +397,7 @@ public class UpgradeManager : MonoBehaviour {
 
         float offset = ballRB.velocity.x > 0 ? -0.5f : 0.5f;
 
-        Vector3 ballPosition = ball.transform.position + new Vector3(offset, 0,0);
+        Vector3 ballPosition = ball.transform.position + new Vector3(offset, 0, 0);
         //Spawn a ball
         GameObject newBall = _spawner.Spawn(0, ballPosition, Quaternion.identity, new Vector3(0.4f, 0.4f, 1f));
         newBall.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;

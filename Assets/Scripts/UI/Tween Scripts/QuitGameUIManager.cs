@@ -37,6 +37,10 @@ public class QuitGameUIManager : MonoBehaviour {
         }
         if (panelOpen) return;
 
+        if (Input.GetKeyDown(KeyCode.Escape) && gameStarted) {
+            PanelEnable();
+        }
+
         if (Input.mousePosition.y < 0.3f * quitCanvas.rect.height && Mathf.Abs(Input.mousePosition.x - (quitCanvas.rect.width / 2f)) / quitCanvas.rect.width < 0.10f) {
             if (!enableQuitButton) {
 

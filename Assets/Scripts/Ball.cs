@@ -73,6 +73,10 @@ public class Ball : AttributesSync {
         } else {
             _trailRenderer.enabled = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.F)) {
+            _rigidbody.velocity = new Vector2(0f, 0f);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
