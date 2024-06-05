@@ -1,18 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PaddleOption : MonoBehaviour
-{
+public class GameModeOption : MonoBehaviour {
     [SerializeField]
     private int _index;
 
-    public static int selectedOption = 0;
+    public static List<int> selectedGameModes = new();
 
     [SerializeField]
     private Button _readyButton;
 
     [SerializeField]
-    private PaddleOption[] _paddleOptions;
+    private GameModeOption[] _gameModeOptions;
 
     private bool clicked;
 
@@ -21,20 +21,22 @@ public class PaddleOption : MonoBehaviour
 
     public void OnButtonClicked() {
         clicked = !clicked;
-        if(clicked) {
-            foreach (var item in _paddleOptions) {
-                item.SetClicked(false);
-                item.OnPaddleOptionDeselected();
-            }
-            clicked = true;
-            OnPaddleOptionSelected();
-        } else {
-            OnPaddleOptionDeselected();
+        if (clicked) {
+            OnGameModeSelected();
+        }
+        else {
+            OnGameModeDeselected();
         }
     }
 
-    private void OnPaddleOptionSelected() {
-        selectedOption = _index;
+    private void OnGameModeSelected() {
+
+        if (selectedGameModes.Count >= 2) {
+            _gameModeOptions[selectedGameModes[0] - 1].OnGameModeDeselected();
+            selectedGameModes.RemoveAt(0);
+        }
+
+        selectedGameModes.Add(_index);
         var colors = GetComponent<Button>().colors;
         colors.normalColor = _selectedColor;
         colors.selectedColor = _selectedColor;
@@ -42,8 +44,8 @@ public class PaddleOption : MonoBehaviour
         GetComponent<Button>().colors = colors;
     }
 
-    private void OnPaddleOptionDeselected() {
-        selectedOption = 0;
+    private void OnGameModeDeselected() {
+        selectedGameModes.Remove(_index);
         var colors = GetComponent<Button>().colors;
         colors.normalColor = _deselectedColor;
         colors.selectedColor = _deselectedColor;

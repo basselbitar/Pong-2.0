@@ -19,6 +19,10 @@ public class TweenUIManager : MonoBehaviour
     [SerializeField]
     GameObject WaitingForPlayerPanel, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton;
 
+    // Game Mode Selection Panel
+    [SerializeField]
+    GameObject GameModeSelectionPanel, GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton, GMSP_BackButton;
+
     // Paddle Selector Panel
     [SerializeField]
     GameObject PaddleSelectorPanel, PSP_Options, PSP_InRoomText, PSP_ReadyButton, PSP_BackButton;
@@ -38,9 +42,10 @@ public class TweenUIManager : MonoBehaviour
     {
         MainMenuPanel.SetActive(true);
         InitializeVolumeSliders();
-        Deactivate(OptionsPanel, RoomListPanel, WaitingForPlayerPanel, PaddleSelectorPanel, GameOverPanel);
+        Deactivate(OptionsPanel, RoomListPanel, WaitingForPlayerPanel, GameModeSelectionPanel, PaddleSelectorPanel, GameOverPanel);
         SetScaleToZero(PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
+            GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton,
             PSP_Options, PSP_InRoomText, PSP_ReadyButton, PSP_BackButton, GOP_WinLoseText, GOP_RematchButton, GOP_BackButton);
 
         StartTween();
@@ -93,7 +98,7 @@ public class TweenUIManager : MonoBehaviour
         LeanTween.scale(MusicSlider, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
         LeanTween.scale(SFXSlider, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
         LeanTween.scale(UpgradeSlider, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
-        LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART).setOnComplete(DeactivateOptionsPanel);
+        LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART).setOnComplete(DisableOptionsPanel);
         ShowMainMenuButtons();
     }
 
@@ -107,6 +112,11 @@ public class TweenUIManager : MonoBehaviour
         ShowRoomListButtons();
     }
 
+    public void BackFromGameModeSelection() {
+        HideGameModeSelectionButtons();
+        ShowRoomListButtons();
+    }
+
     public void BackFromPaddleSelector() {
         HidePaddleSelectorButtons();
         ShowRoomListButtons();
@@ -117,10 +127,7 @@ public class TweenUIManager : MonoBehaviour
         ShowRoomListButtons();
     }
 
-    void DeactivateOptionsPanel()
-    {
-        OptionsPanel.SetActive(false);
-    }
+
 
     public void Rematch() {
         HideGameOverButtons();
@@ -131,11 +138,11 @@ public class TweenUIManager : MonoBehaviour
         HidePaddleSelectorButtons();
         HideBigPanel();
         gameStarted = true; //this activates the in-game Quit button
-        //LeanTween.scale(BackPanel, Vector3.zero, 0.7f).setDelay(.3f).setEase(EASE_IN_QUART)
-        //.setOnComplete(() => { });
-        //TODO: Start the game
     }
 
+    void DisableOptionsPanel() {
+        OptionsPanel.SetActive(false);
+    }
     void DisableMainMenu()
     {
         MainMenuPanel.SetActive(false);
@@ -146,14 +153,15 @@ public class TweenUIManager : MonoBehaviour
     void DisableWaitingForPlayer() {
         WaitingForPlayerPanel.SetActive(false);
     }
+    void DisableGameModeSelection() {
+        GameModeSelectionPanel.SetActive(false);
+    }
     void DisablePaddleSelector() {
         PaddleSelectorPanel.SetActive(false);
     }
     void DisableGameOver() {
         GameOverPanel.SetActive(false);
     }
-
-
 
     // Display the Start Menu
     public void StartTween()
@@ -200,6 +208,22 @@ public class TweenUIManager : MonoBehaviour
         gameStarted = false;
     }
 
+    public void ShowGameModeSelectionButtons() {
+        HideRoomListButtons();
+        HideWaitingForPlayerButtons();
+        HidePaddleSelectorButtons();
+        GameModeSelectionPanel.SetActive(true);
+        LeanTween.scale(GMSP_InRoomText, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_Options, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_PromptText, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_NextButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        FindObjectOfType<ReadyButton>().Initialize();
+
+        LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
+        gameStarted = false;
+    }
+
     public void ShowPaddleSelectorButtons() {
         HideRoomListButtons();
         HideWaitingForPlayerButtons();
@@ -212,6 +236,8 @@ public class TweenUIManager : MonoBehaviour
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
     }
+
+
 
     void ShowGameOverButtons() {
         HideMainMenuButtons();
@@ -258,6 +284,15 @@ public class TweenUIManager : MonoBehaviour
             .setOnComplete(DisableWaitingForPlayer);
     }
 
+    void HideGameModeSelectionButtons() {
+        LeanTween.scale(GMSP_InRoomText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
+        LeanTween.scale(GMSP_Options, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
+        LeanTween.scale(GMSP_PromptText, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
+        LeanTween.scale(GMSP_NextButton, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
+        LeanTween.scale(GMSP_BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART)
+            .setOnComplete(DisableGameModeSelection);
+    }
+
     void HidePaddleSelectorButtons() {
         LeanTween.scale(PSP_InRoomText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_Options, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
@@ -279,7 +314,7 @@ public class TweenUIManager : MonoBehaviour
             ShowWaitingForPlayerButtons();
         }
         else {
-            ShowPaddleSelectorButtons();
+            ShowGameModeSelectionButtons();
         }
     }
 
@@ -310,11 +345,11 @@ public class TweenUIManager : MonoBehaviour
 
     public void ActivateGameOverPanel(int winnerIndex) {
         if (winnerIndex == _multiplayer.Me.Index) {
-            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Win!";
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "<color=#3BD3ED>You Win!</color>";
             FindObjectOfType<UIAudioManager>().PlayYouWinSound();
         }
         else {
-            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "You Lose!";
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "<color=#BE4545>You Lose!</color>";
             FindObjectOfType<UIAudioManager>().PlayYouLoseSound();
 
         }

@@ -189,6 +189,10 @@ public class Paddle : AttributesSync {
         _isPlayerReady = ready;
     }
 
+    public void SetGameModePreference() {
+
+    }
+
     public int GetPaddleTypeIndex() {
         return _paddleTypeIndex;
     }
