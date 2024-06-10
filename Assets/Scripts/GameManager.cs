@@ -1,9 +1,6 @@
 using Alteruna;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using TMPro;
 using UnityEngine;
 using static UpgradeData;
 
@@ -27,12 +24,16 @@ public class GameManager : MonoBehaviour {
     public bool debugMode;
     [SerializeField]
     private GameObject[] walls;
+
+    public static GameMode gameMode;
+
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _gameStarted = false;
         _ballSpawner = GetComponent<BallSpawner>();
         _scoreManager = FindObjectOfType<ScoreManager>();
         debugMode = true;
+        gameMode = null;
     }
 
     public void Update() {
@@ -123,7 +124,6 @@ public class GameManager : MonoBehaviour {
 
         // when game finishes, reset players Readiness
         if (_gameFinished) {
-
             ResetGame();
             return false;
         }
@@ -169,11 +169,15 @@ public class GameManager : MonoBehaviour {
         if (_initialValuesAssigned || !IsHostAndReadyToPlay())
             return;
 
+        //TODO: assign the values for the upgrades based on the chosen game mode 
+        
         //depending on which paddle the players chooses, they get buffs/nerfs to their stats
         SetPaddleValues(p1Paddle, p1Paddle.GetPaddleTypeIndex());
         SetPaddleValues(p2Paddle, p2Paddle.GetPaddleTypeIndex());
 
         SetStartingLives();
+
+
         _initialValuesAssigned = true;
     }
 

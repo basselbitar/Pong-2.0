@@ -16,10 +16,12 @@ public class NextButton : MonoBehaviour
     public void Initialize() {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _player = GameObject.Find("Paddle (" + _multiplayer.Me.Name + ")").GetComponent<Paddle>();
+        _player.SetVoted(false);
+        _player.SetGameModePreference(new List<int>());
     }
 
     public void OnNextClicked() {
-        _player.SetReady(true);
-        _player.SetPaddleTypeIndex(PaddleOption.selectedOption);
+        _player.SetVoted(true);
+        _player.SetGameModePreference(GameModeOption.selectedGameModes);
     }
 }

@@ -12,6 +12,10 @@ public class Paddle : AttributesSync {
     private bool _isPlayerReady;
     [SynchronizableField]
     private int _paddleTypeIndex;
+    [SynchronizableField]
+    private bool _hasPlayerVoted;
+    [SynchronizableField]
+    private List<int> _selectedGameModes;
 
     [SynchronizableField]
     public int startingLives;
@@ -46,8 +50,7 @@ public class Paddle : AttributesSync {
             length = 0.3f;
             transform.localScale = new Vector3(transform.localScale.x, length, 1f);
         }
-
-
+        _selectedGameModes = new();
         Initialize();
         //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
     }
@@ -181,6 +184,7 @@ public class Paddle : AttributesSync {
         GetComponent<SpriteRenderer>().sprite = skins[index];
     }
 
+    // getters and setters
     public bool IsReady() {
         return _isPlayerReady;
     }
@@ -189,8 +193,16 @@ public class Paddle : AttributesSync {
         _isPlayerReady = ready;
     }
 
-    public void SetGameModePreference() {
+    public bool HasVoted() {
+        return _hasPlayerVoted;
+    }
 
+    public void SetVoted(bool voted) {
+        _hasPlayerVoted = voted;
+    }
+
+    public void SetGameModePreference(List<int> selectedGameModes) {
+        _selectedGameModes = selectedGameModes;
     }
 
     public int GetPaddleTypeIndex() {
@@ -199,6 +211,8 @@ public class Paddle : AttributesSync {
     public void SetPaddleTypeIndex(int paddleTypeIndex) {
         _paddleTypeIndex = paddleTypeIndex;
     }
+    // end of getters and setters
+
 
     [SynchronizableMethod]
     public void BlowWind(bool direction) {

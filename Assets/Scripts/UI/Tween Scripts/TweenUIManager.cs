@@ -93,6 +93,10 @@ public class TweenUIManager : MonoBehaviour
         PlayGame();
     }
 
+    public void Next() {
+        ShowPaddleSelectorButtons();
+    }
+
     public void BackFromOptions()
     {
         LeanTween.scale(MusicSlider, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
@@ -218,8 +222,8 @@ public class TweenUIManager : MonoBehaviour
         LeanTween.scale(GMSP_PromptText, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_NextButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
-        FindObjectOfType<ReadyButton>().Initialize();
-
+      //  FindObjectOfType<NextButton>().Initialize();
+      // TODO: 
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
     }
@@ -227,6 +231,7 @@ public class TweenUIManager : MonoBehaviour
     public void ShowPaddleSelectorButtons() {
         HideRoomListButtons();
         HideWaitingForPlayerButtons();
+        HideGameModeSelectionButtons();
         PaddleSelectorPanel.SetActive(true);
         LeanTween.scale(PSP_InRoomText, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PSP_Options, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
@@ -322,7 +327,10 @@ public class TweenUIManager : MonoBehaviour
         ShowBigPanel();
         HideGameOverButtons();
         HidePaddleSelectorButtons();
+        HideGameModeSelectionButtons();
         ShowWaitingForPlayerButtons();
+
+        //TODO: perhaps "You win" panel should show, saying that enemy has resigned
     }
 
     // On Quit, tween out the 3 main buttons and exit the game
