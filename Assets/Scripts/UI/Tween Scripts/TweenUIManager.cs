@@ -25,7 +25,7 @@ public class TweenUIManager : MonoBehaviour
 
     // Paddle Selector Panel
     [SerializeField]
-    GameObject PaddleSelectorPanel, PSP_Options, PSP_InRoomText, PSP_ReadyButton, PSP_BackButton;
+    GameObject PaddleSelectorPanel, PSP_Options, PSP_InRoomText, PSP_GameModeText, PSP_ReadyButton, PSP_BackButton;
 
     // Game Over Panel
     [SerializeField]
@@ -46,7 +46,7 @@ public class TweenUIManager : MonoBehaviour
         SetScaleToZero(PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
             GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton,
-            PSP_Options, PSP_InRoomText, PSP_ReadyButton, PSP_BackButton, GOP_WinLoseText, GOP_RematchButton, GOP_BackButton);
+            PSP_Options, PSP_InRoomText, PSP_GameModeText, PSP_ReadyButton, PSP_BackButton, GOP_WinLoseText, GOP_RematchButton, GOP_BackButton);
 
         StartTween();
     }
@@ -222,8 +222,7 @@ public class TweenUIManager : MonoBehaviour
         LeanTween.scale(GMSP_PromptText, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_NextButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
-      //  FindObjectOfType<NextButton>().Initialize();
-      // TODO: 
+        FindObjectOfType<NextButton>().Initialize();
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
     }
@@ -234,11 +233,12 @@ public class TweenUIManager : MonoBehaviour
         HideGameModeSelectionButtons();
         PaddleSelectorPanel.SetActive(true);
         LeanTween.scale(PSP_InRoomText, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(PSP_Options, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(PSP_ReadyButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PSP_GameModeText, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PSP_Options, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PSP_ReadyButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         FindObjectOfType<ReadyButton>().Initialize();
 
-        LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
     }
 
@@ -300,6 +300,7 @@ public class TweenUIManager : MonoBehaviour
 
     void HidePaddleSelectorButtons() {
         LeanTween.scale(PSP_InRoomText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
+        LeanTween.scale(PSP_GameModeText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_Options, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_ReadyButton, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
         LeanTween.scale(WFPP_BackButton, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART)
