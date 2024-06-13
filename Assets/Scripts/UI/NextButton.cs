@@ -8,6 +8,9 @@ public class NextButton : MonoBehaviour
     private Multiplayer _multiplayer;
     private Paddle _player;
 
+    [SerializeField]
+    private List<GameModeOption> _gameModeOptions;
+
     public void Awake() {
         Initialize();
     }
@@ -17,11 +20,15 @@ public class NextButton : MonoBehaviour
         _multiplayer = FindObjectOfType<Multiplayer>();
         _player = GameObject.Find("Paddle (" + _multiplayer.Me.Name + ")").GetComponent<Paddle>();
         _player.SetVoted(false);
-        _player.SetGameModePreference(new List<int>());
+        _player.SetSelectedGameModes(new List<int>());
+        foreach (var item in _gameModeOptions)
+        {
+            item.OnGameModeDeselected();
+        }
     }
 
     public void OnNextClicked() {
         _player.SetVoted(true);
-        _player.SetGameModePreference(GameModeOption.selectedGameModes);
+        _player.SetSelectedGameModes(GameModeOption.selectedGameModes);
     }
 }

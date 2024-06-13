@@ -44,11 +44,10 @@ public class GameModeOption : MonoBehaviour {
         colors.selectedColor = _selectedColor;
         colors.highlightedColor = _selectedColor;
         GetComponent<Button>().colors = colors;
-        PrintGameModeList();
+        //PrintGameModeList();
     }
 
-    private void OnGameModeDeselected() {
-        Debug.Log("attempting to remove: " + _index);
+    public void OnGameModeDeselected() {
         this.clicked = false;
         selectedGameModes.Remove(_index);
 
@@ -57,13 +56,19 @@ public class GameModeOption : MonoBehaviour {
         colors.selectedColor = _deselectedColor;
         colors.highlightedColor = _deselectedColor;
         GetComponent<Button>().colors = colors;
-        PrintGameModeList();
+        //PrintGameModeList();
     }
     private void PrintGameModeList() {
         string result = "current modes:";
-        foreach (var item in selectedGameModes) {
+        result += PrintArray(selectedGameModes);
+        Debug.Log(result);
+    }
+
+    public static string PrintArray(List<int> list) {
+        string result = "";
+        foreach (var item in list) {
             result += item.ToString() + ", ";
         }
-        Debug.Log(result);
+        return result;
     }
 }

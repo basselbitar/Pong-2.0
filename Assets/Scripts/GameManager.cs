@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour {
         p2Paddle.id = 1;
     }
 
-    private bool AmITheHost() {
+    public bool AmITheHost() {
         if (_multiplayer.CurrentRoom == null)
             return false;
         return _multiplayer.LowestUserIndex == _multiplayer.Me.Index;

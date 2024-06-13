@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class GameMode
 {
     private readonly string _name;

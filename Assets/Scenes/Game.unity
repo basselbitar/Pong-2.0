@@ -1362,7 +1362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &120273949
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2056,6 +2056,7 @@ MonoBehaviour:
   PaddleSelectorPanel: {fileID: 1579765832}
   PSP_Options: {fileID: 1554297967}
   PSP_InRoomText: {fileID: 219379508}
+  PSP_GameModeText: {fileID: 223438476}
   PSP_ReadyButton: {fileID: 918226594}
   PSP_BackButton: {fileID: 1833220779}
   GameOverPanel: {fileID: 1768650960}
@@ -2604,6 +2605,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f58267077552849b2a8da107833d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameModes: []
+  gameModeText: {fileID: 223438478}
+  _gameModeOptionTexts:
+  - {fileID: 1950852459}
+  - {fileID: 1083299345}
+  - {fileID: 1417526312}
 --- !u!4 &361931519
 Transform:
   m_ObjectHideFlags: 0
@@ -9526,7 +9533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1579765833
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10178,6 +10185,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b2a6a6a2b38e14dae71bf873dfcb85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameModeOptions:
+  - {fileID: 2033506697}
+  - {fileID: 1387208877}
+  - {fileID: 1609392643}
 --- !u!1 &1693729327
 GameObject:
   m_ObjectHideFlags: 0
@@ -17105,6 +17116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   joinedRoomText: {fileID: 1323758659}
   inRoomText: {fileID: 219379509}
+  gameModeText: {fileID: 223438478}
 --- !u!4 &2093974991
 Transform:
   m_ObjectHideFlags: 0

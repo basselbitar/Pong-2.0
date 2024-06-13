@@ -11,15 +11,12 @@ public class RoomHandler : MonoBehaviour
     public TMP_Text joinedRoomText;
     public TMP_Text inRoomText;
 
-    public TMP_Text gameModeText;
-
     // Start is called before the first frame update
     void Start()
     {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _multiplayer.OnRoomJoined.AddListener(JoinedRoom);
 
-        gameModeText.text = "Game Mode: ?";
         //TODO: check how to pass JoinedRoom  to the function (check RoomMenu line 51)
     }
     
@@ -40,9 +37,5 @@ public class RoomHandler : MonoBehaviour
 
     private void UpdateInRoomText(Room room) {
         inRoomText.text = "In Room: " + room.Name;
-    }
-
-    private void UpdateGameModeText(string gameMode) {
-        gameModeText.text = "Game Mode: " + gameMode;
     }
 }

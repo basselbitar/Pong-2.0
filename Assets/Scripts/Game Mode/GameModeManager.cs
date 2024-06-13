@@ -1,13 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class GameModeManager : MonoBehaviour {
     public List<GameMode> gameModes;
 
+    private GameManager _gameManager;
+    private Paddle p1, p2;
+
+    private bool _gameModePoolIsSet;
+    private bool _gameModeConfirmed;
+    private GameMode _chosenGameMode;
+
+    [SerializeField]
+    private TMP_Text gameModeText;
+
+    [SerializeField]
+    private List<TMP_Text> _gameModeOptionTexts;
+
     void Start() {
+        _gameManager = FindObjectOfType<GameManager>();
+        _gameModeConfirmed = false;
         PopulateGameModes();
+        gameModeText.text = "Game Mode: ?";
     }
 
     private void PopulateGameModes() {
@@ -70,6 +87,99 @@ public class GameModeManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (!_gameManager.AmITheHost()) {
+            return;
+        }
 
+        if (p1 == null || p2 == null) {
+            InitializePaddles();
+            return;
+        }
+
+        // Randomly select 3 options for players to choose from
+        if (!_gameModePoolIsSet) {
+            GenerateGameModePool();
+        }
+
+        if (p1.HasVoted() && p2.HasVoted() && !_gameModeConfirmed) {
+            Debug.Log("Both players have voted");
+            DecideOnGameMode();
+        }
+
+    }
+
+    private void InitializePaddles() {
+        var playerList = GameObject.FindGameObjectsWithTag("Player");
+        if (playerList.Length < 2) {
+            return;
+        }
+
+        p1 = playerList[0].GetComponent<Paddle>();
+        p2 = playerList[1].GetComponent<Paddle>();
+        _gameModeConfirmed = false;
+        _chosenGameMode = null;
+    }
+
+    // The host picks 3 game modes to place in the pool and then broadcasts them to both players
+    private void GenerateGameModePool() {
+        //int randSeed = Random.Range(0, 1000);
+        int randSeed = 5;
+        List<GameMode> shuffledGameModes = Shuffler.Shuffle(gameModes, randSeed);
+
+        List<GameMode> availablePool = new List<GameMode>(shuffledGameModes.GetRange(0, 3));
+
+        //now that we've set the available pool, we need to pass it to both players so they can update their UI, and vote on it
+
+        p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), availablePool);
+        p2.BroadcastRemoteMethod(nameof(p2.SetGameModePool), availablePool);
+
+        _gameModePoolIsSet = true;
+    }
+
+    public void SetGameModePool(List<GameMode> gameModes) {
+        _gameModeOptionTexts[0].text = gameModes[0].GetName();
+        _gameModeOptionTexts[1].text = gameModes[1].GetName();
+        _gameModeOptionTexts[2].text = gameModes[2].GetName();
+    }
+
+    private void DecideOnGameMode() {
+        Debug.Log("P1 votes:" + GameModeOption.PrintArray(p1.GetSelectedGameModes()));
+        Debug.Log("P2 votes:" + GameModeOption.PrintArray(p2.GetSelectedGameModes()));
+
+        List<int> p1Choices = p1.GetSelectedGameModes(), p2Choices = p2.GetSelectedGameModes();
+        List<GameMode> candidates = new List<GameMode>();
+        int votes;
+        int threshold = 2;
+
+        while (candidates.Count == 0) {
+            for (int i = 1; i < 4; i++) {
+                votes = 0;
+                if (p1Choices.Contains(i)) {
+                    votes++;
+                }
+
+                if (p2Choices.Contains(i)) {
+                    votes++;
+                }
+
+                if (votes == threshold) {
+                    candidates.Add(gameModes[0]);
+                    Debug.Log("Threshold met at index:" + i);
+                    Debug.Log("Threshold = " + threshold);
+                }
+            }
+            threshold--;
+        }
+
+        _gameModeConfirmed = true;
+    }
+
+    private void UpdateGameModePool(List<GameMode> gameModes) {
+
+    }
+
+    private void UpdateGameModeText(string gameMode) {
+        gameModeText.text = "Game Mode: " + gameMode;
+        //TODO: add a listener when the game mode is decided  ... or removed to update this text (so that it doesn't persist from game to game)
     }
 }

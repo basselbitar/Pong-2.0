@@ -30,7 +30,7 @@ public class Paddle : AttributesSync {
 
 
     public int id;
-    private float tweenTime = 1.2f;
+    private readonly float _tweenTime = 1.2f;
 
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
@@ -201,8 +201,12 @@ public class Paddle : AttributesSync {
         _hasPlayerVoted = voted;
     }
 
-    public void SetGameModePreference(List<int> selectedGameModes) {
+    public void SetSelectedGameModes(List<int> selectedGameModes) {
         _selectedGameModes = selectedGameModes;
+    }
+
+    public List<int> GetSelectedGameModes() {
+        return _selectedGameModes;
     }
 
     public int GetPaddleTypeIndex() {
@@ -219,6 +223,14 @@ public class Paddle : AttributesSync {
         FindObjectOfType<EffectsManager>().PlayWindEffect(direction);
     }
 
+    [SynchronizableMethod]
+    public void SetGameModePool(List<GameMode> gameModes) {
+        Debug.LogError(gameModes[0].GetName() + " from player " + id);
+        Debug.LogError(gameModes[1].GetName() + " from player " + id);
+        Debug.LogError(gameModes[2].GetName() + " from player " + id);
+        FindObjectOfType<GameModeManager>().SetGameModePool(gameModes);
+    }
+
     private void TweenPaddle() {
         _isTweening = true;
         LeanTween.cancel(gameObject);
@@ -230,7 +242,7 @@ public class Paddle : AttributesSync {
 
             LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.3f).setEaseInBack().setOnComplete(() => {
                 //transform.localScale = new(0.01187452f, length, 1f);
-                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), tweenTime).setEasePunch().setOnComplete(() => { _isTweening = false; });
+                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), _tweenTime).setEasePunch().setOnComplete(() => { _isTweening = false; });
             });
         });
 
