@@ -23,6 +23,7 @@ public class RoomHandler : MonoBehaviour
     public void OnLeaveRoomClicked() {
         if (_multiplayer != null) {
             _multiplayer.CurrentRoom?.Leave();
+            FindObjectOfType<GameModeManager>().Initialize();
         }
     }
 

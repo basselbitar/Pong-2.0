@@ -1,9 +1,6 @@
 using Alteruna;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-
 public class TweenUIManager : MonoBehaviour
 {
 
@@ -321,6 +318,7 @@ public class TweenUIManager : MonoBehaviour
         }
         else {
             ShowGameModeSelectionButtons();
+            FindObjectOfType<GameModeManager>().BroadcastGameModes();
         }
     }
 
@@ -330,6 +328,8 @@ public class TweenUIManager : MonoBehaviour
         HidePaddleSelectorButtons();
         HideGameModeSelectionButtons();
         ShowWaitingForPlayerButtons();
+
+        FindObjectOfType<GameModeManager>().Initialize();
 
         //TODO: perhaps "You win" panel should show, saying that enemy has resigned
     }

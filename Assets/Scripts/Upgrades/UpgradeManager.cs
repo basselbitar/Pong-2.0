@@ -46,7 +46,7 @@ public class UpgradeManager : MonoBehaviour {
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
         _upgradeAudioManager = FindObjectOfType<UpgradeAudioManager>();
-        _debugMode = true;
+        _debugMode = false;
     }
 
     private void FixedUpdate() {

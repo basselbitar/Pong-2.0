@@ -35,6 +35,7 @@ public class Paddle : AttributesSync {
     private Alteruna.Avatar _avatar;
     private Multiplayer _multiplayer;
     private GameManager _gameManager;
+    private GameModeManager _gameModeManager;
 
     public bool debug = false;
 
@@ -52,7 +53,6 @@ public class Paddle : AttributesSync {
         }
         _selectedGameModes = new();
         Initialize();
-        //Debug.Log("Am I the host? " + _multiplayer.Me.IsHost);
     }
 
     void Update() {
@@ -95,6 +95,7 @@ public class Paddle : AttributesSync {
         _rigidbody = GetComponent<Rigidbody2D>();
         _multiplayer = FindObjectOfType<Multiplayer>();
         _gameManager = FindObjectOfType<GameManager>();
+        _gameModeManager = FindObjectOfType<GameModeManager>();
         //id = _multiplayer.Me.Index;
     }
 
@@ -225,10 +226,15 @@ public class Paddle : AttributesSync {
 
     [SynchronizableMethod]
     public void SetGameModePool(List<GameMode> gameModes) {
-        Debug.LogError(gameModes[0].GetName() + " from player " + id);
-        Debug.LogError(gameModes[1].GetName() + " from player " + id);
-        Debug.LogError(gameModes[2].GetName() + " from player " + id);
-        FindObjectOfType<GameModeManager>().SetGameModePool(gameModes);
+        Debug.LogError(gameModes[0].GetName());
+        Debug.LogError(gameModes[1].GetName());
+        Debug.LogError(gameModes[2].GetName());
+        _gameModeManager.SetGameModePool(gameModes);
+    }
+
+    [SynchronizableMethod]
+    public void SetChosenGameMode(GameMode gameMode) {
+        _gameModeManager.UpdateChosenGameModeText(gameMode);
     }
 
     private void TweenPaddle() {

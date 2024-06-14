@@ -1,3 +1,4 @@
+using Alteruna;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,6 +7,7 @@ using UnityEngine;
 
 public class GameModeManager : MonoBehaviour {
     public List<GameMode> gameModes;
+    private List<GameMode> _gameModePool;
 
     private GameManager _gameManager;
     private Paddle p1, p2;
@@ -14,6 +16,7 @@ public class GameModeManager : MonoBehaviour {
     private bool _gameModeConfirmed;
     private GameMode _chosenGameMode;
 
+
     [SerializeField]
     private TMP_Text gameModeText;
 
@@ -21,10 +24,19 @@ public class GameModeManager : MonoBehaviour {
     private List<TMP_Text> _gameModeOptionTexts;
 
     void Start() {
-        _gameManager = FindObjectOfType<GameManager>();
-        _gameModeConfirmed = false;
         PopulateGameModes();
+        Initialize();
+    }
+
+    public void Initialize() {
+        _gameManager = FindObjectOfType<GameManager>();
         gameModeText.text = "Game Mode: ?";
+        _gameModeConfirmed = false;
+        _gameModePoolIsSet = false;
+        _gameModePool = new();
+        _gameModeOptionTexts[0].text = "";
+        _gameModeOptionTexts[1].text = "";
+        _gameModeOptionTexts[2].text = "";
     }
 
     private void PopulateGameModes() {
@@ -102,19 +114,18 @@ public class GameModeManager : MonoBehaviour {
         }
 
         if (p1.HasVoted() && p2.HasVoted() && !_gameModeConfirmed) {
-            Debug.Log("Both players have voted");
+            _gameModeConfirmed = true;
             DecideOnGameMode();
         }
-
     }
 
     private void InitializePaddles() {
         var playerList = GameObject.FindGameObjectsWithTag("Player");
+        p1 = playerList[0].GetComponent<Paddle>();
         if (playerList.Length < 2) {
             return;
         }
 
-        p1 = playerList[0].GetComponent<Paddle>();
         p2 = playerList[1].GetComponent<Paddle>();
         _gameModeConfirmed = false;
         _chosenGameMode = null;
@@ -122,32 +133,47 @@ public class GameModeManager : MonoBehaviour {
 
     // The host picks 3 game modes to place in the pool and then broadcasts them to both players
     private void GenerateGameModePool() {
-        //int randSeed = Random.Range(0, 1000);
-        int randSeed = 5;
+        int randSeed = Random.Range(0, 1000);
+        //int randSeed = 5;
         List<GameMode> shuffledGameModes = Shuffler.Shuffle(gameModes, randSeed);
 
         List<GameMode> availablePool = new List<GameMode>(shuffledGameModes.GetRange(0, 3));
-
+        _gameModePool = availablePool;
         //now that we've set the available pool, we need to pass it to both players so they can update their UI, and vote on it
-
+        if (p1 == null) {
+            InitializePaddles();
+        }
         p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), availablePool);
-        p2.BroadcastRemoteMethod(nameof(p2.SetGameModePool), availablePool);
-
         _gameModePoolIsSet = true;
+    }
+
+    public void BroadcastGameModes() {
+        if (!_gameManager.AmITheHost()) {
+            return;
+        }
+        if (_gameModePoolIsSet) {
+            p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), _gameModePool);
+        }
+        else {
+            GenerateGameModePool();
+        }
     }
 
     public void SetGameModePool(List<GameMode> gameModes) {
         _gameModeOptionTexts[0].text = gameModes[0].GetName();
         _gameModeOptionTexts[1].text = gameModes[1].GetName();
         _gameModeOptionTexts[2].text = gameModes[2].GetName();
+        _gameModePool = gameModes;
     }
 
     private void DecideOnGameMode() {
-        Debug.Log("P1 votes:" + GameModeOption.PrintArray(p1.GetSelectedGameModes()));
-        Debug.Log("P2 votes:" + GameModeOption.PrintArray(p2.GetSelectedGameModes()));
+        if (p2 == null)
+            return;
+        Debug.Log("P1 votes: " + GameModeOption.PrintArray(p1.GetSelectedGameModes()));
+        Debug.Log("P2 votes: " + GameModeOption.PrintArray(p2.GetSelectedGameModes()));
 
         List<int> p1Choices = p1.GetSelectedGameModes(), p2Choices = p2.GetSelectedGameModes();
-        List<GameMode> candidates = new List<GameMode>();
+        List<GameMode> candidates = new();
         int votes;
         int threshold = 2;
 
@@ -163,23 +189,21 @@ public class GameModeManager : MonoBehaviour {
                 }
 
                 if (votes == threshold) {
-                    candidates.Add(gameModes[0]);
+                    candidates.Add(_gameModePool[i - 1]);
                     Debug.Log("Threshold met at index:" + i);
-                    Debug.Log("Threshold = " + threshold);
                 }
             }
             threshold--;
         }
 
-        _gameModeConfirmed = true;
+        // randomly select a game mode from all the available candidates
+        int randomGameModeIndex = Random.Range(0, candidates.Count);
+        _chosenGameMode = candidates[randomGameModeIndex];
+        Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
+        p1.BroadcastRemoteMethod(nameof(p1.SetChosenGameMode), _chosenGameMode);
     }
 
-    private void UpdateGameModePool(List<GameMode> gameModes) {
-
-    }
-
-    private void UpdateGameModeText(string gameMode) {
-        gameModeText.text = "Game Mode: " + gameMode;
-        //TODO: add a listener when the game mode is decided  ... or removed to update this text (so that it doesn't persist from game to game)
+    public void UpdateChosenGameModeText(GameMode gameMode) {
+        gameModeText.text = "Game Mode: " + gameMode.GetName();
     }
 }
