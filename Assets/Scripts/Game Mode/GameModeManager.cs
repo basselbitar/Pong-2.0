@@ -16,12 +16,14 @@ public class GameModeManager : MonoBehaviour {
     private bool _gameModeConfirmed;
     private GameMode _chosenGameMode;
 
+    private UpgradeManager _upgradeManager;
 
     [SerializeField]
     private TMP_Text gameModeText;
 
     [SerializeField]
     private List<TMP_Text> _gameModeOptionTexts;
+
 
     void Start() {
         PopulateGameModes();
@@ -30,6 +32,7 @@ public class GameModeManager : MonoBehaviour {
 
     public void Initialize() {
         _gameManager = FindObjectOfType<GameManager>();
+        _upgradeManager = FindObjectOfType<UpgradeManager>();
         gameModeText.text = "Game Mode: ?";
         _gameModeConfirmed = false;
         _gameModePoolIsSet = false;
@@ -116,6 +119,8 @@ public class GameModeManager : MonoBehaviour {
         if (p1.HasVoted() && p2.HasVoted() && !_gameModeConfirmed) {
             _gameModeConfirmed = true;
             DecideOnGameMode();
+            p1.SetVoted(false);
+            p2.SetVoted(false);
         }
     }
 
@@ -133,6 +138,10 @@ public class GameModeManager : MonoBehaviour {
 
     // The host picks 3 game modes to place in the pool and then broadcasts them to both players
     private void GenerateGameModePool() {
+        if (!_gameManager.AmITheHost()) {
+            return;
+        }
+
         int randSeed = Random.Range(0, 1000);
         //int randSeed = 5;
         List<GameMode> shuffledGameModes = Shuffler.Shuffle(gameModes, randSeed);
@@ -169,8 +178,6 @@ public class GameModeManager : MonoBehaviour {
     private void DecideOnGameMode() {
         if (p2 == null)
             return;
-        Debug.Log("P1 votes: " + GameModeOption.PrintArray(p1.GetSelectedGameModes()));
-        Debug.Log("P2 votes: " + GameModeOption.PrintArray(p2.GetSelectedGameModes()));
 
         List<int> p1Choices = p1.GetSelectedGameModes(), p2Choices = p2.GetSelectedGameModes();
         List<GameMode> candidates = new();
@@ -190,7 +197,7 @@ public class GameModeManager : MonoBehaviour {
 
                 if (votes == threshold) {
                     candidates.Add(_gameModePool[i - 1]);
-                    Debug.Log("Threshold met at index:" + i);
+                    //Debug.Log("Threshold met at index:" + i);
                 }
             }
             threshold--;
@@ -203,7 +210,10 @@ public class GameModeManager : MonoBehaviour {
         p1.BroadcastRemoteMethod(nameof(p1.SetChosenGameMode), _chosenGameMode);
     }
 
-    public void UpdateChosenGameModeText(GameMode gameMode) {
+    public void UpdateChosenGameMode(GameMode gameMode) {
         gameModeText.text = "Game Mode: " + gameMode.GetName();
+        //take values and pass them to UpgradeManager
+
+        _upgradeManager.SetUpgradeWeights(gameMode.GetUpgradeWeights());
     }
 }
