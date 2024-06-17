@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetPaddleValues(Paddle p, int paddleTypeIndex) {
-        int defaultLives = 3;
+        int defaultLives = 50;
         float defaultSpeed = 10f;
         float defaultLength = 0.3f;
 
@@ -238,6 +238,7 @@ public class GameManager : MonoBehaviour {
 
                 _ballGO = _ballSpawner.SpawnBall();
                 _ball = _ballGO.GetComponent<Ball>();
+                _ball.BroadcastRemoteMethod(nameof(_ball.SetBallSkin), Random.Range(0,5));
                 _ball.ResetPosition();
                 _ball.AddStartingForce();
                 _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;

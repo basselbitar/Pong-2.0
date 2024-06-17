@@ -432,16 +432,18 @@ public class UpgradeManager : MonoBehaviour {
 
         Vector3 ballPosition = ball.transform.position + new Vector3(offset, 0, 0);
         //Spawn a ball
-        GameObject newBall = _spawner.Spawn(0, ballPosition, Quaternion.identity, new Vector3(0.4f, 0.4f, 1f));
-        newBall.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
-
+        GameObject newBallGO = _spawner.Spawn(0, ballPosition, Quaternion.identity, new Vector3(0.3f, 0.3f, 1f));
+        newBallGO.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
+        
+        Ball newBall = newBallGO.GetComponent<Ball>();
+        newBall.BroadcastRemoteMethod(nameof(newBall.SetBallSkin), ball.skinIndex);
 
         //ensure that the new ball moves away from the old ball
         float x = ballRB.velocity.x > 0 ? -1.0f : 1.0f;
         float y = Random.value < 0.5f ? Random.Range(-1.0f, -0.5f) : Random.Range(0.5f, 1.0f);
 
         Vector2 direction = new(x, y);
-        newBall.GetComponent<Rigidbody2D>().AddForce(direction * ball.speed);
+        newBallGO.GetComponent<Rigidbody2D>().AddForce(direction * ball.speed);
 
     }
 

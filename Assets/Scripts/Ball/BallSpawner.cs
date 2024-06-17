@@ -10,6 +10,6 @@ public class BallSpawner : MonoBehaviour
     }
 
     public GameObject SpawnBall() {
-       return _spawner.Spawn(0, Vector3.zero, Quaternion.identity, new Vector3(0.4f, 0.4f, 1f));
+       return _spawner.Spawn(0, Vector3.zero, Quaternion.identity, new Vector3(0.3f, 0.3f, 1f));
     }
 }

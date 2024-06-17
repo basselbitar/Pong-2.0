@@ -3,8 +3,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Alteruna.Trinity;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Ball : AttributesSync {
+    public int skinIndex;
     [SynchronizableField]
     public float speed;
     private Rigidbody2D _rigidbody;
@@ -21,9 +23,13 @@ public class Ball : AttributesSync {
 
     private TrailRenderer _trailRenderer;
 
+    [SerializeField]
+    private List<Sprite> _ballSprites;
+
     public int GetLastTouchedBy() { return _lastTouchedBy; }
 
     public void SetLastTouchedBy(int lastTouchedIndex) { _lastTouchedBy = lastTouchedIndex; }
+
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -103,8 +109,18 @@ public class Ball : AttributesSync {
     private void TweenBall() {
 
         LeanTween.cancel(gameObject);
-        transform.localScale = new(0.4f, 0.4f, 1f);
+        transform.localScale = new(0.3f, 0.3f, 1f);
 
-        LeanTween.scale(gameObject, Vector3.one * 0.58f, _tweenTime).setEasePunch();
+        LeanTween.scale(gameObject, Vector3.one * 0.42f, _tweenTime).setEasePunch();
+    }
+
+    [SynchronizableMethod]
+    public void SetBallSkin(int skinIndex) {
+        if (skinIndex >= _ballSprites.Count) {
+            Debug.LogError("Unknown ball index reqested");
+            return;
+        }
+        this.skinIndex = skinIndex;
+        GetComponent<SpriteRenderer>().sprite = _ballSprites[skinIndex];
     }
 }
