@@ -1362,7 +1362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &120273949
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5433,6 +5433,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9a5e0b2da6ed259449be2c0d102f929b, type: 3}
   windEffect: {fileID: 1735648768}
   upgradeIndex: 0
+  _upgradeOccurancesCount: 
 --- !u!4 &962463224
 Transform:
   m_ObjectHideFlags: 0
@@ -17115,8 +17116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joinedRoomText: {fileID: 1323758659}
-  inRoomText: {fileID: 219379509}
-  gameModeText: {fileID: 223438478}
+  GMSP_InRoomText: {fileID: 1317975115}
+  PSP_InRoomText: {fileID: 1317975115}
 --- !u!4 &2093974991
 Transform:
   m_ObjectHideFlags: 0

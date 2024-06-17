@@ -52,10 +52,9 @@ public class UpgradeManager : MonoBehaviour {
         _debugMode = false;
         _upgradeWeights = new int[17];
         _upgradeOccurancesCount = new();
-        for (int i = 0; i < 17; i++)
-        {
+        for (int i = 0; i < 17; i++) {
             _upgradeOccurancesCount.Add(0);
-            
+
         }
         _upgradeOccurancesCount.Add(0); // this will hold the total
     }
@@ -80,8 +79,7 @@ public class UpgradeManager : MonoBehaviour {
     private void PopulateUpgrades() {
         upgrades = new List<UpgradeData>();
 
-       for(int i= 0; i< _upgradeWeights.Length;i++)
-        {
+        for (int i = 0; i < _upgradeWeights.Length; i++) {
             Debug.Log("Upgrade | index: " + i + ", weight = " + _upgradeWeights[i]);
         }
 
@@ -180,8 +178,10 @@ public class UpgradeManager : MonoBehaviour {
         if (timeSinceLastSpawnedUpgrade >= spawnUpgradeThreshold && !_debugMode) {
             //randomize and announce an index
             upgradeIndex = GenerateRandomUpgradeIndex();
-            SpawnUpgrade();
-            timeSinceLastSpawnedUpgrade = 0;
+            if (upgradeIndex != -1) {
+                SpawnUpgrade();
+                timeSinceLastSpawnedUpgrade = 0;
+            }
         }
     }
 
@@ -227,8 +227,7 @@ public class UpgradeManager : MonoBehaviour {
     }
 
     private void CleanSpawnedUpgrades() {
-        for (int i = 0; i < spawnedUpgrades.Count; i++)
-        {
+        for (int i = 0; i < spawnedUpgrades.Count; i++) {
             if (spawnedUpgrades[i] == null) {
                 spawnedUpgrades.RemoveAt(i);
             }

@@ -142,18 +142,21 @@ public class GameModeManager : MonoBehaviour {
             return;
         }
 
+        if (p1 == null || p2 == null) {
+            InitializePaddles();
+            return;
+        }
+
         int randSeed = Random.Range(0, 1000);
         //int randSeed = 5;
         List<GameMode> shuffledGameModes = Shuffler.Shuffle(gameModes, randSeed);
 
         List<GameMode> availablePool = new List<GameMode>(shuffledGameModes.GetRange(0, 3));
         _gameModePool = availablePool;
-        //now that we've set the available pool, we need to pass it to both players so they can update their UI, and vote on it
-        if (p1 == null) {
-            InitializePaddles();
-        }
-        p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), availablePool);
         _gameModePoolIsSet = true;
+
+        //now that we've set the available pool, we need to pass it to both players so they can update their UI, and vote on it
+        BroadcastGameModes();
     }
 
     public void BroadcastGameModes() {
@@ -162,6 +165,7 @@ public class GameModeManager : MonoBehaviour {
         }
         if (_gameModePoolIsSet) {
             p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), _gameModePool);
+            p2.BroadcastRemoteMethod(nameof(p2.SetGameModePool), _gameModePool);
         }
         else {
             GenerateGameModePool();

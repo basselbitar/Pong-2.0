@@ -9,7 +9,9 @@ public class RoomHandler : MonoBehaviour
     private Multiplayer _multiplayer;
 
     public TMP_Text joinedRoomText;
-    public TMP_Text inRoomText;
+    public TMP_Text GMSP_InRoomText;
+
+    public TMP_Text PSP_InRoomText;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +39,7 @@ public class RoomHandler : MonoBehaviour
     }
 
     private void UpdateInRoomText(Room room) {
-        inRoomText.text = "In Room: " + room.Name;
+        PSP_InRoomText.text = "In Room: " + room.Name;
+        GMSP_InRoomText.text = "In Room: " + room.Name;
     }
 }

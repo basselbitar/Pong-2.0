@@ -226,9 +226,12 @@ public class Paddle : AttributesSync {
 
     [SynchronizableMethod]
     public void SetGameModePool(List<GameMode> gameModes) {
-        //Debug.LogError(gameModes[0].GetName());
-        //Debug.LogError(gameModes[1].GetName());
-        //Debug.LogError(gameModes[2].GetName());
+        Debug.LogError(gameModes[0].GetName());
+        Debug.LogError(gameModes[1].GetName());
+        Debug.LogError(gameModes[2].GetName());
+        if (gameModes == null || gameModes.Count == 0)
+            return;
+
         _gameModeManager.SetGameModePool(gameModes);
     }
 
