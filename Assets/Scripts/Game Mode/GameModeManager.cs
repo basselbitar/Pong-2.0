@@ -14,6 +14,7 @@ public class GameModeManager : MonoBehaviour {
 
     private bool _gameModePoolIsSet;
     private bool _gameModeConfirmed;
+    private bool _waiting;
     private GameMode _chosenGameMode;
 
     private UpgradeManager _upgradeManager;
@@ -24,6 +25,7 @@ public class GameModeManager : MonoBehaviour {
     [SerializeField]
     private List<TMP_Text> _gameModeOptionTexts;
 
+    private Multiplayer _multiplayer;
 
     void Start() {
         PopulateGameModes();
@@ -33,9 +35,12 @@ public class GameModeManager : MonoBehaviour {
     public void Initialize() {
         _gameManager = FindObjectOfType<GameManager>();
         _upgradeManager = FindObjectOfType<UpgradeManager>();
+        _multiplayer = FindObjectOfType<Multiplayer>();
+
         gameModeText.text = "Game Mode: ?";
         _gameModeConfirmed = false;
         _gameModePoolIsSet = false;
+        _waiting = false;
         _gameModePool = new();
         _gameModeOptionTexts[0].text = "";
         _gameModeOptionTexts[1].text = "";
@@ -111,9 +116,17 @@ public class GameModeManager : MonoBehaviour {
             return;
         }
 
+        if(_multiplayer.CurrentRoom.Users.Count < 2) {
+            //Debug.Log("getting out before creating new game modes");
+            return;
+        }
+
         // Randomly select 3 options for players to choose from
         if (!_gameModePoolIsSet) {
-            GenerateGameModePool();
+            if(!_waiting) {
+                _waiting = true;
+                StartCoroutine(WaitAndGenerateGameModePool());
+            }
         }
 
         if (p1.HasVoted() && p2.HasVoted() && !_gameModeConfirmed) {
@@ -122,6 +135,14 @@ public class GameModeManager : MonoBehaviour {
             p1.SetVoted(false);
             p2.SetVoted(false);
         }
+    }
+
+    private IEnumerator WaitAndGenerateGameModePool() {
+        yield return new WaitForSeconds(0.3f);
+        if (!_gameModePoolIsSet && _gameManager.AmITheHost()) {
+            GenerateGameModePool();
+        }
+        _waiting = false;
     }
 
     private void InitializePaddles() {
@@ -155,7 +176,14 @@ public class GameModeManager : MonoBehaviour {
         _gameModePool = availablePool;
         _gameModePoolIsSet = true;
 
+        //Debug.LogError("Generated pool successfully, time to broadcast");
         //now that we've set the available pool, we need to pass it to both players so they can update their UI, and vote on it
+        StartCoroutine(WaitAndBroadcastGameModes());
+        //BroadcastGameModes();
+    }
+
+    public IEnumerator WaitAndBroadcastGameModes() {
+        yield return new WaitForSeconds(0.3f);
         BroadcastGameModes();
     }
 
@@ -163,7 +191,8 @@ public class GameModeManager : MonoBehaviour {
         if (!_gameManager.AmITheHost()) {
             return;
         }
-        if (_gameModePoolIsSet) {
+
+        if (_gameModePoolIsSet && _gameModePool != null) {
             p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), _gameModePool);
             p2.BroadcastRemoteMethod(nameof(p2.SetGameModePool), _gameModePool);
         }
@@ -210,7 +239,7 @@ public class GameModeManager : MonoBehaviour {
         // randomly select a game mode from all the available candidates
         int randomGameModeIndex = Random.Range(0, candidates.Count);
         _chosenGameMode = candidates[randomGameModeIndex];
-        Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
+        //Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
         p1.BroadcastRemoteMethod(nameof(p1.SetChosenGameMode), _chosenGameMode);
     }
 

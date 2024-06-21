@@ -83,6 +83,13 @@ public class Ball : AttributesSync {
         if (Input.GetKeyDown(KeyCode.F)) {
             _rigidbody.velocity = new Vector2(0f, 0f);
         }
+
+        if (Input.GetKeyDown(KeyCode.B)) {
+            skinIndex++;
+            skinIndex %= _ballSprites.Count;
+            SetBallSkin(skinIndex);
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -93,6 +100,8 @@ public class Ball : AttributesSync {
         ParticleSystem collisionParticles = GetComponentInChildren<ParticleSystem>();
         collisionParticles.transform.SetPositionAndRotation(collision.contacts[0].point, rotation);
         collisionParticles.Play();
+        //// spin the ball
+        //_rigidbody.AddTorque(10f, ForceMode2D.Force);
 
         if (_bounceAudioManager == null) {
             return;

@@ -80,7 +80,7 @@ public class UpgradeManager : MonoBehaviour {
         upgrades = new List<UpgradeData>();
 
         for (int i = 0; i < _upgradeWeights.Length; i++) {
-            Debug.Log("Upgrade | index: " + i + ", weight = " + _upgradeWeights[i]);
+         //   Debug.Log("Upgrade | index: " + i + ", weight = " + _upgradeWeights[i]);
         }
 
         //buffs                                                                amount, duration, weight, iconIndex
@@ -240,7 +240,7 @@ public class UpgradeManager : MonoBehaviour {
             foreach (var upgrade in upgrades) {
                 totalWeight += upgrade.GetWeight();
             }
-            Debug.Log("Total weight is: " + totalWeight);
+            //Debug.Log("Total weight is: " + totalWeight);
         }
         int randIndex = Random.Range(0, totalWeight);
         int cumulativeWeight = 0;

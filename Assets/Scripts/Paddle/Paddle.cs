@@ -72,7 +72,6 @@ public class Paddle : AttributesSync {
         if ((speed == -1)) {
             speed = startingSpeed; //TODO: plus any buffs and minus any nerfs
         }
-
         if (_direction.sqrMagnitude != 0) {
             _rigidbody.AddForce(_direction * speed);
         }
@@ -145,7 +144,18 @@ public class Paddle : AttributesSync {
             Vector2 direction = new(0f, normalizedDist);
             collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
 
-            float velocityAfter = new Vector2(ballRigidBody.velocity.x, ballRigidBody.velocity.y).magnitude;
+            float paddleVelocityY = this.transform.GetComponent<Rigidbody2D>().velocity.y;
+            float paddlePositionX = this.transform.position.x;
+            float ballPositionX = ballTransform.position.x;
+
+            float torqueAmount = Mathf.Clamp(10f * paddleVelocityY, -20, 20);
+
+            // spin the ball
+            if(paddlePositionX < ballPositionX) {
+                ballRigidBody.AddTorque(-1 * torqueAmount, ForceMode2D.Force);
+            } else {
+                ballRigidBody.AddTorque(torqueAmount, ForceMode2D.Force);
+            }
 
             //Debug.Log("Paddle coordinate is: " + transform.position.y);
             //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
@@ -153,7 +163,7 @@ public class Paddle : AttributesSync {
             //Debug.Log("Length of paddle is: " + length);
 
             //Debug.Log("Ball x velocity is: " + ballRigidBody.velocity.x);
-            //Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);
+            //Debug.Log("Ball y velocity is: " + ballRigidBody.velocity.y);w
         }
     }
 
@@ -229,8 +239,14 @@ public class Paddle : AttributesSync {
         //Debug.LogError(gameModes[0].GetName());
         //Debug.LogError(gameModes[1].GetName());
         //Debug.LogError(gameModes[2].GetName());
+        //if (!_avatar.IsMe) {
+        //    return;
+        //}
         if (gameModes == null || gameModes.Count == 0)
             return;
+
+        if (_gameModeManager == null)
+            _gameModeManager = FindObjectOfType<GameModeManager>();
 
         _gameModeManager.SetGameModePool(gameModes);
     }

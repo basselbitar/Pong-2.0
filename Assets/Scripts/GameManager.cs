@@ -182,8 +182,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetPaddleValues(Paddle p, int paddleTypeIndex) {
-        int defaultLives = 50;
-        float defaultSpeed = 10f;
+        int defaultLives = 10;
+        float defaultSpeed = 20f;
         float defaultLength = 0.3f;
 
         p.startingSpeed = defaultSpeed;
@@ -195,13 +195,17 @@ public class GameManager : MonoBehaviour {
                 // keep the default values of speed, length, and lives
                 break;
             case 1: // speed
-                p.startingSpeed = defaultSpeed * 5f;
+                p.startingSpeed = defaultSpeed * 1.5f;
+                p.startingLives = defaultLives - 2;
                 break;
             case 2: // length
-                p.length = defaultLength * 3f;
+                p.length = defaultLength * 1.5f;
+                p.startingLives = defaultLives - 2;
                 break;
             case 3: // lives
-                p.startingLives = defaultLives * 2;
+                p.startingSpeed *= 0.5f;
+                p.length *= 0.5f; // make them both 0.9
+                p.startingLives = defaultLives + 2;
                 break;
             default:
                 Debug.LogError("Unknown paddle selected!");
