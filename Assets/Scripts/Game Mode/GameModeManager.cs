@@ -107,7 +107,7 @@ public class GameModeManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!_gameManager.AmITheHost()) {
+        if (!_gameManager.AmITheHost() && PlayMode.IsOnline) {
             return;
         }
 
@@ -116,7 +116,7 @@ public class GameModeManager : MonoBehaviour {
             return;
         }
 
-        if(_multiplayer.CurrentRoom.Users.Count < 2) {
+        if (PlayMode.IsOnline &&_multiplayer.CurrentRoom.Users.Count < 2) {
             //Debug.Log("getting out before creating new game modes");
             return;
         }
@@ -147,11 +147,11 @@ public class GameModeManager : MonoBehaviour {
 
     private void InitializePaddles() {
         var playerList = GameObject.FindGameObjectsWithTag("Player");
-        p1 = playerList[0].GetComponent<Paddle>();
         if (playerList.Length < 2) {
             return;
         }
 
+        p1 = playerList[0].GetComponent<Paddle>();
         p2 = playerList[1].GetComponent<Paddle>();
         _gameModeConfirmed = false;
         _chosenGameMode = null;
@@ -159,13 +159,14 @@ public class GameModeManager : MonoBehaviour {
 
     // The host picks 3 game modes to place in the pool and then broadcasts them to both players
     private void GenerateGameModePool() {
-        if (!_gameManager.AmITheHost()) {
+        if (!_gameManager.AmITheHost() && PlayMode.IsOnline) {
             return;
         }
 
         if (p1 == null || p2 == null) {
             InitializePaddles();
-            return;
+            if(PlayMode.IsOnline)
+                return;
         }
 
         int randSeed = Random.Range(0, 1000);
@@ -188,13 +189,14 @@ public class GameModeManager : MonoBehaviour {
     }
 
     public void BroadcastGameModes() {
-        if (!_gameManager.AmITheHost()) {
+
+        if (!_gameManager.AmITheHost() && PlayMode.IsOnline) {
             return;
         }
-
         if (_gameModePoolIsSet && _gameModePool != null) {
             p1.BroadcastRemoteMethod(nameof(p1.SetGameModePool), _gameModePool);
-            p2.BroadcastRemoteMethod(nameof(p2.SetGameModePool), _gameModePool);
+            if(PlayMode.IsOnline)
+                p2.BroadcastRemoteMethod(nameof(p2.SetGameModePool), _gameModePool);
         }
         else {
             GenerateGameModePool();
@@ -239,7 +241,7 @@ public class GameModeManager : MonoBehaviour {
         // randomly select a game mode from all the available candidates
         int randomGameModeIndex = Random.Range(0, candidates.Count);
         _chosenGameMode = candidates[randomGameModeIndex];
-        //Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
+        Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
         p1.BroadcastRemoteMethod(nameof(p1.SetChosenGameMode), _chosenGameMode);
     }
 

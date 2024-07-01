@@ -22,10 +22,7 @@ public class PaddleOption : MonoBehaviour
     public void OnButtonClicked() {
         clicked = !clicked;
         if(clicked) {
-            foreach (var item in _paddleOptions) {
-                item.SetClicked(false);
-                item.OnPaddleOptionDeselected();
-            }
+            clearOptions();
             clicked = true;
             OnPaddleOptionSelected();
         } else {
@@ -49,6 +46,13 @@ public class PaddleOption : MonoBehaviour
         colors.selectedColor = _deselectedColor;
         colors.highlightedColor = _deselectedColor;
         GetComponent<Button>().colors = colors;
+    }
+
+    public void clearOptions() {
+        foreach (var item in _paddleOptions) {
+            item.SetClicked(false);
+            item.OnPaddleOptionDeselected();
+        }
     }
 
     public void SetClicked(bool clicked) {

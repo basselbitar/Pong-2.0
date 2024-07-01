@@ -7,6 +7,10 @@ public class TweenUIManager : MonoBehaviour {
     GameObject BigPanel, PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider,
     BackButton, BackPanel, MainMenuPanel, OptionsPanel;
 
+    // Play Panel
+    [SerializeField]
+    GameObject PlayPanel, PP_PlayVsPc, PP_LocalPvP, PP_PlayOnline, PP_BackButton;
+
     // Room List Panel
     [SerializeField]
     GameObject RoomListPanel, RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton;
@@ -37,8 +41,9 @@ public class TweenUIManager : MonoBehaviour {
     void Awake() {
         MainMenuPanel.SetActive(true);
         InitializeVolumeSliders();
-        Deactivate(OptionsPanel, RoomListPanel, WaitingForPlayerPanel, GameModeSelectionPanel, PaddleSelectorPanel, GameOverPanel);
+        Deactivate(OptionsPanel, PlayPanel, RoomListPanel, WaitingForPlayerPanel, GameModeSelectionPanel, PaddleSelectorPanel, GameOverPanel);
         SetScaleToZero(PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
+            PP_PlayVsPc, PP_LocalPvP, PP_PlayOnline, PP_BackButton,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
             GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton,
             PSP_Options, PSP_InRoomText, PSP_GameModeText, PSP_ReadyButton, PSP_BackButton, GOP_WinLoseText, GOP_RematchButton, GOP_BackButton);
@@ -75,15 +80,30 @@ public class TweenUIManager : MonoBehaviour {
     }
 
     public void Play() {
-        ShowRoomListButtons();
+        ShowPlayButtons();
     }
 
     public void Options() {
         ShowOptionsButtons();
     }
 
-    public void Ready() {
-        PlayGame();
+    public void PlayVsPC() {
+        PlayMode.selectedPlayMode = PlayMode.PlayModeType.PlayVsPC;
+        ShowGameModeSelectionButtons();
+        FindObjectOfType<RoomHandler>().SetOfflineRoomText();
+        OnRoomJoined(); //simulate entering a room
+    }
+
+    public void PlayLocalMultiplayer() {
+        PlayMode.selectedPlayMode = PlayMode.PlayModeType.PlayLocal;
+        ShowGameModeSelectionButtons();
+        FindObjectOfType<RoomHandler>().SetOfflineRoomText();
+        OnRoomJoined(); //simulate entering a room
+    }
+
+    public void PlayOnline() {
+        PlayMode.selectedPlayMode = PlayMode.PlayModeType.PlayOnline;
+        ShowRoomListButtons();
     }
 
     public void Next() {
@@ -95,6 +115,11 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(SFXSlider, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
         LeanTween.scale(UpgradeSlider, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
         LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART).setOnComplete(DisableOptionsPanel);
+        ShowMainMenuButtons();
+    }
+
+    public void BackFromPlayPanel() {
+        HidePlayButtons();
         ShowMainMenuButtons();
     }
 
@@ -110,12 +135,21 @@ public class TweenUIManager : MonoBehaviour {
 
     public void BackFromGameModeSelection() {
         HideGameModeSelectionButtons();
-        ShowRoomListButtons();
+        if(PlayMode.IsOnline) {
+            ShowRoomListButtons();
+        } else {
+            ShowPlayButtons();
+        }
     }
 
     public void BackFromPaddleSelector() {
         HidePaddleSelectorButtons();
-        ShowRoomListButtons();
+        if (PlayMode.IsOnline) {
+            ShowRoomListButtons();
+        }
+        else {
+            ShowPlayButtons();
+        }
     }
 
     public void BackFromGameOver() {
@@ -123,13 +157,11 @@ public class TweenUIManager : MonoBehaviour {
         ShowRoomListButtons();
     }
 
-
-
     public void Rematch() {
         HideGameOverButtons();
         ShowPaddleSelectorButtons();
     }
-    void PlayGame() {
+    public void PlayGame() {
         HidePaddleSelectorButtons();
         HideBigPanel();
         gameStarted = true; //this activates the in-game Quit button
@@ -141,6 +173,11 @@ public class TweenUIManager : MonoBehaviour {
     void DisableMainMenu() {
         MainMenuPanel.SetActive(false);
     }
+
+    void DisablePlayPanel() {
+        PlayPanel.SetActive(false);
+    }
+
     void DisableRoomList() {
         RoomListPanel.SetActive(false);
     }
@@ -181,8 +218,19 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
     }
 
+    void ShowPlayButtons() {
+        HideMainMenuButtons();
+        PlayPanel.SetActive(true);
+
+        LeanTween.scale(PP_PlayVsPc, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PP_LocalPvP, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PP_PlayOnline, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+    }
+
     void ShowRoomListButtons() {
         HideMainMenuButtons();
+        HidePlayButtons();
         RoomListPanel.SetActive(true);
         LeanTween.scale(RLP_TitleText, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(RLP_ScrollView, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
@@ -202,6 +250,7 @@ public class TweenUIManager : MonoBehaviour {
     }
 
     public void ShowGameModeSelectionButtons() {
+        HidePlayButtons();
         HideRoomListButtons();
         HideWaitingForPlayerButtons();
         HidePaddleSelectorButtons();
@@ -225,7 +274,8 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(PSP_GameModeText, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PSP_Options, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PSP_ReadyButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
-        FindObjectOfType<ReadyButton>().Initialize();
+        if(PlayMode.IsOnline)
+            FindObjectOfType<ReadyButton>().Initialize();
 
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
@@ -263,6 +313,13 @@ public class TweenUIManager : MonoBehaviour {
         .setOnComplete(DisableMainMenu);
     }
 
+    void HidePlayButtons() {
+        LeanTween.scale(PP_PlayVsPc, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
+        LeanTween.scale(PP_LocalPvP, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
+        LeanTween.scale(PP_PlayOnline, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART)
+        .setOnComplete(DisablePlayPanel);
+    }
+
     void HideRoomListButtons() {
         LeanTween.scale(RLP_TitleText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(RLP_ScrollView, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
@@ -287,7 +344,7 @@ public class TweenUIManager : MonoBehaviour {
             .setOnComplete(DisableGameModeSelection);
     }
 
-    void HidePaddleSelectorButtons() {
+    public void HidePaddleSelectorButtons() {
         LeanTween.scale(PSP_InRoomText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_GameModeText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_Options, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
@@ -305,13 +362,13 @@ public class TweenUIManager : MonoBehaviour {
 
     // When joining a room, it might be empty or it might have one player waiting
     public void OnRoomJoined() {
-        if (_multiplayer.CurrentRoom.Users.Count < 2) {
+        if (_multiplayer.CurrentRoom != null && _multiplayer.CurrentRoom.Users.Count < 2) {
             ShowWaitingForPlayerButtons();
         }
         else {
             ShowGameModeSelectionButtons();
             // if I'm still the host when a new player joins, I'll broadcast to them the game modes
-            if (_multiplayer.LowestUserIndex == _multiplayer.Me.Index) {
+            if (_multiplayer.LowestUserIndex == _multiplayer.Me.Index || !PlayMode.IsOnline) {
                 StartCoroutine(FindObjectOfType<GameModeManager>().WaitAndBroadcastGameModes());
             }
         }

@@ -8,9 +8,8 @@ public class RoomHandler : MonoBehaviour
 {
     private Multiplayer _multiplayer;
 
-    public TMP_Text joinedRoomText;
+    public TMP_Text WFPP_JoinedRoomText; //waiting for players panel
     public TMP_Text GMSP_InRoomText;
-
     public TMP_Text PSP_InRoomText;
 
     // Start is called before the first frame update
@@ -18,10 +17,24 @@ public class RoomHandler : MonoBehaviour
     {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _multiplayer.OnRoomJoined.AddListener(JoinedRoom);
-
-        //TODO: check how to pass JoinedRoom  to the function (check RoomMenu line 51)
     }
     
+    // offline gameplay functions
+    public void SetOfflineRoomText() {
+        if(PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayLocal) {
+            GMSP_InRoomText.text = "Local Multiplayer";
+            PSP_InRoomText.text = "Player 1 Choose a Paddle";
+        } else if(PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC) {
+            GMSP_InRoomText.text = "Play VS PC";
+            PSP_InRoomText.text = "Play VS PC";
+        }
+    }
+
+    public void SetPlayer2Turn() {
+        PSP_InRoomText.text = "Player 2 Choose a Paddle";
+    }
+
+    // online gameplay functions
     public void OnLeaveRoomClicked() {
         if (_multiplayer != null) {
             _multiplayer.CurrentRoom?.Leave();
@@ -35,7 +48,7 @@ public class RoomHandler : MonoBehaviour
     }
 
     private void UpdateJoinedRoomText(Room room) {
-        joinedRoomText.text = "Joined Room: " + room.Name;
+        WFPP_JoinedRoomText.text = "Joined Room: " + room.Name;
     }
 
     private void UpdateInRoomText(Room room) {

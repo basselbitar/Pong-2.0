@@ -33,7 +33,7 @@ public class GameModeOption : MonoBehaviour {
     private void OnGameModeSelected() {
 
         if (selectedGameModes.Count >= 2) {
-            Debug.Log("we must first remove: " + _gameModeOptions[selectedGameModes[0] - 1]._index);
+            //Debug.Log("we must first remove: " + _gameModeOptions[selectedGameModes[0] - 1]._index);
             _gameModeOptions[selectedGameModes[0] - 1].OnGameModeDeselected();
         }
 

@@ -56,7 +56,7 @@ public class Paddle : AttributesSync {
     }
 
     void Update() {
-        if (!_avatar.IsMe && !debug) {
+        if (!_avatar.IsMe && !debug && PlayMode.IsOnline) {
             return;
         }
 
@@ -99,14 +99,27 @@ public class Paddle : AttributesSync {
     }
 
     private void HandleInputs() {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
-            _direction = isInvertedControls ? Vector2.down : Vector2.up;
-        }
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
-            _direction = isInvertedControls ? Vector2.up : Vector2.down;
-        }
-        else {
-            _direction = Vector2.zero;
+
+        //for single player vs CPU and for multiplayer
+        if (PlayMode.IsOnline) { 
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
+                _direction = isInvertedControls ? Vector2.down : Vector2.up;
+            }
+            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+                _direction = isInvertedControls ? Vector2.up : Vector2.down;
+            }
+            else {
+                _direction = Vector2.zero;
+            }
+        } else {
+            //for local multiplayer  W,S  moves p1  ... Up,Down moves p2
+            if ((Input.GetKey(KeyCode.W) && id == 0) || (Input.GetKey(KeyCode.UpArrow) && id == 1)) {
+                _direction = isInvertedControls ? Vector2.down : Vector2.up;
+            } else if ((Input.GetKey(KeyCode.S) && id == 0) || (Input.GetKey(KeyCode.DownArrow) && id == 1)) {
+                _direction = isInvertedControls ? Vector2.up : Vector2.down;
+            } else {
+                _direction = Vector2.zero;
+            }
         }
     }
 
@@ -117,7 +130,7 @@ public class Paddle : AttributesSync {
         }
 
         //check if game hasn't started yet, stick to default skin
-        if (startingSpeed == 0 ) {
+        if (startingSpeed == 0) {
             return 0;
         }
         if (speed > startingSpeed * 1.01) {
@@ -151,9 +164,10 @@ public class Paddle : AttributesSync {
             float torqueAmount = Mathf.Clamp(10f * paddleVelocityY, -20, 20);
 
             // spin the ball
-            if(paddlePositionX < ballPositionX) {
+            if (paddlePositionX < ballPositionX) {
                 ballRigidBody.AddTorque(-1 * torqueAmount, ForceMode2D.Force);
-            } else {
+            }
+            else {
                 ballRigidBody.AddTorque(torqueAmount, ForceMode2D.Force);
             }
 
@@ -170,7 +184,7 @@ public class Paddle : AttributesSync {
 
     [SynchronizableMethod]
     public void ResetPosition() {
-        if (!_avatar.IsMe) {
+        if (!_avatar.IsMe && PlayMode.IsOnline) {
             return;
         }
 
@@ -184,7 +198,7 @@ public class Paddle : AttributesSync {
 
     [SynchronizableMethod]
     public void ModifyLength() {
-        if (!_avatar.IsMe) {
+        if (!_avatar.IsMe && PlayMode.IsOnline) {
             return;
         }
         LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.6f).setEaseInBack();
