@@ -8,6 +8,8 @@ public class ReadyButton : MonoBehaviour
     private Paddle _player2Local;
     [SerializeField]
     private NextButton nextButton;
+    [SerializeField]
+    private PaddleOption _paddleOption;
 
     public void Awake() {
         Initialize();
@@ -15,7 +17,6 @@ public class ReadyButton : MonoBehaviour
 
     //must be called whenever a new room is joined
     public void Initialize() {
-        Debug.Log("Initialize ready button");
         if (!PlayMode.IsOnline) {
             InitializeLocal();
             return;
@@ -47,6 +48,7 @@ public class ReadyButton : MonoBehaviour
                 FindObjectOfType<RoomHandler>().SetPlayer2Turn();
                 //FindObjectOfType<TweenUIManager>().HidePaddleSelectorButtons();
                 FindObjectOfType<TweenUIManager>().ShowPaddleSelectorButtons();
+                _paddleOption.ClearOptions();
             } else {
                 _player2Local.SetReady(true);
                 _player2Local.SetPaddleTypeIndex(PaddleOption.selectedOption);

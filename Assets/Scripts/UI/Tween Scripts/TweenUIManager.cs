@@ -159,7 +159,14 @@ public class TweenUIManager : MonoBehaviour {
 
     public void Rematch() {
         HideGameOverButtons();
-        ShowPaddleSelectorButtons();
+        if(PlayMode.IsOnline)
+            ShowPaddleSelectorButtons();
+        else if(PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayLocal) {
+            PlayLocalMultiplayer();
+        } else {
+            PlayVsPC();
+        }
+
     }
     public void PlayGame() {
         HidePaddleSelectorButtons();
@@ -404,11 +411,12 @@ public class TweenUIManager : MonoBehaviour {
 
     public void ActivateGameOverPanel(int winnerIndex) {
         if (winnerIndex == _multiplayer.Me.Index) {
-            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "<color=#3BD3ED>You Win!</color>";
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = PlayMode.IsOnline ? "<color=#3BD3ED>You Win!</color>" : "<color=#3BD3ED>Player 1 Wins!</color>";
             FindObjectOfType<UIAudioManager>().PlayYouWinSound();
         }
         else {
-            GameOverPanel.GetComponentInChildren<TMP_Text>().text = "<color=#BE4545>You Lose!</color>";
+
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = PlayMode.IsOnline ? "<color=#BE4545>You Lose!</color>" : "<color=#3BD3ED>Player 2 Wins!</color>";
             FindObjectOfType<UIAudioManager>().PlayYouLoseSound();
 
         }

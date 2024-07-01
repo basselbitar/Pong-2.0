@@ -19,7 +19,8 @@ public class NextButton : MonoBehaviour
 
     [SerializeField]
     private ReadyButton _readyButton;
-
+    [SerializeField]
+    private PaddleOption _paddleOption;
     public void Awake() {
         Initialize();
     }
@@ -69,7 +70,7 @@ public class NextButton : MonoBehaviour
         player.SetVoted(true);
         player.SetSelectedGameModes(GameModeOption.selectedGameModes);
         _readyButton.Initialize();
-
+        _paddleOption.ClearOptions();
         if (!PlayMode.IsOnline) {
             player2Local.SetVoted(true);
             player2Local.SetSelectedGameModes(GameModeOption.selectedGameModes);

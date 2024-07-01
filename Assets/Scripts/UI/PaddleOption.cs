@@ -22,7 +22,7 @@ public class PaddleOption : MonoBehaviour
     public void OnButtonClicked() {
         clicked = !clicked;
         if(clicked) {
-            clearOptions();
+            ClearOptions();
             clicked = true;
             OnPaddleOptionSelected();
         } else {
@@ -48,7 +48,7 @@ public class PaddleOption : MonoBehaviour
         GetComponent<Button>().colors = colors;
     }
 
-    public void clearOptions() {
+    public void ClearOptions() {
         foreach (var item in _paddleOptions) {
             item.SetClicked(false);
             item.OnPaddleOptionDeselected();

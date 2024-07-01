@@ -27,6 +27,9 @@ public class GameModeManager : MonoBehaviour {
 
     private Multiplayer _multiplayer;
 
+    [SerializeField]
+    private GameModeOption _gameModeOption;
+
     void Start() {
         PopulateGameModes();
         Initialize();
@@ -169,6 +172,8 @@ public class GameModeManager : MonoBehaviour {
                 return;
         }
 
+        _gameModeOption.ClearGameModeOptions();
+
         int randSeed = Random.Range(0, 1000);
         //int randSeed = 5;
         List<GameMode> shuffledGameModes = Shuffler.Shuffle(gameModes, randSeed);
@@ -241,7 +246,7 @@ public class GameModeManager : MonoBehaviour {
         // randomly select a game mode from all the available candidates
         int randomGameModeIndex = Random.Range(0, candidates.Count);
         _chosenGameMode = candidates[randomGameModeIndex];
-        Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
+        //Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
         p1.BroadcastRemoteMethod(nameof(p1.SetChosenGameMode), _chosenGameMode);
     }
 

@@ -58,6 +58,15 @@ public class GameModeOption : MonoBehaviour {
         GetComponent<Button>().colors = colors;
         //PrintGameModeList();
     }
+
+
+    public void ClearGameModeOptions() {
+        foreach (var item in _gameModeOptions) {
+            item.clicked = false;
+            item.OnGameModeDeselected();
+        }
+    }
+
     private void PrintGameModeList() {
         string result = "current modes:";
         result += PrintArray(selectedGameModes);

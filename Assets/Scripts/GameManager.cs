@@ -32,8 +32,9 @@ public class GameManager : MonoBehaviour {
         _gameStarted = false;
         _ballSpawner = GetComponent<BallSpawner>();
         _scoreManager = FindObjectOfType<ScoreManager>();
-        debugMode = true;
+        debugMode = false;
         gameMode = null;
+        SetDebugWalls();
     }
 
     public void Update() {
@@ -52,15 +53,11 @@ public class GameManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.U)) {
             debugMode = !debugMode;
-            if (walls.Length == 0) {
-                walls = GameObject.FindGameObjectsWithTag("Debug");
-
-            }
-            foreach (GameObject wall in walls) {
-                wall.SetActive(debugMode);
-            }
+            SetDebugWalls();
         }
     }
+
+
     public void Player1Scores() {
         if (!IsHostAndReadyToPlay()) {
             return;
@@ -97,19 +94,22 @@ public class GameManager : MonoBehaviour {
 
     private bool IsHostAndReadyToPlay() {
         //only the host should manage the game
-        if (!AmITheHost()) {
-            return false;
-        }
+        if (PlayMode.IsOnline) {
 
-        if (_multiplayer.CurrentRoom.Users.Count < 2) {
-            if (_gameStarted) {
-                ResetGame();
+            if (!AmITheHost()) {
+                return false;
             }
-            else {
-                DestroyRemainingBalls();
-                DestroyRemainingUpgrades();
+
+            if (_multiplayer.CurrentRoom.Users.Count < 2) {
+                if (_gameStarted) {
+                    ResetGame();
+                }
+                else {
+                    DestroyRemainingBalls();
+                    DestroyRemainingUpgrades();
+                }
+                return false;
             }
-            return false;
         }
 
         if (p1Paddle == null || p2Paddle == null) {
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour {
             return;
 
         //TODO: assign the values for the upgrades based on the chosen game mode 
-        
+
         //depending on which paddle the players chooses, they get buffs/nerfs to their stats
         SetPaddleValues(p1Paddle, p1Paddle.GetPaddleTypeIndex());
         SetPaddleValues(p2Paddle, p2Paddle.GetPaddleTypeIndex());
@@ -203,8 +203,8 @@ public class GameManager : MonoBehaviour {
                 p.startingLives = defaultLives - 2;
                 break;
             case 3: // lives
-                p.startingSpeed *= 0.5f;
-                p.length *= 0.5f; // make them both 0.9
+                p.startingSpeed = defaultSpeed * 0.9f;
+                p.length = defaultLength * 0.9f;
                 p.startingLives = defaultLives + 2;
                 break;
             default:
@@ -242,7 +242,7 @@ public class GameManager : MonoBehaviour {
 
                 _ballGO = _ballSpawner.SpawnBall();
                 _ball = _ballGO.GetComponent<Ball>();
-                _ball.BroadcastRemoteMethod(nameof(_ball.SetBallSkin), Random.Range(0,5));
+                _ball.BroadcastRemoteMethod(nameof(_ball.SetBallSkin), Random.Range(0, 5));
                 _ball.ResetPosition();
                 _ball.AddStartingForce();
                 _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
@@ -289,6 +289,15 @@ public class GameManager : MonoBehaviour {
             return;
         }
         ResetGame();
+    }
+
+    public void SetDebugWalls() {
+        if (walls.Length == 0) {
+            walls = GameObject.FindGameObjectsWithTag("Debug");
+        }
+        foreach (GameObject wall in walls) {
+            wall.SetActive(debugMode);
+        }
     }
 }
 
