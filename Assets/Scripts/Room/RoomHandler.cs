@@ -25,8 +25,8 @@ public class RoomHandler : MonoBehaviour
             GMSP_InRoomText.text = "Local Multiplayer";
             PSP_InRoomText.text = "Player 1 Choose a Paddle";
         } else if(PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC) {
-            GMSP_InRoomText.text = "Play VS PC";
-            PSP_InRoomText.text = "Play VS PC";
+            GMSP_InRoomText.text = "Play vs PC";
+            PSP_InRoomText.text = "Play vs PC";
         }
     }
 

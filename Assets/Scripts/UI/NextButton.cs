@@ -27,7 +27,6 @@ public class NextButton : MonoBehaviour
 
     //must be called whenever a new room is joined
     public void Initialize() {
-
         if(!PlayMode.IsOnline) {
             InitializeLocal();
             return;
@@ -56,6 +55,11 @@ public class NextButton : MonoBehaviour
             player2Local = player2GO.GetComponent<Paddle>();
             player2Local.SetVoted(true);
             player2Local.id = 1;
+
+            //add PC Controller if playing vs a PC
+            if(PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC) {
+                player2GO.AddComponent<PCController>();
+            }
 
             _multiplayer = FindObjectOfType<Multiplayer>();
             player.SetVoted(false);

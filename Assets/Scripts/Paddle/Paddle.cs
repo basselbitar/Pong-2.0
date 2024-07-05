@@ -99,9 +99,10 @@ public class Paddle : AttributesSync {
     }
 
     private void HandleInputs() {
-
+        if (PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC && id == 1)
+            return;
         //for single player vs CPU and for multiplayer
-        if (PlayMode.IsOnline) { 
+        if (PlayMode.IsOnline || PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC) { 
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
                 _direction = isInvertedControls ? Vector2.down : Vector2.up;
             }
@@ -143,7 +144,9 @@ public class Paddle : AttributesSync {
         return 0;
     }
 
-
+    public void SetDirection(Vector2 direction) {
+        _direction = direction;
+    }
 
     public void OnCollisionEnter2D(Collision2D collision) {
         if (collision.collider.CompareTag("Ball")) {

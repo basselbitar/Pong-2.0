@@ -154,7 +154,13 @@ public class TweenUIManager : MonoBehaviour {
 
     public void BackFromGameOver() {
         HideGameOverButtons();
-        ShowRoomListButtons();
+        if (PlayMode.IsOnline) {
+            ShowRoomListButtons();
+        }
+        else {
+            ShowPlayButtons();
+            FindObjectOfType<GameManager>().DestroyRemainingPaddles();
+        }
     }
 
     public void Rematch() {
@@ -262,13 +268,13 @@ public class TweenUIManager : MonoBehaviour {
         HideWaitingForPlayerButtons();
         HidePaddleSelectorButtons();
         GameModeSelectionPanel.SetActive(true);
-        LeanTween.scale(GMSP_InRoomText, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_InRoomText, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_Options, Vector3.one, 0.9f).setDelay(.8f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(GMSP_PromptText, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(GMSP_NextButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(GMSP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_PromptText, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_NextButton, Vector3.one, 0.6f).setDelay(1.0f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_BackButton, Vector3.one, 0.6f).setDelay(1.1f).setEase(EASE_OUT_CIRC);
         FindObjectOfType<NextButton>().Initialize();
-        LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
     }
 
@@ -410,13 +416,13 @@ public class TweenUIManager : MonoBehaviour {
 
 
     public void ActivateGameOverPanel(int winnerIndex) {
+        bool isLocalMultiplayer = PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayLocal;
         if (winnerIndex == _multiplayer.Me.Index) {
-            GameOverPanel.GetComponentInChildren<TMP_Text>().text = PlayMode.IsOnline ? "<color=#3BD3ED>You Win!</color>" : "<color=#3BD3ED>Player 1 Wins!</color>";
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = isLocalMultiplayer ? "<color=#3BD3ED>Player 1 Wins!</color>" : "<color=#3BD3ED>You Win!</color>";
             FindObjectOfType<UIAudioManager>().PlayYouWinSound();
         }
         else {
-
-            GameOverPanel.GetComponentInChildren<TMP_Text>().text = PlayMode.IsOnline ? "<color=#BE4545>You Lose!</color>" : "<color=#3BD3ED>Player 2 Wins!</color>";
+            GameOverPanel.GetComponentInChildren<TMP_Text>().text = isLocalMultiplayer ? "<color=#3BD3ED>Player 2 Wins!</color>" : "<color=#BE4545>You Lose!</color>";
             FindObjectOfType<UIAudioManager>().PlayYouLoseSound();
 
         }
@@ -424,4 +430,9 @@ public class TweenUIManager : MonoBehaviour {
         Invoke(nameof(ShowGameOverButtons), 0.7f);
     }
 
+    public void TweenScoreUI(TMP_Text scoreUI, string text) {
+        LeanTween.scale(RLP_ScrollView, Vector3.zero, 0.3f).setEase(EASE_IN_QUART);
+        scoreUI.text = text;
+        LeanTween.scale(GMSP_InRoomText, Vector3.one, 0.5f).setDelay(.3f).setEase(EASE_OUT_CIRC);
+    }
 }

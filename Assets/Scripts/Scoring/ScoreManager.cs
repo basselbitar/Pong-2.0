@@ -19,7 +19,8 @@ public class ScoreManager : AttributesSync
     [SynchronizableMethod]
     public void UpdateP1Score(int score) {
         _p1Score = score;
-        p1ScoreText.text = _p1Score.ToString();
+        _tweenUIManager.TweenScoreUI(p1ScoreText, _p1Score.ToString());
+        
         if(_p1Score <= 0 ) {
             _tweenUIManager.ActivateGameOverPanel(1);
         }
@@ -28,7 +29,7 @@ public class ScoreManager : AttributesSync
     [SynchronizableMethod]
     public void UpdateP2Score(int score) {
         _p2Score = score;
-        p2ScoreText.text = _p2Score.ToString();
+        _tweenUIManager.TweenScoreUI(p2ScoreText, _p2Score.ToString());
         if (_p2Score <= 0) {
             _tweenUIManager.ActivateGameOverPanel(0);
         }

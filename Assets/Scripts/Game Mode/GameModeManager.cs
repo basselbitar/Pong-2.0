@@ -16,6 +16,8 @@ public class GameModeManager : MonoBehaviour {
     private bool _gameModeConfirmed;
     private bool _waiting;
     private GameMode _chosenGameMode;
+    [SerializeField]
+    private string _chosenGameModeName; //debugging purposes
 
     private UpgradeManager _upgradeManager;
 
@@ -158,6 +160,7 @@ public class GameModeManager : MonoBehaviour {
         p2 = playerList[1].GetComponent<Paddle>();
         _gameModeConfirmed = false;
         _chosenGameMode = null;
+        _chosenGameModeName = "";
     }
 
     // The host picks 3 game modes to place in the pool and then broadcasts them to both players
@@ -236,6 +239,7 @@ public class GameModeManager : MonoBehaviour {
                 }
 
                 if (votes == threshold) {
+                    //Debug.Log(_gameModePool[i - 1]);
                     candidates.Add(_gameModePool[i - 1]);
                     //Debug.Log("Threshold met at index:" + i);
                 }
@@ -246,6 +250,7 @@ public class GameModeManager : MonoBehaviour {
         // randomly select a game mode from all the available candidates
         int randomGameModeIndex = Random.Range(0, candidates.Count);
         _chosenGameMode = candidates[randomGameModeIndex];
+        _chosenGameModeName = _chosenGameMode.GetName();
         //Debug.Log("Chosen mode: " + _chosenGameMode.GetName());
         p1.BroadcastRemoteMethod(nameof(p1.SetChosenGameMode), _chosenGameMode);
     }
@@ -255,5 +260,9 @@ public class GameModeManager : MonoBehaviour {
         //take values and pass them to UpgradeManager
 
         _upgradeManager.SetUpgradeWeights(gameMode.GetUpgradeWeights());
+    }
+
+    public void UnsetGameMode() {
+        _gameModeConfirmed = false;
     }
 }

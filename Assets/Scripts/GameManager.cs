@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour {
             debugMode = !debugMode;
             SetDebugWalls();
         }
+
+        if (Input.GetKeyDown(KeyCode.V)) {
+            Player1Scores();
+            Player2Scores();
+        }
     }
 
 
@@ -146,12 +151,20 @@ public class GameManager : MonoBehaviour {
         FindObjectOfType<UpgradeManager>().spawnedUpgrades = new List<GameObject>();
     }
 
+    public void DestroyRemainingPaddles() {
+        if (PlayMode.IsOnline)
+            return;
+        Paddle[] remainingPaddles = FindObjectsOfType<Paddle>();
+        foreach (var paddle in remainingPaddles) {
+            Destroy(paddle.gameObject);
+        }
+    }
+
     private void InitializePaddles() {
         var playerList = GameObject.FindGameObjectsWithTag("Player");
         if (playerList.Length < 2) {
             return;
         }
-
         p1Paddle = playerList[0].GetComponent<Paddle>();
         p2Paddle = playerList[1].GetComponent<Paddle>();
 
@@ -260,6 +273,7 @@ public class GameManager : MonoBehaviour {
         p2Paddle.SetReady(false);
         p1Paddle = null;
         p2Paddle = null;
+        FindObjectOfType<GameModeManager>().UnsetGameMode();
     }
 
     public Paddle GetPaddle1() { return p1Paddle; }
@@ -285,7 +299,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void OnLeaveRoom() {
-        if (!AmITheHost()) {
+        if (!AmITheHost() && PlayMode.IsOnline) {
             return;
         }
         ResetGame();
