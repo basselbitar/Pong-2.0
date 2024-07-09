@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BounceAudioManager : MonoBehaviour
-{
+public class BounceAudioManager : MonoBehaviour {
     [SerializeField]
     private List<AudioClip> wallBounces;
     [SerializeField]
@@ -12,9 +11,8 @@ public class BounceAudioManager : MonoBehaviour
     private float _bounceVolume;
 
     private AudioSource _audioSource;
-    void Start()
-    {
-        if(!TryGetComponent<AudioSource>(out _audioSource)) {
+    void Start() {
+        if (!TryGetComponent<AudioSource>(out _audioSource)) {
             _audioSource = gameObject.AddComponent<AudioSource>();
         }
 
@@ -41,7 +39,6 @@ public class BounceAudioManager : MonoBehaviour
     public void SetBounceVolume(float volume) {
         _bounceVolume = volume;
         PlayerPrefs.SetFloat("sfxVolume", _bounceVolume);
-
         //play a sound for the user
         UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
         uIAudioManager.PlayPlingSound(_bounceVolume);

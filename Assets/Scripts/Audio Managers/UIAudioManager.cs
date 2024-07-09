@@ -49,12 +49,15 @@ public class UIAudioManager : MonoBehaviour {
 
     public void PlayPlingSound(float volume) {
         _audioSource.volume = volume;
-        StopCoroutine(PlayPlingSoundAfterDelay());
+        //StopCoroutine(PlayPlingSoundAfterDelay());
+        StopAllCoroutines();
         StartCoroutine(PlayPlingSoundAfterDelay());
     }
 
     private IEnumerator PlayPlingSoundAfterDelay() {
-        yield return new WaitForSeconds(0.2f);
+        Debug.Log("Hello World");
+        yield return new WaitForSeconds(0.15f);
+        Debug.Log("Goodbye World");
         _audioSource.clip = plingSound;
         _audioSource.Play();
     }
