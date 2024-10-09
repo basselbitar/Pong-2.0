@@ -41,6 +41,7 @@ public class MusicAudioManager : MonoBehaviour {
 
         //play a sound for the user
         UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
-        uIAudioManager.PlayPlingSound(_musicVolume);
+        uIAudioManager.SetSoundToDo();
+        uIAudioManager.PlaySoundAfterDelay(_musicVolume);
     }
 }

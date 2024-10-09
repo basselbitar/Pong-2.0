@@ -38,6 +38,7 @@ public class UpgradeManager : MonoBehaviour {
     private UpgradeAudioManager _upgradeAudioManager;
     private Ball[] _balls;
 
+    [SerializeField]
     private bool _debugMode;
     [SerializeField]
     private List<int> _upgradeOccurancesCount;
@@ -49,7 +50,7 @@ public class UpgradeManager : MonoBehaviour {
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
         _upgradeAudioManager = FindObjectOfType<UpgradeAudioManager>();
-        _debugMode = false;
+       
         _upgradeWeights = new int[17];
         _upgradeOccurancesCount = new();
         for (int i = 0; i < 17; i++) {

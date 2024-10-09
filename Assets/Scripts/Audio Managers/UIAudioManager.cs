@@ -19,6 +19,13 @@ public class UIAudioManager : MonoBehaviour {
     [SerializeField]
     private AudioClip youLoseSound;
 
+    [SerializeField]
+    private AudioClip doSound;
+    [SerializeField]
+    private AudioClip reSound;
+    [SerializeField]
+    private AudioClip miSound;
+
     private AudioSource _audioSource;
     private float _sfxVolume;
 
@@ -47,18 +54,25 @@ public class UIAudioManager : MonoBehaviour {
         _audioSource.Play();
     }
 
-    public void PlayPlingSound(float volume) {
+    public void PlaySoundAfterDelay(float volume) {
         _audioSource.volume = volume;
-        //StopCoroutine(PlayPlingSoundAfterDelay());
+        //_audioSource.clip = plingSound;
         StopAllCoroutines();
-        StartCoroutine(PlayPlingSoundAfterDelay());
+        StartCoroutine(PlaySoundAfterDelay());
     }
 
-    private IEnumerator PlayPlingSoundAfterDelay() {
-        Debug.Log("Hello World");
+    public void SetSoundToDo() {
+        _audioSource.clip = doSound;
+    }
+    public void SetSoundToRe() {
+        _audioSource.clip = reSound;
+    }
+    public void SetSoundToMi() {
+        _audioSource.clip = miSound;
+    }
+
+    private IEnumerator PlaySoundAfterDelay() {
         yield return new WaitForSeconds(0.15f);
-        Debug.Log("Goodbye World");
-        _audioSource.clip = plingSound;
         _audioSource.Play();
     }
 

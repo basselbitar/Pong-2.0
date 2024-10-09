@@ -41,6 +41,7 @@ public class BounceAudioManager : MonoBehaviour {
         PlayerPrefs.SetFloat("sfxVolume", _bounceVolume);
         //play a sound for the user
         UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
-        uIAudioManager.PlayPlingSound(_bounceVolume);
+        uIAudioManager.SetSoundToRe();
+        uIAudioManager.PlaySoundAfterDelay(_bounceVolume);
     }
 }

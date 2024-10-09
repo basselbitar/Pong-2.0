@@ -128,6 +128,7 @@ public class UpgradeAudioManager : MonoBehaviour
 
         //play a sound for the user
         UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
-        uIAudioManager.PlayPlingSound(_upgradeVolume);
+        uIAudioManager.SetSoundToMi();
+        uIAudioManager.PlaySoundAfterDelay(_upgradeVolume);
     }
 }
