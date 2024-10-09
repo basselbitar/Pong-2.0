@@ -4285,19 +4285,29 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f55f9150036a3af4cb4db843508be44a, type: 3}
   shrinkingSounds:
   - {fileID: 8300000, guid: 9828ebd5d45f2e64180de4298733d02c, type: 3}
-  - {fileID: 8300000, guid: b28b220a69c770e42965af43e3852e5d, type: 3}
   - {fileID: 8300000, guid: 96466f987aa5f2f4dad6921fd2b1be3e, type: 3}
   - {fileID: 8300000, guid: e1cca4b2e9ce55e4b8bc5a1f548086dd, type: 3}
   fasterSounds:
   - {fileID: 8300000, guid: 94a14cd0e434b204b935e6efebb724dc, type: 3}
   - {fileID: 8300000, guid: 03e72a648b53b4949b01d26ec7f47c44, type: 3}
-  slowerSounds: []
+  slowerSounds:
+  - {fileID: 8300000, guid: 598f60b653fa9ac45973b50e1358b2a4, type: 3}
+  - {fileID: 8300000, guid: 362f040472bd8884f9655fc95e019be7, type: 3}
+  - {fileID: 8300000, guid: b606fb9074efddb4b8b5568188bf1fd5, type: 3}
+  - {fileID: 8300000, guid: e9c7bfc121047cc4e8e42726c3c51ba9, type: 3}
   bonusLifeSounds:
   - {fileID: 8300000, guid: ebe127b548776fa4fb57b499e5c7d472, type: 3}
   flipControlsSounds:
   - {fileID: 8300000, guid: 303513e3b72b79d459e10579535bdd33, type: 3}
-  windSounds: []
-  splitBallSounds: []
+  windSounds:
+  - {fileID: 8300000, guid: fe248267e1898904a985014e305a71d0, type: 3}
+  - {fileID: 8300000, guid: c9715a78f0e2f6f4c89db401fe7f8560, type: 3}
+  - {fileID: 8300000, guid: edfcd0575621f6e4d8076a0c276eb37f, type: 3}
+  splitBallSounds:
+  - {fileID: 8300000, guid: 127201b87fd62914a8a0c89fa34fb1ba, type: 3}
+  - {fileID: 8300000, guid: f831d1911d573184f8f55c0b5d7ef7c0, type: 3}
+  - {fileID: 8300000, guid: 005105556312e214d81c12f3699291ec, type: 3}
+  - {fileID: 8300000, guid: c89ce13a90481224f9a0546ca4ed0d93, type: 3}
 --- !u!82 &682478558
 AudioSource:
   m_ObjectHideFlags: 0
