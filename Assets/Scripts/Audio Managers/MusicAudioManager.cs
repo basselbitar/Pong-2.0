@@ -10,9 +10,13 @@ public class MusicAudioManager : MonoBehaviour {
     [SerializeField]
     private List<AudioClip> intenseMusic;
 
+    [SerializeField]
+    private List<AudioClip> superIntenseMusic;
+
     private float _musicVolume;
 
     private AudioSource _audioSource;
+    private int _intensityLevel; // 0 for normal gameplay, 1 for intense game, 2 for super intense game
 
     void Start() {
         if (!TryGetComponent<AudioSource>(out _audioSource)) {
@@ -21,8 +25,32 @@ public class MusicAudioManager : MonoBehaviour {
         _musicVolume = PlayerPrefs.GetFloat("musicVolume");
     }
 
-    void Update() {
-        //TODO: check if player is on last live and make music more intense
+    public void UpdateSoundtrack(bool intenseGame, bool superIntenseGame) {
+        if ( (_intensityLevel == 0 && (intenseGame || superIntenseGame)) || (_intensityLevel == 1 && superIntenseGame)) { 
+            if(superIntenseGame) {
+                _intensityLevel = 2;
+                PlaySuperIntenseMusic();
+            } else {
+                _intensityLevel = 1;
+                PlayIntenseMusic();
+            }
+        }
+        if( _intensityLevel > 0 && !intenseGame && !superIntenseGame) {
+            _intensityLevel = 0;
+            PlayRelaxedMusic();
+        }
+    }
+
+    public void PlayRelaxedMusic() {
+        PlayRandomSong(relaxedMusic);
+    }
+
+    public void PlayIntenseMusic() {
+        PlayRandomSong(intenseMusic);
+    }
+
+    public void PlaySuperIntenseMusic() {
+        PlayRandomSong(superIntenseMusic);
     }
 
     private void PlayRandomSong(List<AudioClip> songs) {

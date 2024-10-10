@@ -25,7 +25,13 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private GameObject[] walls;
 
+    [SerializeField]
+    private MusicAudioManager _musicAudioManager;
+
     public static GameMode gameMode;
+
+    private bool _intenseGame;
+    private bool _superIntenseGame;
 
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
@@ -48,6 +54,7 @@ public class GameManager : MonoBehaviour {
         // spawn the ball
         if (!_gameStarted) {
             _gameStarted = true;
+            _musicAudioManager.PlayRelaxedMusic();
             StartCoroutine(ResetRound());
         }
 
@@ -261,6 +268,9 @@ public class GameManager : MonoBehaviour {
                 _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
             }
         }
+        _intenseGame = _p1Score <= 2 || _p2Score <= 2;
+        _superIntenseGame = _p1Score <= 2 && _p2Score <= 2;
+        _musicAudioManager.UpdateSoundtrack(_intenseGame, _superIntenseGame);
     }
 
     private void ResetGame() {
