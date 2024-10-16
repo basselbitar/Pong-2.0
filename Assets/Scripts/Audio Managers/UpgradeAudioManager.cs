@@ -120,6 +120,8 @@ public class UpgradeAudioManager : MonoBehaviour
         _audioSource.volume = _upgradeVolume;
         _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
+        //Debug.Log("Upgrade volume is: " + _upgradeVolume);
+
     }
 
     public void SetUpgradeVolume(float volume) {

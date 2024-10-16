@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private MusicAudioManager _musicAudioManager;
 
+    [SerializeField]
+    private ScoreAudioManager _scoreAudioManager;
+
     public static GameMode gameMode;
 
     private bool _intenseGame;
@@ -44,6 +47,14 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Update() {
+
+        if (Input.GetKeyDown(KeyCode.P)) {
+            Debug.LogError("I AM THE HOST: " + AmITheHost());
+            Debug.LogError("My index is: " + _multiplayer.Me.Index);
+            Debug.Log("Hello");
+        }
+
+
         if (!IsHostAndReadyToPlay()) {
             return;
         }
@@ -65,6 +76,9 @@ public class GameManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.V)) {
             Player1Scores();
+        }
+
+        if (Input.GetKeyDown(KeyCode.B)) {
             Player2Scores();
         }
     }
@@ -75,10 +89,11 @@ public class GameManager : MonoBehaviour {
             return;
         }
         _p2Score--;
-        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP2Score), _p2Score, true);
         if (_p2Score <= 0) {
             _gameFinished = true;
         }
+        
         StartCoroutine(ResetRound());
     }
 
@@ -87,21 +102,22 @@ public class GameManager : MonoBehaviour {
             return;
         }
         _p1Score--;
-        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP1Score), _p1Score, true);
         if (_p1Score <= 0) {
             _gameFinished = true;
         }
+        //_scoreAudioManager.PlayScoreSound();
         StartCoroutine(ResetRound());
     }
 
     public void Player1GainsLife() {
         _p1Score++;
-        _scoreManager.BroadcastRemoteMethod("UpdateP1Score", _p1Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP1Score), _p1Score, false);
     }
 
     public void Player2GainsLife() {
         _p2Score++;
-        _scoreManager.BroadcastRemoteMethod("UpdateP2Score", _p2Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP2Score), _p2Score, false);
     }
 
     private bool IsHostAndReadyToPlay() {
@@ -239,8 +255,8 @@ public class GameManager : MonoBehaviour {
         _p1Score = p1Paddle.startingLives;
         _p2Score = p2Paddle.startingLives;
 
-        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP1Score), _p1Score);
-        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP2Score), _p2Score);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP1Score), _p1Score, false);
+        _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP2Score), _p2Score, false);
     }
 
     private IEnumerator ResetRound() {

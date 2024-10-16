@@ -23,19 +23,22 @@ public class MusicAudioManager : MonoBehaviour {
             _audioSource = gameObject.AddComponent<AudioSource>();
         }
         _musicVolume = PlayerPrefs.GetFloat("musicVolume");
+        //Debug.Log("Initially, Music volume was: " + _musicVolume);
+
     }
 
     public void UpdateSoundtrack(bool intenseGame, bool superIntenseGame) {
-        if ( (_intensityLevel == 0 && (intenseGame || superIntenseGame)) || (_intensityLevel == 1 && superIntenseGame)) { 
-            if(superIntenseGame) {
+        if ((_intensityLevel == 0 && (intenseGame || superIntenseGame)) || (_intensityLevel == 1 && superIntenseGame)) {
+            if (superIntenseGame) {
                 _intensityLevel = 2;
                 PlaySuperIntenseMusic();
-            } else {
+            }
+            else {
                 _intensityLevel = 1;
                 PlayIntenseMusic();
             }
         }
-        if( _intensityLevel > 0 && !intenseGame && !superIntenseGame) {
+        if (_intensityLevel > 0 && !intenseGame && !superIntenseGame) {
             _intensityLevel = 0;
             PlayRelaxedMusic();
         }
@@ -61,6 +64,7 @@ public class MusicAudioManager : MonoBehaviour {
         _audioSource.volume = _musicVolume;
         _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
+        //Debug.Log("Music volume is: " + _musicVolume);
     }
 
     public void SetMusicVolume(float volume) {
@@ -71,5 +75,10 @@ public class MusicAudioManager : MonoBehaviour {
         UIAudioManager uIAudioManager = FindObjectOfType<UIAudioManager>();
         uIAudioManager.SetSoundToDo();
         uIAudioManager.PlaySoundAfterDelay(_musicVolume);
+    }
+
+    public void Stop() {
+
+        _audioSource.Stop();
     }
 }

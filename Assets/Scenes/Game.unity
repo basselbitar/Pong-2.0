@@ -792,6 +792,7 @@ Transform:
   - {fileID: 682478556}
   - {fileID: 1069034527}
   - {fileID: 3400953}
+  - {fileID: 1971946168}
   m_Father: {fileID: 1497263373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &92717205
@@ -1080,6 +1081,7 @@ MonoBehaviour:
   debugMode: 0
   walls: []
   _musicAudioManager: {fileID: 1069034528}
+  _scoreAudioManager: {fileID: 1971946169}
 --- !u!114 &93448596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3187,6 +3189,7 @@ MonoBehaviour:
   p1ScoreText: {fileID: 81811234}
   p2ScoreText: {fileID: 961512299}
   _tweenUIManager: {fileID: 240677811}
+  _scoreAudioManager: {fileID: 1971946169}
 --- !u!4 &473377682
 Transform:
   m_ObjectHideFlags: 0
@@ -19210,6 +19213,61 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1971946167
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1971946168}
+  - component: {fileID: 1971946169}
+  m_Layer: 0
+  m_Name: ScoreAudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1971946168
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971946167}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 90772739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1971946169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971946167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c9d9d849379404b8f4dee8cbbab733, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreSounds:
+  - {fileID: 8300000, guid: 72da761022e614847b259e80c8cf6c3f, type: 3}
+  - {fileID: 8300000, guid: 2966e446bfb541b4fa6031341bd6e06a, type: 3}
+  - {fileID: 8300000, guid: 9a1f17969a019a640b2c8c59dd7866b3, type: 3}
+  - {fileID: 8300000, guid: 26741024e5ab69a418af12b3e3d706ff, type: 3}
+  - {fileID: 8300000, guid: 0aaa360711aaad54ea602c0abe38b193, type: 3}
+  scoredAtSounds:
+  - {fileID: 8300000, guid: e200f506ee996f04c9f46aa2cf6f93d7, type: 3}
+  - {fileID: 8300000, guid: 3e4254386c20eae4fb8b3cd69dc8acc2, type: 3}
+  - {fileID: 8300000, guid: 8b48a9cae4d846b45a6a3eeab231d509, type: 3}
+  - {fileID: 8300000, guid: a93260b5b28c1a048943567f8b3b23e5, type: 3}
 --- !u!1 &2013240456
 GameObject:
   m_ObjectHideFlags: 0

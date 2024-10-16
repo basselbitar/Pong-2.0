@@ -17,6 +17,8 @@ public class BounceAudioManager : MonoBehaviour {
         }
 
         _bounceVolume = PlayerPrefs.GetFloat("sfxVolume");
+        //Debug.Log("Initially, bounce volume was: " + _bounceVolume);
+
     }
 
 
@@ -34,6 +36,7 @@ public class BounceAudioManager : MonoBehaviour {
         _audioSource.clip = paddleBounces[randIndex];
         _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
+        //Debug.Log("Bounce volume is: " + _bounceVolume);
     }
 
     public void SetBounceVolume(float volume) {
