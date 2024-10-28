@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class QuitGameUIManager : MonoBehaviour {
     [SerializeField] GameObject yesOrNoPanel, yesBtn, noBtn, quitBtn;
@@ -92,6 +93,13 @@ public class QuitGameUIManager : MonoBehaviour {
         LeanTween.scale(yesOrNoPanel, Vector3.zero, .5f).setDelay(.1f).setEase(LeanTweenType.easeInQuart);
         //LeanTween.scale(quitBtn, Vector3.one, .5f).setDelay(.7f).setEase(LeanTweenType.easeOutCirc);
         panelOpen = false;
+
+        //disable navigation via keyboard
+        Navigation noNavigation = new() {
+            mode = Navigation.Mode.None
+        };
+        yesBtn.GetComponent<Button>().navigation = noNavigation;
+        noBtn.GetComponent<Button>().navigation = noNavigation;
     }
 
 
@@ -102,6 +110,13 @@ public class QuitGameUIManager : MonoBehaviour {
         LeanTween.scale(yesBtn, new Vector3(1.5f, 1.5f, 1.5f), .5f).setDelay(.3f).setEase(LeanTweenType.easeOutCirc);
         LeanTween.scale(noBtn, new Vector3(1.5f, 1.5f, 1.5f), .5f).setDelay(.4f).setEase(LeanTweenType.easeOutCirc);
         panelOpen = true;
+        yesBtn.GetComponent<Button>().Select();
+        //enable navigation via keyboard
+        Navigation horizontalNav = new() {
+            mode = Navigation.Mode.Horizontal
+        };
+        yesBtn.GetComponent<Button>().navigation = horizontalNav;
+        noBtn.GetComponent<Button>().navigation = horizontalNav;
     }
 
 

@@ -1,10 +1,12 @@
 using Alteruna;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class TweenUIManager : MonoBehaviour {
 
     [SerializeField]
-    GameObject BigPanel, PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider,
+    GameObject BigPanel, PlayButton, HowToPlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider,
     BackButton, BackPanel, MainMenuPanel, OptionsPanel;
 
     // Play Panel
@@ -42,7 +44,7 @@ public class TweenUIManager : MonoBehaviour {
         MainMenuPanel.SetActive(true);
         InitializeVolumeSliders();
         Deactivate(OptionsPanel, PlayPanel, RoomListPanel, WaitingForPlayerPanel, GameModeSelectionPanel, PaddleSelectorPanel, GameOverPanel);
-        SetScaleToZero(PlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
+        SetScaleToZero(PlayButton, OptionsButton, HowToPlayButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
             PP_PlayVsPc, PP_LocalPvP, PP_PlayOnline, PP_BackButton,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
             GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton,
@@ -217,8 +219,10 @@ public class TweenUIManager : MonoBehaviour {
     void ShowMainMenuButtons() {
         MainMenuPanel.SetActive(true);
         LeanTween.scale(PlayButton, Vector3.one, 0.7f).setDelay(.6f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(OptionsButton, Vector3.one, 0.7f).setDelay(.7f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(QuitButton, Vector3.one, 0.7f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(HowToPlayButton, Vector3.one, 0.7f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(OptionsButton, Vector3.one, 0.7f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(QuitButton, Vector3.one, 0.7f).setDelay(.9f).setEase(EASE_OUT_CIRC);
+        PlayButton.GetComponent<Button>().Select();
     }
 
     void ShowOptionsButtons() {
@@ -229,6 +233,7 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(SFXSlider, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(UpgradeSlider, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
+        MusicSlider.GetComponent<Slider>().Select();
     }
 
     void ShowPlayButtons() {
@@ -239,6 +244,7 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(PP_LocalPvP, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PP_PlayOnline, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        PP_PlayVsPc.GetComponent<Button>().Select();
     }
 
     void ShowRoomListButtons() {
@@ -251,6 +257,7 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(RLP_BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
         FindObjectOfType<Multiplayer>().RefreshRoomList();
+        RLP_CreateRoom.GetComponent<Button>().Select();
     }
 
     public void ShowWaitingForPlayerButtons() {
@@ -260,6 +267,7 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(WFPP_WaitingText, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(WFPP_BackButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
+        WFPP_BackButton.GetComponent<Button>().Select();
     }
 
     public void ShowGameModeSelectionButtons() {
@@ -276,6 +284,8 @@ public class TweenUIManager : MonoBehaviour {
         FindObjectOfType<NextButton>().Initialize();
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
+
+        GMSP_Options.GetComponentInChildren<Button>().Select();
     }
 
     public void ShowPaddleSelectorButtons() {
@@ -292,6 +302,8 @@ public class TweenUIManager : MonoBehaviour {
 
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
+
+        PSP_Options.GetComponentInChildren<Button>().Select();
     }
 
 
@@ -305,6 +317,7 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(GOP_BackButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
 
         gameStarted = false;
+        GOP_RematchButton.GetComponent<Button>().Select();
     }
 
     public void ShowBigPanel() {
@@ -321,8 +334,9 @@ public class TweenUIManager : MonoBehaviour {
     // Hide buttons functions
     void HideMainMenuButtons() {
         LeanTween.scale(PlayButton, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
-        LeanTween.scale(OptionsButton, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
-        LeanTween.scale(QuitButton, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART)
+        LeanTween.scale(HowToPlayButton, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
+        LeanTween.scale(OptionsButton, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
+        LeanTween.scale(QuitButton, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART)
         .setOnComplete(DisableMainMenu);
     }
 

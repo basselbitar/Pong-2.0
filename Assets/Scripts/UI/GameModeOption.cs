@@ -19,6 +19,7 @@ public class GameModeOption : MonoBehaviour {
 
     private Color _selectedColor = new(0.412f, 0.651f, 0.463f);
     private Color _deselectedColor = new(1f, 1f, 1f);
+    private Color _hoveredColor = new(0.76f, 0.78f, 0.384f);
 
     public void OnButtonClicked() {
         clicked = !clicked;
@@ -53,7 +54,7 @@ public class GameModeOption : MonoBehaviour {
 
         var colors = GetComponent<Button>().colors;
         colors.normalColor = _deselectedColor;
-        colors.selectedColor = _deselectedColor;
+        colors.selectedColor = _hoveredColor;
         colors.highlightedColor = _deselectedColor;
         GetComponent<Button>().colors = colors;
         //PrintGameModeList();
