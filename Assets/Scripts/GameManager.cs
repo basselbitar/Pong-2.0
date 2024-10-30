@@ -205,8 +205,6 @@ public class GameManager : MonoBehaviour {
         if (_initialValuesAssigned || !IsHostAndReadyToPlay())
             return;
 
-        //TODO: assign the values for the upgrades based on the chosen game mode 
-
         //depending on which paddle the players chooses, they get buffs/nerfs to their stats
         SetPaddleValues(p1Paddle, p1Paddle.GetPaddleTypeIndex());
         SetPaddleValues(p2Paddle, p2Paddle.GetPaddleTypeIndex());
@@ -225,6 +223,9 @@ public class GameManager : MonoBehaviour {
         p.startingSpeed = defaultSpeed;
         p.startingLives = defaultLives;
         p.length = defaultLength;
+
+        p.SetBounceMultiplierFactor(gameMode.GetBallBouncinessMultiplier());
+        Debug.Log("Since game mode is " + gameMode.GetName() + ", setting the bounciness multiplier to " + gameMode.GetBallBouncinessMultiplier());
 
         switch (paddleTypeIndex) {
             case 0: // default values

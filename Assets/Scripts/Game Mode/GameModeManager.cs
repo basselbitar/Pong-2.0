@@ -62,12 +62,12 @@ public class GameModeManager : MonoBehaviour {
 
         // Stormy Night: Game mode where there's lots of "wind" and "wind against player"
         upgradeValues = new int[17] { 3, 2, 1, 1, 1, 0, 10, 0, 0, 0, 6, 2, 3, 3, 2, 1, 2 };
-        GameMode Stormy = new("Stormy Night", upgradeValues, 1.0f);
+        GameMode Stormy = new("Stormy Night", upgradeValues, 0.6f);
         gameModes.Add(Stormy);
 
         // Angelic: All buffs and good neutrals 
         upgradeValues = new int[17] { 4, 3, 1, 3, 3, 2, 3, 0, 0, 0, 0, 0, 2, 4, 0, 0, 1 };
-        GameMode Angelic = new("Angelic", upgradeValues, 1.0f);
+        GameMode Angelic = new("Angelic", upgradeValues, 2.0f);
         gameModes.Add(Angelic);
 
         // Mine Field/Demonic: All the debuffs and negative neutrals
@@ -77,17 +77,17 @@ public class GameModeManager : MonoBehaviour {
 
         // Ball Mania: Lots of split balls and bonus lives
         upgradeValues = new int[17] { 3, 3, 6, 2, 1, 2, 1, 0, 0, 0, 0, 2, 2, 1, 1, 1, 10 };
-        GameMode BallMania = new("Ball Mania", upgradeValues, 1.0f);
+        GameMode BallMania = new("Ball Mania", upgradeValues, 0.4f);
         gameModes.Add(BallMania);
 
         // Drunken Brawl: Lots of “Flip Enemy Controls”, “Flip Controls”, “Flip Both Controls”
         upgradeValues = new int[17] { 2, 2, 1, 2, 2, 10, 2, 2, 2, 6, 2, 0, 0, 0, 0, 8, 1 };
-        GameMode DrunkenBrawl = new("Drunken Brawl", upgradeValues, 1.0f);
+        GameMode DrunkenBrawl = new("Drunken Brawl", upgradeValues, 0.6f);
         gameModes.Add(DrunkenBrawl);
 
         // Speed Racer: Lots of “Faster Paddle” and “Faster Both Paddles” and shorter
         upgradeValues = new int[17] { 0, 5, 1, 4, 0, 1, 1, 4, 0, 1, 0, 0, 0, 5, 0, 0, 1 };
-        GameMode SpeedRacer = new("Speed Racer", upgradeValues, 1.0f);
+        GameMode SpeedRacer = new("Speed Racer", upgradeValues, 1.5f);
         gameModes.Add(SpeedRacer);
 
         // Dumbo Style: Lots of Slowness and Elongation
@@ -102,7 +102,7 @@ public class GameModeManager : MonoBehaviour {
 
         // Classic: No upgrades, but ball gets faster faster. TODO: how?
         upgradeValues = new int[17] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        GameMode Classic = new("Classic", upgradeValues, 1.0f);
+        GameMode Classic = new("Classic", upgradeValues, 3f);
         gameModes.Add(Classic);
 
         foreach (GameMode mode in gameModes) {
@@ -261,6 +261,7 @@ public class GameModeManager : MonoBehaviour {
         //take values and pass them to UpgradeManager
 
         _upgradeManager.SetUpgradeWeights(gameMode.GetUpgradeWeights());
+        GameManager.gameMode = gameMode;
     }
 
     public void UnsetGameMode() {

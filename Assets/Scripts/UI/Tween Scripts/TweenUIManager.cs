@@ -433,12 +433,12 @@ public class TweenUIManager : MonoBehaviour {
         bool isLocalMultiplayer = PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayLocal;
         if (winnerIndex == _multiplayer.Me.Index) {
             GameOverPanel.GetComponentInChildren<TMP_Text>().text = isLocalMultiplayer ? "<color=#3BD3ED>Player 1 Wins!</color>" : "<color=#3BD3ED>You Win!</color>";
-            GameOverPanel.GetComponentInChildren<TMP_Text>().font = Resources.Load<TMP_FontAsset>("Fonts/GreatVibes-Regular SDF");
+            GameOverPanel.GetComponentInChildren<TMP_Text>().font = Resources.Load<TMP_FontAsset>("Fonts/Game Over/GreatVibes-Regular SDF");
             FindObjectOfType<UIAudioManager>().PlayYouWinSound();
         }
         else {
             GameOverPanel.GetComponentInChildren<TMP_Text>().text = isLocalMultiplayer ? "<color=#3BD3ED>Player 2 Wins!</color>" : "<color=#BE4545>You Lose!</color>";
-            GameOverPanel.GetComponentInChildren<TMP_Text>().font = isLocalMultiplayer ? Resources.Load<TMP_FontAsset>("Fonts/GreatVibes-Regular SDF") : Resources.Load<TMP_FontAsset>("Fonts/jollygoodsans-basic SDF");
+            GameOverPanel.GetComponentInChildren<TMP_Text>().font = isLocalMultiplayer ? Resources.Load<TMP_FontAsset>("Fonts/Game Over/GreatVibes-Regular SDF") : Resources.Load<TMP_FontAsset>("Fonts/Game Over/jollygoodsans-basic SDF");
             FindObjectOfType<UIAudioManager>().PlayYouLoseSound();
 
         }

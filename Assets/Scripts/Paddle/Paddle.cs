@@ -164,8 +164,8 @@ public class Paddle : AttributesSync {
             float normalizedDist = (dist / (length * 10f / 2f)); //due to number of pixels
             Vector2 direction = new(0f, normalizedDist);
             collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
-            Debug.Log("Velocity before = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
-            Debug.Log("Multiplying by a factor of " + (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100));
+            //Debug.Log("Velocity before = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
+            //Debug.Log("Multiplying by a factor of " + (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100));
 
             //ball velocity increases per bounce and is clamped by 30 on each axis
             float newVelocityX = Mathf.Clamp(velocityX * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor)/100), -30f, 30f);
@@ -173,7 +173,7 @@ public class Paddle : AttributesSync {
 
             ballRigidBody.velocity = new Vector2(newVelocityX, newVelocityY);
 
-            Debug.Log("Velocity after = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
+            //Debug.Log("Velocity after = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
 
 
             float paddleVelocityY = this.transform.GetComponent<Rigidbody2D>().velocity.y;

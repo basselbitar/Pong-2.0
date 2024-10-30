@@ -84,7 +84,7 @@ public class Ball : AttributesSync {
             _rigidbody.velocity = new Vector2(0f, 0f);
         }
 
-        if (Input.GetKeyDown(KeyCode.B)) {
+        if (Input.GetKeyDown(KeyCode.M)) {
             skinIndex++;
             skinIndex %= _ballSprites.Count;
             SetBallSkin(skinIndex);

@@ -37,7 +37,7 @@ public class ScoreAudioManager : MonoBehaviour
         _audioSource.clip = sounds[randIndex];
         _audioSource.volume = _scoreVolume;
         //Debug.Log("Score volume = " + _scoreVolume);
-        Debug.LogError("Playing track : " + _audioSource.clip.name);
+        //Debug.LogError("Playing track : " + _audioSource.clip.name);
         _audioSource.pitch = Random.Range(0.8f, 1.2f);
         _audioSource.Play();
     }
