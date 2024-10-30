@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviour {
         p.length = defaultLength;
 
         p.SetBounceMultiplierFactor(gameMode.GetBallBouncinessMultiplier());
-        Debug.Log("Since game mode is " + gameMode.GetName() + ", setting the bounciness multiplier to " + gameMode.GetBallBouncinessMultiplier());
+        //Debug.Log("Since game mode is " + gameMode.GetName() + ", setting the bounciness multiplier to " + gameMode.GetBallBouncinessMultiplier());
 
         switch (paddleTypeIndex) {
             case 0: // default values

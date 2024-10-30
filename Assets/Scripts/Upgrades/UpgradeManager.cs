@@ -67,7 +67,7 @@ public class UpgradeManager : MonoBehaviour {
         if (windsActiveCount > 0) {
             _balls = FindObjectsOfType<Ball>();
             foreach (var _ball in _balls) {
-                _ball.AddForce(new Vector2(windDirection * windsActiveCount * 5, 0));
+                _ball.AddForce(new Vector2(windDirection * ( 1 + windsActiveCount*1.0f/10f) * 5, 0)); // wind power stacks slowly when taking multiple wind upgrades
             }
         }
     }
@@ -391,7 +391,7 @@ public class UpgradeManager : MonoBehaviour {
 
     private IEnumerator ActivateWind(Paddle p, float duration) {
         windsActiveCount++;
-        SetWind(p, windsActiveCount);
+        SetWind(p);
         yield return new WaitForSeconds(duration);
         windsActiveCount--;
     }
@@ -419,7 +419,7 @@ public class UpgradeManager : MonoBehaviour {
     }
 
 
-    public void SetWind(Paddle p, int windsActiveCount) {
+    public void SetWind(Paddle p) {
         windEffect.SetActive(true);
         windDirection = p.transform.position.x < 0 ? 1 : -1;
         p1Paddle.BroadcastRemoteMethod(nameof(p1Paddle.BlowWind), windDirection == 1);
