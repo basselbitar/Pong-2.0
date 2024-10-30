@@ -7,10 +7,12 @@ public class GameMode
     private readonly int[] _upgradeWeights;
 
     // TODO: some game modes might need to modify how many lives the players start with, or their speed(s) or ball speed
+    private readonly float _ballBouncinessMultiplier;
 
-    public GameMode(string name, int[] upgradeWeights) {
+    public GameMode(string name, int[] upgradeWeights, float ballBouncinessMultiplier) {
         _name = name;
         _upgradeWeights = upgradeWeights;
+        _ballBouncinessMultiplier = ballBouncinessMultiplier;
     }
 
     public string GetName() {
@@ -19,6 +21,10 @@ public class GameMode
 
     public int[] GetUpgradeWeights() {
         return _upgradeWeights;
+    }
+
+    public float GetBallBouncinessMultiplier() { 
+        return _ballBouncinessMultiplier; 
     }
 
     override public string ToString() {

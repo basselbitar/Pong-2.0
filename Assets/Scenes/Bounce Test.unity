@@ -642,6 +642,10 @@ PrefabInstance:
       value: Paddle
       objectReference: {fileID: 0}
     - target: {fileID: 5237842685977034883, guid: d828d9f7813810e48bb722f046ceb44c, type: 3}
+      propertyPath: m_Mass
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5237842685977034883, guid: d828d9f7813810e48bb722f046ceb44c, type: 3}
       propertyPath: m_LinearDrag
       value: 5
       objectReference: {fileID: 0}
@@ -945,7 +949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceRight: -0.5
-  forceTop: 0
+  forceTop: -0.08
 --- !u!1 &1132699209
 GameObject:
   m_ObjectHideFlags: 0

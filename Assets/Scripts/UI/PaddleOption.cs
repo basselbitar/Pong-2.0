@@ -16,7 +16,7 @@ public class PaddleOption : MonoBehaviour
 
     private bool clicked;
 
-    private Color _selectedColor = new(0.412f, 0.651f, 0.463f);
+    private Color _selectedColor = new(0.57f, 1f, 0.66f);
     private Color _deselectedColor = new(1f, 1f, 1f);
     private Color _hoveredColor = new(0.76f, 0.78f, 0.384f);
 

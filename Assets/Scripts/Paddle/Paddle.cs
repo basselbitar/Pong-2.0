@@ -37,6 +37,11 @@ public class Paddle : AttributesSync {
     private GameManager _gameManager;
     private GameModeManager _gameModeManager;
 
+    // from 0 to 100 denoting how much velocity should increase per bounce. ie  velocity * (1 + x/100)
+    private readonly float _defaultBounceMultiplier = 5f;
+    // multiplier factor that applies to the defaultBounceMultipler before adding 1. ie (1 + (x * y)/100)
+    private float _bounceMultiplierFactor = 1f;
+
     public bool debug = false;
 
     [SerializeField]
@@ -154,11 +159,22 @@ public class Paddle : AttributesSync {
             Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
             float velocityX = ballRigidBody.velocity.x;
             float velocityY = ballRigidBody.velocity.y;
-            float velocityBefore = new Vector2(velocityX, velocityY).magnitude;
+            //float velocityBefore = new Vector2(velocityX, velocityY).magnitude;
             float dist = ballTransform.position.y - transform.position.y;
             float normalizedDist = (dist / (length * 10f / 2f)); //due to number of pixels
             Vector2 direction = new(0f, normalizedDist);
             collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
+            Debug.Log("Velocity before = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
+            Debug.Log("Multiplying by a factor of " + (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100));
+
+            //ball velocity increases per bounce and is clamped by 30 on each axis
+            float newVelocityX = Mathf.Clamp(velocityX * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor)/100), -30f, 30f);
+            float newVelocityY = Mathf.Clamp(velocityY * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor)/100), -30f, 30f);
+
+            ballRigidBody.velocity = new Vector2(newVelocityX, newVelocityY);
+
+            Debug.Log("Velocity after = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
+
 
             float paddleVelocityY = this.transform.GetComponent<Rigidbody2D>().velocity.y;
             float paddlePositionX = this.transform.position.x;
@@ -210,6 +226,11 @@ public class Paddle : AttributesSync {
     [SynchronizableMethod]
     public void ModifySkin(int index) {
         GetComponent<SpriteRenderer>().sprite = skins[index];
+    }
+
+    [SynchronizableMethod]
+    public void SetBounceMultiplierFactor(float bmf) {
+        _bounceMultiplierFactor = bmf;
     }
 
     // getters and setters
