@@ -107,7 +107,7 @@ MonoBehaviour:
   LocalMethodBehavior: 1
   startingLives: 0
   startingSpeed: 0
-  speed: 3
+  speed: 400
   length: 0
   isInvertedControls: 0
   id: 0
@@ -129,8 +129,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.5
-  m_LinearDrag: 5
+  m_Mass: 2
+  m_LinearDrag: 25
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}

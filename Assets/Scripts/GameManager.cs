@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour {
 
     private void SetPaddleValues(Paddle p, int paddleTypeIndex) {
         int defaultLives = 10;
-        float defaultSpeed = 20f;
+        float defaultSpeed = 400f;
         float defaultLength = 0.3f;
 
         p.startingSpeed = defaultSpeed;

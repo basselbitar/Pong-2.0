@@ -78,7 +78,7 @@ public class Paddle : AttributesSync {
             speed = startingSpeed; //TODO: plus any buffs and minus any nerfs
         }
         if (_direction.sqrMagnitude != 0) {
-            _rigidbody.AddForce(_direction * speed);
+            _rigidbody.AddForce(speed * _direction);
         }
 
         if (this.transform.position.y >= 6f || this.transform.position.y <= -6f) {
