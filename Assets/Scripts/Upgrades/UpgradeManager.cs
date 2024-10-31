@@ -407,7 +407,7 @@ public class UpgradeManager : MonoBehaviour {
     public void ModifyLength(Paddle p, float amount) {
 
         p.length *= amount;
-        p1Paddle.BroadcastRemoteMethod(nameof(Paddle.ModifyLength));
+        p1Paddle.BroadcastRemoteMethod(nameof(p1Paddle.ModifyLength));
         p2Paddle.BroadcastRemoteMethod(nameof(p2Paddle.ModifyLength));
     }
 

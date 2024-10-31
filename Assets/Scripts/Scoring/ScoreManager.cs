@@ -70,7 +70,6 @@ public class ScoreManager : AttributesSync
         if ( _isOnline) {
             //get the index of our player
             _myIndex = _multiplayer.Me.Index;
-            Debug.LogError("My index: " +  _myIndex);
         }
     }
 

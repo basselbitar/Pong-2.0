@@ -107,7 +107,7 @@ public class Paddle : AttributesSync {
         if (PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC && id == 1)
             return;
         //for single player vs CPU and for multiplayer
-        if (PlayMode.IsOnline || PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC) { 
+        if (PlayMode.IsOnline || PlayMode.selectedPlayMode == PlayMode.PlayModeType.PlayVsPC) {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
                 _direction = isInvertedControls ? Vector2.down : Vector2.up;
             }
@@ -117,13 +117,16 @@ public class Paddle : AttributesSync {
             else {
                 _direction = Vector2.zero;
             }
-        } else {
+        }
+        else {
             //for local multiplayer  W,S  moves p1  ... Up,Down moves p2
             if ((Input.GetKey(KeyCode.W) && id == 0) || (Input.GetKey(KeyCode.UpArrow) && id == 1)) {
                 _direction = isInvertedControls ? Vector2.down : Vector2.up;
-            } else if ((Input.GetKey(KeyCode.S) && id == 0) || (Input.GetKey(KeyCode.DownArrow) && id == 1)) {
+            }
+            else if ((Input.GetKey(KeyCode.S) && id == 0) || (Input.GetKey(KeyCode.DownArrow) && id == 1)) {
                 _direction = isInvertedControls ? Vector2.up : Vector2.down;
-            } else {
+            }
+            else {
                 _direction = Vector2.zero;
             }
         }
@@ -168,8 +171,8 @@ public class Paddle : AttributesSync {
             //Debug.Log("Multiplying by a factor of " + (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100));
 
             //ball velocity increases per bounce and is clamped by 30 on each axis
-            float newVelocityX = Mathf.Clamp(velocityX * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor)/100), -30f, 30f);
-            float newVelocityY = Mathf.Clamp(velocityY * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor)/100), -30f, 30f);
+            float newVelocityX = Mathf.Clamp(velocityX * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100), -30f, 30f);
+            float newVelocityY = Mathf.Clamp(velocityY * (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100), -30f, 30f);
 
             ballRigidBody.velocity = new Vector2(newVelocityX, newVelocityY);
 
@@ -218,6 +221,9 @@ public class Paddle : AttributesSync {
     [SynchronizableMethod]
     public void ModifyLength() {
         if (!_avatar.IsMe && PlayMode.IsOnline) {
+            return;
+        }
+        if(_isTweening) {
             return;
         }
         LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.6f).setEaseInBack();
@@ -295,6 +301,8 @@ public class Paddle : AttributesSync {
     }
 
     private void TweenPaddle() {
+        if (_isTweening)
+            return;
         _isTweening = true;
         LeanTween.cancel(gameObject);
         transform.localScale = new(0.2f, length, 1f);
@@ -305,7 +313,14 @@ public class Paddle : AttributesSync {
 
             LeanTween.scale(gameObject, new(0.2f, length, 1f), 0.3f).setEaseInBack().setOnComplete(() => {
                 //transform.localScale = new(0.01187452f, length, 1f);
-                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), _tweenTime).setEasePunch().setOnComplete(() => { _isTweening = false; });
+                LeanTween.scale(gameObject, new(0.3f, length * 1.3f, 1f), _tweenTime).setEasePunch().setOnComplete(() => { 
+                    _isTweening = false; 
+                    if(Mathf.Abs(gameObject.transform.localScale.y - length) > 0.001) {
+                        //Debug.Log("******** Twean again, as we didn't land on the correct length ********");
+                        //Debug.Log(gameObject.transform.localScale.y + " is not equal to length = " + length);
+                        ModifyLength();
+                    }
+                });
             });
         });
 
