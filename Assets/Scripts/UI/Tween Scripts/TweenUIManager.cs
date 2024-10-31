@@ -240,6 +240,7 @@ public class TweenUIManager : MonoBehaviour {
         HideMainMenuButtons();
         PlayPanel.SetActive(true);
 
+        GMSP_NextButton.GetComponent<NextButton>().Uninitialize();
         LeanTween.scale(PP_PlayVsPc, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PP_LocalPvP, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PP_PlayOnline, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);

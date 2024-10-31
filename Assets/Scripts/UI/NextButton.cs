@@ -70,6 +70,18 @@ public class NextButton : MonoBehaviour
         }
     }
 
+    //deletes the paddles if any and clears their references
+    public void Uninitialize() {
+        if(player != null) {
+            Destroy(player.gameObject);
+            player = null;
+        }
+        if (player2Local != null) {
+            Destroy(player2Local.gameObject);
+            player2Local = null;
+        }
+    }
+
     public void OnNextClicked() {
         player.SetVoted(true);
         player.SetSelectedGameModes(GameModeOption.selectedGameModes);
