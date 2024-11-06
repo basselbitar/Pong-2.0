@@ -12,14 +12,22 @@ public class PCController : MonoBehaviour {
     private float _drunkResetThreshold = 6f;
     private float _drunkDuration = 0.4f;
     private bool _isDrunk = false;
+    [SerializeField]
+    private float _actionThreshold = 0.5f;
 
     private Vector2 _intendedDirection;
 
+    enum Difficulty { Easy, Medium, Hard };
+    private Difficulty _difficulty;
 
     // Start is called before the first frame update
     void Start() {
         _paddle = GetComponent<Paddle>();
         _lastDrunkTime = Time.realtimeSinceStartup;
+        _difficulty = Difficulty.Easy;
+        Debug.Log(PlayerPrefs.GetInt("Difficulty"));
+        _difficulty = (Difficulty)PlayerPrefs.GetInt("Difficulty");
+        Debug.Log(_difficulty);
     }
 
     // Update is called once per frame
@@ -39,12 +47,15 @@ public class PCController : MonoBehaviour {
         }
 
         if (transform.position.y > closestBall.transform.position.y) {
+            //Debug.Log("Moving down since " + transform.position.y + " > ball position = " + closestBall.transform.position.y);
             _intendedDirection = Vector2.down;
         }
         else if (transform.position.y < closestBall.transform.position.y) {
+            //Debug.Log("Moving up since " + transform.position.y + " < ball position = " + closestBall.transform.position.y);
             _intendedDirection = Vector2.up;
         }
-        else {
+        // remove or reduce jitters
+        if (Mathf.Abs(transform.position.y - closestBall.transform.position.y) < _actionThreshold) {
             _intendedDirection = Vector2.zero;
         }
         _paddle.SetDirection(_intendedDirection);

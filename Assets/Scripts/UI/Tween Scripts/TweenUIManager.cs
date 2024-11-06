@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TweenUIManager : MonoBehaviour {
 
     [SerializeField]
-    GameObject BigPanel, PlayButton, HowToPlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider,
+    GameObject BigPanel, PlayButton, HowToPlayButton, OptionsButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, AIDifficulty,
     BackButton, BackPanel, MainMenuPanel, OptionsPanel;
 
     // Play Panel
@@ -44,7 +44,7 @@ public class TweenUIManager : MonoBehaviour {
         MainMenuPanel.SetActive(true);
         InitializeVolumeSliders();
         Deactivate(OptionsPanel, PlayPanel, RoomListPanel, WaitingForPlayerPanel, GameModeSelectionPanel, PaddleSelectorPanel, GameOverPanel);
-        SetScaleToZero(PlayButton, OptionsButton, HowToPlayButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, BackButton, BackPanel,
+        SetScaleToZero(PlayButton, OptionsButton, HowToPlayButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, AIDifficulty, BackButton, BackPanel,
             PP_PlayVsPc, PP_LocalPvP, PP_PlayOnline, PP_BackButton,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
             GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton,
@@ -66,6 +66,16 @@ public class TweenUIManager : MonoBehaviour {
         MusicSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(musicVolume);
         SFXSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(sfxVolume);
         UpgradeSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(upgradeVolume);
+
+        PlayerPrefs.SetInt("Difficulty", 2);
+        var toggles = AIDifficulty.GetComponentsInChildren<Toggle>();
+        foreach (var item in toggles)
+        {
+            item.isOn = false;
+        }
+        toggles[PlayerPrefs.GetInt("Difficulty")].isOn = true;
+
+        Debug.Log(AIDifficulty.GetComponentsInChildren<Toggle>().Length);
     }
 
     // utility
@@ -116,7 +126,8 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(MusicSlider, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
         LeanTween.scale(SFXSlider, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
         LeanTween.scale(UpgradeSlider, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
-        LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART).setOnComplete(DisableOptionsPanel);
+        LeanTween.scale(AIDifficulty, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART);
+        LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.5f).setEase(EASE_IN_QUART).setOnComplete(DisableOptionsPanel);
         ShowMainMenuButtons();
     }
 
@@ -230,8 +241,9 @@ public class TweenUIManager : MonoBehaviour {
         OptionsPanel.SetActive(true);
 
         LeanTween.scale(MusicSlider, Vector3.one, 0.6f).setDelay(.5f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(SFXSlider, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(UpgradeSlider, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(SFXSlider, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(UpgradeSlider, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(AIDifficulty, Vector3.one, 0.6f).setDelay(0.9f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
         MusicSlider.GetComponent<Slider>().Select();
     }
@@ -344,7 +356,8 @@ public class TweenUIManager : MonoBehaviour {
     void HidePlayButtons() {
         LeanTween.scale(PP_PlayVsPc, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PP_LocalPvP, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
-        LeanTween.scale(PP_PlayOnline, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART)
+        LeanTween.scale(PP_PlayOnline, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
+        LeanTween.scale(PP_BackButton, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART)
         .setOnComplete(DisablePlayPanel);
     }
 
