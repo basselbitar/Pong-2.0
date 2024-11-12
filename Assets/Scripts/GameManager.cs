@@ -113,11 +113,19 @@ public class GameManager : MonoBehaviour {
     public void Player1GainsLife() {
         _p1Score++;
         _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP1Score), _p1Score, false);
+        CalculateMusicIntensity();
     }
 
     public void Player2GainsLife() {
         _p2Score++;
         _scoreManager.BroadcastRemoteMethod(nameof(_scoreManager.UpdateP2Score), _p2Score, false);
+        CalculateMusicIntensity();
+    }
+
+    private void CalculateMusicIntensity() {
+        _intenseGame = _p1Score <= 2 || _p2Score <= 2;
+        _superIntenseGame = _p1Score <= 2 && _p2Score <= 2;
+        _musicAudioManager.UpdateSoundtrack(_intenseGame, _superIntenseGame);
     }
 
     private bool IsHostAndReadyToPlay() {
@@ -153,6 +161,7 @@ public class GameManager : MonoBehaviour {
         // when game finishes, reset players Readiness
         if (_gameFinished) {
             ResetGame();
+            _musicAudioManager.Stop();
             return false;
         }
 
@@ -285,9 +294,7 @@ public class GameManager : MonoBehaviour {
                 _ball.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
             }
         }
-        _intenseGame = _p1Score <= 2 || _p2Score <= 2;
-        _superIntenseGame = _p1Score <= 2 && _p2Score <= 2;
-        _musicAudioManager.UpdateSoundtrack(_intenseGame, _superIntenseGame);
+        CalculateMusicIntensity();
     }
 
     private void ResetGame() {
@@ -326,6 +333,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void OnLeaveRoom() {
+        _musicAudioManager.Stop();
         if (!AmITheHost() && PlayMode.IsOnline) {
             return;
         }

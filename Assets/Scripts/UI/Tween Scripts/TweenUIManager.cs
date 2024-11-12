@@ -67,15 +67,12 @@ public class TweenUIManager : MonoBehaviour {
         SFXSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(sfxVolume);
         UpgradeSlider.GetComponent<UnityEngine.UI.Slider>().SetValueWithoutNotify(upgradeVolume);
 
-        PlayerPrefs.SetInt("Difficulty", 2);
         var toggles = AIDifficulty.GetComponentsInChildren<Toggle>();
         foreach (var item in toggles)
         {
             item.isOn = false;
         }
         toggles[PlayerPrefs.GetInt("Difficulty")].isOn = true;
-
-        Debug.Log(AIDifficulty.GetComponentsInChildren<Toggle>().Length);
     }
 
     // utility

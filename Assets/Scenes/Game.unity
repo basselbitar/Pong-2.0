@@ -4641,7 +4641,7 @@ RectTransform:
   m_Father: {fileID: 1137699438}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5151,7 +5151,7 @@ RectTransform:
   m_Father: {fileID: 1949726119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5820,6 +5820,7 @@ GameObject:
   m_Component:
   - component: {fileID: 788864146}
   - component: {fileID: 788864147}
+  - component: {fileID: 788864148}
   m_Layer: 5
   m_Name: Hard Radio Option
   m_TagString: Untagged
@@ -5894,8 +5895,33 @@ MonoBehaviour:
   m_Group: {fileID: 1797559518}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 788864148}
+        m_TargetAssemblyTypeName: DifficultyToggle, Assembly-CSharp
+        m_MethodName: OnOptionSelected
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
+--- !u!114 &788864148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788864145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317dcd1d021dc6949acc7985db3548d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _difficultyValue: 2
 --- !u!1 &791448253
 GameObject:
   m_ObjectHideFlags: 0
@@ -6367,7 +6393,7 @@ RectTransform:
   m_Father: {fileID: 1906590484}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7964,6 +7990,8 @@ GameObject:
   - component: {fileID: 1069034527}
   - component: {fileID: 1069034528}
   - component: {fileID: 1069034529}
+  - component: {fileID: 1069034531}
+  - component: {fileID: 1069034530}
   m_Layer: 0
   m_Name: MusicAudioManager
   m_TagString: Untagged
@@ -7999,17 +8027,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relaxedMusic:
-  - {fileID: 8300000, guid: 9be1ba9d781bd95479fc785e10aceb43, type: 3}
+  - {fileID: 8300000, guid: 9c65c6a78327d6147b0cabd017eec631, type: 3}
   intenseMusic:
-  - {fileID: 8300000, guid: d8f3a6db50cfcbe4a9501104442305ca, type: 3}
-  - {fileID: 8300000, guid: 0f9b5d760925e024380132c3fa9c94ee, type: 3}
-  - {fileID: 8300000, guid: a10a6c32d4c1ebe42800c762a66cc5ea, type: 3}
-  - {fileID: 8300000, guid: 3fd93cd13ce40344194016b4ffdbbe4b, type: 3}
+  - {fileID: 8300000, guid: 40dfd2ad5e3c7024dbb70136e5b3cdb8, type: 3}
   superIntenseMusic:
-  - {fileID: 8300000, guid: 095d0656a048e664296c9f0447b84c41, type: 3}
-  - {fileID: 8300000, guid: b0648be9d9fe73d4886eafef0d90778f, type: 3}
-  - {fileID: 8300000, guid: 36f2dddc85bf5d84b9b86344bafd2608, type: 3}
-  - {fileID: 8300000, guid: 1a08d579a1dd50f439011c1af8de5acd, type: 3}
+  - {fileID: 8300000, guid: 55b73e5d6ed4cb74c987cab2cb3abc48, type: 3}
+  - {fileID: 8300000, guid: d7cf1d9613fa40a4aafd38d92a033de0, type: 3}
+  _relaxedAudioSource: {fileID: 1069034529}
+  _intenseAudioSource: {fileID: 1069034531}
+  _superIntenseAudioSource: {fileID: 1069034530}
 --- !u!82 &1069034529
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8025,6 +8051,198 @@ AudioSource:
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &1069034530
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069034526}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &1069034531
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069034526}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -8557,7 +8775,7 @@ RectTransform:
   m_Father: {fileID: 824983459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 5.1, y: 0}
   m_SizeDelta: {x: 36.7042, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -9732,7 +9950,7 @@ RectTransform:
   m_Father: {fileID: 1001107284}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 5.1, y: 0}
   m_SizeDelta: {x: 36.7042, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10598,7 +10816,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1389902919
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11399,7 +11617,7 @@ RectTransform:
   m_Father: {fileID: 1967453721}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 5.1, y: 0}
   m_SizeDelta: {x: 36.7042, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -20581,6 +20799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1917440786}
   - component: {fileID: 1917440787}
+  - component: {fileID: 1917440788}
   m_Layer: 5
   m_Name: Medium Radio Option
   m_TagString: Untagged
@@ -20655,8 +20874,33 @@ MonoBehaviour:
   m_Group: {fileID: 1797559518}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1917440788}
+        m_TargetAssemblyTypeName: DifficultyToggle, Assembly-CSharp
+        m_MethodName: OnOptionSelected
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
+--- !u!114 &1917440788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917440785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317dcd1d021dc6949acc7985db3548d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _difficultyValue: 1
 --- !u!1 &1934735840
 GameObject:
   m_ObjectHideFlags: 0
@@ -22008,6 +22252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2138905558}
   - component: {fileID: 2138905559}
+  - component: {fileID: 2138905560}
   m_Layer: 5
   m_Name: Easy Radio Option
   m_TagString: Untagged
@@ -22082,8 +22327,33 @@ MonoBehaviour:
   m_Group: {fileID: 1797559518}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2138905560}
+        m_TargetAssemblyTypeName: DifficultyToggle, Assembly-CSharp
+        m_MethodName: OnOptionSelected
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
+--- !u!114 &2138905560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138905557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317dcd1d021dc6949acc7985db3548d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _difficultyValue: 0
 --- !u!1 &2146904306
 GameObject:
   m_ObjectHideFlags: 0

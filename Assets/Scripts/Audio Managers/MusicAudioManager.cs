@@ -15,56 +15,63 @@ public class MusicAudioManager : MonoBehaviour {
 
     private float _musicVolume;
 
-    private AudioSource _audioSource;
+    public AudioSource _relaxedAudioSource;
+    public AudioSource _intenseAudioSource;
+    public AudioSource _superIntenseAudioSource;
     private int _intensityLevel; // 0 for normal gameplay, 1 for intense game, 2 for super intense game
 
     void Start() {
-        if (!TryGetComponent<AudioSource>(out _audioSource)) {
-            _audioSource = gameObject.AddComponent<AudioSource>();
-        }
         _musicVolume = PlayerPrefs.GetFloat("musicVolume");
         //Debug.Log("Initially, Music volume was: " + _musicVolume);
+    }
 
+    private void Update() {
+        Debug.Log("Intensity Level is: " + _intensityLevel);
     }
 
     public void UpdateSoundtrack(bool intenseGame, bool superIntenseGame) {
-        if ((_intensityLevel == 0 && (intenseGame || superIntenseGame)) || (_intensityLevel == 1 && superIntenseGame)) {
-            if (superIntenseGame) {
+
+        if(superIntenseGame) {
+            if(_intensityLevel != 2) {
                 _intensityLevel = 2;
                 PlaySuperIntenseMusic();
             }
-            else {
-                _intensityLevel = 1;
-                PlayIntenseMusic();
-            }
-        }
-        if (_intensityLevel > 0 && !intenseGame && !superIntenseGame) {
+        } else if(intenseGame) {
+            _intensityLevel = 1;
+            PlayIntenseMusic();
+        } else {
             _intensityLevel = 0;
-            PlayRelaxedMusic();
+            _intenseAudioSource.volume = 0;
+            _superIntenseAudioSource.volume = 0;
         }
     }
 
     public void PlayRelaxedMusic() {
-        PlayRandomSong(relaxedMusic);
+        PlayRandomSong(_relaxedAudioSource, relaxedMusic, _musicVolume);
+        PlayRandomSong(_intenseAudioSource, intenseMusic, 0);
+        PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, 0);
     }
 
     public void PlayIntenseMusic() {
-        PlayRandomSong(intenseMusic);
+        //PlayRandomSong(intenseMusic);
+        _intenseAudioSource.volume = _musicVolume;
+        _superIntenseAudioSource.volume = 0;
     }
 
     public void PlaySuperIntenseMusic() {
-        PlayRandomSong(superIntenseMusic);
+        //PlayRandomSong(superIntenseMusic);
+        _intenseAudioSource.volume = _musicVolume;
+        _superIntenseAudioSource.volume = _musicVolume;
     }
 
-    private void PlayRandomSong(List<AudioClip> songs) {
+    private void PlayRandomSong(AudioSource audioSource,  List<AudioClip> songs, float volume) {
         if (songs.Count == 0)
             return;
         int randIndex = Random.Range(0, songs.Count);
-        _audioSource.clip = songs[randIndex];
-        _audioSource.volume = _musicVolume;
-        _audioSource.pitch = Random.Range(0.8f, 1.2f);
-        _audioSource.Play();
-        //Debug.Log("Music volume is: " + _musicVolume);
+        audioSource.clip = songs[randIndex];
+        audioSource.volume = volume;
+        //_audioSource.pitch = Random.Range(0.8f, 1.2f);
+        audioSource.Play();
     }
 
     public void SetMusicVolume(float volume) {
@@ -78,7 +85,8 @@ public class MusicAudioManager : MonoBehaviour {
     }
 
     public void Stop() {
-
-        _audioSource.Stop();
+        _relaxedAudioSource.Stop();
+        _intenseAudioSource.Stop();
+        _superIntenseAudioSource.Stop();
     }
 }

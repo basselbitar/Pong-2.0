@@ -14,23 +14,48 @@ public class PCController : MonoBehaviour {
     private bool _isDrunk = false;
     [SerializeField]
     private float _actionThreshold = 0.5f;
+    private float _messUpProbability = 0.05f;
 
     private Vector2 _intendedDirection;
 
     enum Difficulty { Easy, Medium, Hard };
     private Difficulty _difficulty;
 
-    // Start is called before the first frame update
     void Start() {
         _paddle = GetComponent<Paddle>();
         _lastDrunkTime = Time.realtimeSinceStartup;
         _difficulty = Difficulty.Easy;
-        Debug.Log(PlayerPrefs.GetInt("Difficulty"));
-        _difficulty = (Difficulty)PlayerPrefs.GetInt("Difficulty");
-        Debug.Log(_difficulty);
+        _difficulty = (Difficulty) PlayerPrefs.GetInt("Difficulty");
+        SetParameters();
+    }
+    private void SetParameters() {
+        switch (_difficulty) {
+            case Difficulty.Easy:
+                _actionThreshold = 0.7f;
+                _drunkDuration = 2f;
+                _drunkResetThreshold = 2f;
+                _messUpProbability = 0.2f; // 20% chance to make the wrong decision
+                break;
+            case Difficulty.Medium:
+                _actionThreshold = 0.2f;
+                _drunkDuration = 1f;
+                _drunkResetThreshold = 4f;
+                _messUpProbability = 0.1f;
+                break;
+            case Difficulty.Hard:
+                _actionThreshold = 0.08f;
+                _drunkDuration = 0.5f;
+                _drunkResetThreshold = 6f;
+                _messUpProbability = 0.05f;
+                break;
+            default:
+                Debug.LogError("Difficulty not set");
+                break;
+        }
+
+        Debug.Log("Parameters have been set to: " + _actionThreshold + ", " + _drunkDuration + ", " + _drunkResetThreshold + ", " + _messUpProbability);
     }
 
-    // Update is called once per frame
     void Update() {
         balls = FindObjectsOfType<Ball>();
         if (balls.Length == 0)
@@ -58,6 +83,9 @@ public class PCController : MonoBehaviour {
         if (Mathf.Abs(transform.position.y - closestBall.transform.position.y) < _actionThreshold) {
             _intendedDirection = Vector2.zero;
         }
+
+
+
         _paddle.SetDirection(_intendedDirection);
 
         //TODO: program failures at random ... and leeway so that the movement isn't jagged
@@ -69,6 +97,18 @@ public class PCController : MonoBehaviour {
 
             if (_lastDrunkTime + _drunkDuration < Time.realtimeSinceStartup) {
                 _isDrunk = false;
+            }
+        } else {
+            _isDrunk = false;
+        }
+
+        // random chance to mess up (when not drunk)
+        if (!_isDrunk && Random.Range(0f, 1f) < _messUpProbability) {
+            if (_intendedDirection == Vector2.up) {
+                _intendedDirection = Vector2.down;
+            }
+            else if (_intendedDirection == Vector2.down) {
+                _intendedDirection = Vector2.up;
             }
         }
 
@@ -86,4 +126,6 @@ public class PCController : MonoBehaviour {
             _paddle.SetDirection(Vector2.up);
         }
     }
+
+
 }
