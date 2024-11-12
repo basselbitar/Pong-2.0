@@ -26,7 +26,7 @@ public class MusicAudioManager : MonoBehaviour {
     }
 
     private void Update() {
-        Debug.Log("Intensity Level is: " + _intensityLevel);
+        //Debug.Log("Intensity Level is: " + _intensityLevel);
     }
 
     public void UpdateSoundtrack(bool intenseGame, bool superIntenseGame) {

@@ -16,6 +16,14 @@ public class PCController : MonoBehaviour {
     private float _actionThreshold = 0.5f;
     private float _messUpProbability = 0.05f;
 
+    private float _timeSinceLastCheckedForMessUp;
+    private float _intervalBetweenCheckingForMessUp = 1f;
+
+    private bool _asleep = false;
+    private float _timeSinceLastSleep;
+    private float _sleepDuration;
+
+
     private Vector2 _intendedDirection;
 
     enum Difficulty { Easy, Medium, Hard };
@@ -24,6 +32,7 @@ public class PCController : MonoBehaviour {
     void Start() {
         _paddle = GetComponent<Paddle>();
         _lastDrunkTime = Time.realtimeSinceStartup;
+        _timeSinceLastCheckedForMessUp = Time.realtimeSinceStartup;
         _difficulty = Difficulty.Easy;
         _difficulty = (Difficulty) PlayerPrefs.GetInt("Difficulty");
         SetParameters();
@@ -35,18 +44,24 @@ public class PCController : MonoBehaviour {
                 _drunkDuration = 2f;
                 _drunkResetThreshold = 2f;
                 _messUpProbability = 0.2f; // 20% chance to make the wrong decision
+                _intervalBetweenCheckingForMessUp = 2f;
+                _sleepDuration = 3f;
                 break;
             case Difficulty.Medium:
                 _actionThreshold = 0.2f;
                 _drunkDuration = 1f;
                 _drunkResetThreshold = 4f;
                 _messUpProbability = 0.1f;
+                _intervalBetweenCheckingForMessUp = 3f;
+                _sleepDuration = 2f;
                 break;
             case Difficulty.Hard:
                 _actionThreshold = 0.08f;
                 _drunkDuration = 0.5f;
                 _drunkResetThreshold = 6f;
                 _messUpProbability = 0.05f;
+                _intervalBetweenCheckingForMessUp = 4f;
+                _sleepDuration = 1f;
                 break;
             default:
                 Debug.LogError("Difficulty not set");
@@ -71,6 +86,37 @@ public class PCController : MonoBehaviour {
             }
         }
 
+        if(Time.realtimeSinceStartup > _timeSinceLastSleep + _sleepDuration && _asleep) {
+            _asleep = false;
+        }
+
+        if(_asleep) {
+            return;
+        }
+
+        if( Time.realtimeSinceStartup > _timeSinceLastCheckedForMessUp + _intervalBetweenCheckingForMessUp  ) {
+            _timeSinceLastCheckedForMessUp = Time.realtimeSinceStartup;
+            float f = Random.Range(0f, 1f);
+            if( f < _messUpProbability) {
+                _asleep = true;
+                _timeSinceLastSleep = Time.realtimeSinceStartup;
+            }
+        }
+
+        //every n seconds, sleep for m seconds to give the player a chance
+        // random chance to mess up (when not drunk)
+        if (!_isDrunk && Random.Range(0f, 1f) < _messUpProbability) {
+            if (_intendedDirection == Vector2.up) {
+                _intendedDirection = Vector2.down;
+            }
+            else if (_intendedDirection == Vector2.down) {
+                _intendedDirection = Vector2.up;
+            }
+        }
+
+
+
+
         if (transform.position.y > closestBall.transform.position.y) {
             //Debug.Log("Moving down since " + transform.position.y + " > ball position = " + closestBall.transform.position.y);
             _intendedDirection = Vector2.down;
@@ -88,7 +134,7 @@ public class PCController : MonoBehaviour {
 
         _paddle.SetDirection(_intendedDirection);
 
-        //TODO: program failures at random ... and leeway so that the movement isn't jagged
+        // TODO: program failures at random ... and leeway so that the movement isn't jagged
         if (_paddle.isInvertedControls) {
             if (_lastDrunkTime + _drunkResetThreshold < Time.realtimeSinceStartup) {
                 _isDrunk = true;
@@ -100,16 +146,6 @@ public class PCController : MonoBehaviour {
             }
         } else {
             _isDrunk = false;
-        }
-
-        // random chance to mess up (when not drunk)
-        if (!_isDrunk && Random.Range(0f, 1f) < _messUpProbability) {
-            if (_intendedDirection == Vector2.up) {
-                _intendedDirection = Vector2.down;
-            }
-            else if (_intendedDirection == Vector2.down) {
-                _intendedDirection = Vector2.up;
-            }
         }
 
         if (_isDrunk) {
