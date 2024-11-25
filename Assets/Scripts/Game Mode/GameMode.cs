@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 
 [Serializable]
 public class GameMode
@@ -17,6 +18,10 @@ public class GameMode
 
     public string GetName() {
         return _name;
+    }
+
+    public string GetImageURL() {
+        return "Game Modes Images/" + _name;
     }
 
     public int[] GetUpgradeWeights() {

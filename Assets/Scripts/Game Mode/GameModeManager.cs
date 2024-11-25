@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameModeManager : MonoBehaviour {
     public List<GameMode> gameModes;
@@ -26,6 +27,9 @@ public class GameModeManager : MonoBehaviour {
 
     [SerializeField]
     private List<TMP_Text> _gameModeOptionTexts;
+
+    [SerializeField]
+    private List<Image> _gameModeOptionImages;
 
     private Multiplayer _multiplayer;
 
@@ -57,8 +61,8 @@ public class GameModeManager : MonoBehaviour {
 
         // basic game mode: Original design of the game where everything is balanced
         int[] upgradeValues = new int[17] { 4, 4, 1, 3, 1, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1 };
-        GameMode Base = new("Base Mode", upgradeValues, 1.0f);
-        gameModes.Add(Base);
+        GameMode Balanced = new("Balanced", upgradeValues, 1.0f);
+        gameModes.Add(Balanced);
 
         // Stormy Night: Game mode where there's lots of "wind" and "wind against player"
         upgradeValues = new int[17] { 3, 2, 1, 1, 1, 0, 10, 0, 0, 0, 6, 2, 3, 3, 2, 1, 2 };
@@ -97,12 +101,12 @@ public class GameModeManager : MonoBehaviour {
 
         // We’re in this together: Heavier stats for neutral upgrades rather than buffs/debuffs
         upgradeValues = new int[17] { 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 4, 3 };
-        GameMode Together = new("We're in this together", upgradeValues, 1.0f);
+        GameMode Together = new("We're in this Together", upgradeValues, 1.0f);
         gameModes.Add(Together);
 
         // Classic: No upgrades, but ball gets faster faster. TODO: how?
         upgradeValues = new int[17] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        GameMode Classic = new("Classic", upgradeValues, 3f);
+        GameMode Classic = new("Classic Pong", upgradeValues, 3f);
         gameModes.Add(Classic);
 
         foreach (GameMode mode in gameModes) {
@@ -215,6 +219,16 @@ public class GameModeManager : MonoBehaviour {
         _gameModeOptionTexts[0].text = gameModes[0].GetName();
         _gameModeOptionTexts[1].text = gameModes[1].GetName();
         _gameModeOptionTexts[2].text = gameModes[2].GetName();
+
+        Debug.Log("The game modes are: " + gameModes[0].GetName() + ", " + gameModes[1].GetName() + ", " + gameModes[2].GetName());
+        Debug.Log("The game modes URLS are: " + gameModes[0].GetImageURL() + ", " + gameModes[1].GetImageURL() + ", " + gameModes[2].GetImageURL());
+
+        _gameModeOptionImages[0].sprite = Resources.Load<Sprite>(gameModes[0].GetImageURL());
+        _gameModeOptionImages[1].sprite = Resources.Load<Sprite>(gameModes[1].GetImageURL());
+        _gameModeOptionImages[2].sprite = Resources.Load<Sprite>(gameModes[2].GetImageURL());
+        //GameOverPanel.GetComponentInChildren<TMP_Text>().font = Resources.Load<TMP_FontAsset>("Fonts/Game Over/GreatVibes-Regular SDF");
+
+        //Resources.Load<TMP_FontAsset>("Fonts/Game Over/GreatVibes-Regular SDF");
         _gameModePool = gameModes;
         //TODO: add the images to the buttons that describe each game mode and what it entails
     }
