@@ -17,8 +17,13 @@ public class GameModeOption : MonoBehaviour {
 
     private bool clicked;
 
-    private Color _selectedColor = new(0.57f, 1f, 0.66f);
-    private Color _deselectedColor = new(1f, 1f, 1f);
+    [SerializeField]
+    private GameObject _frame;
+
+    //private Color _selectedColor = new(0.57f, 1f, 0.66f);
+    private Color _selectedColor = new(1f, 1f, 1f);
+    //private Color _deselectedColor = new(1f, 1f, 1f);
+    private Color _deselectedColor = new(0.7176f, 0.7176f, 0.7176f);
     private Color _hoveredColor = new(0.76f, 0.78f, 0.384f);
 
     public void OnButtonClicked() {
@@ -40,11 +45,14 @@ public class GameModeOption : MonoBehaviour {
 
         this.clicked = true;
         selectedGameModes.Add(_index);
+
+        _frame.SetActive(true);
+
         var colors = GetComponent<Button>().colors;
-        colors.normalColor = _selectedColor;
-        colors.selectedColor = _selectedColor;
-        colors.highlightedColor = _selectedColor;
-        GetComponent<Button>().colors = colors;
+        //colors.normalColor = _selectedColor;
+        //colors.selectedColor = _selectedColor;
+        //colors.highlightedColor = _selectedColor;
+        //GetComponent<Button>().colors = colors;
         //PrintGameModeList();
     }
 
@@ -52,11 +60,13 @@ public class GameModeOption : MonoBehaviour {
         this.clicked = false;
         selectedGameModes.Remove(_index);
 
+        _frame.SetActive(false);
+
         var colors = GetComponent<Button>().colors;
-        colors.normalColor = _deselectedColor;
-        colors.selectedColor = _hoveredColor;
-        colors.highlightedColor = _deselectedColor;
-        GetComponent<Button>().colors = colors;
+        //colors.normalColor = _deselectedColor;
+        //colors.selectedColor = _hoveredColor;
+        //colors.highlightedColor = _deselectedColor;
+        //GetComponent<Button>().colors = colors;
         //PrintGameModeList();
     }
 

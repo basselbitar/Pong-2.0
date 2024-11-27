@@ -1,4 +1,5 @@
 using Alteruna;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -287,7 +288,7 @@ public class TweenUIManager : MonoBehaviour {
         HidePaddleSelectorButtons();
         GameModeSelectionPanel.SetActive(true);
         LeanTween.scale(GMSP_InRoomText, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(GMSP_Options, Vector3.one, 0.9f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(GMSP_Options, Vector3.one, 0.9f).setDelay(.8f).setEase(EASE_OUT_CIRC).setOnComplete(() => { InitializeGameModeOptionsPositions(); });
         LeanTween.scale(GMSP_PromptText, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_NextButton, Vector3.one, 0.6f).setDelay(1.0f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(GMSP_BackButton, Vector3.one, 0.6f).setDelay(1.1f).setEase(EASE_OUT_CIRC);
@@ -298,6 +299,18 @@ public class TweenUIManager : MonoBehaviour {
         GMSP_Options.GetComponentInChildren<Button>().Select();
     }
 
+    private void InitializeGameModeOptionsPositions() {
+        foreach (var osh in GMSP_Options.GetComponentsInChildren<OptionSelectionHandler>()) {
+            osh.enabled = true;
+            osh.InitializePositionAndScale();
+        }
+    }
+
+    private void DeactivateGameModeOptionsSelectionHandlers() {
+        foreach (var osh in GMSP_Options.GetComponentsInChildren<OptionSelectionHandler>()) {
+            osh.enabled = false;
+        }
+    }
     public void ShowPaddleSelectorButtons() {
         HideRoomListButtons();
         HideWaitingForPlayerButtons();
@@ -374,6 +387,7 @@ public class TweenUIManager : MonoBehaviour {
     }
 
     void HideGameModeSelectionButtons() {
+        DeactivateGameModeOptionsSelectionHandlers();
         LeanTween.scale(GMSP_InRoomText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(GMSP_Options, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
         LeanTween.scale(GMSP_PromptText, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);

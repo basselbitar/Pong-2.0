@@ -220,9 +220,6 @@ public class GameModeManager : MonoBehaviour {
         _gameModeOptionTexts[1].text = gameModes[1].GetName();
         _gameModeOptionTexts[2].text = gameModes[2].GetName();
 
-        Debug.Log("The game modes are: " + gameModes[0].GetName() + ", " + gameModes[1].GetName() + ", " + gameModes[2].GetName());
-        Debug.Log("The game modes URLS are: " + gameModes[0].GetImageURL() + ", " + gameModes[1].GetImageURL() + ", " + gameModes[2].GetImageURL());
-
         _gameModeOptionImages[0].sprite = Resources.Load<Sprite>(gameModes[0].GetImageURL());
         _gameModeOptionImages[1].sprite = Resources.Load<Sprite>(gameModes[1].GetImageURL());
         _gameModeOptionImages[2].sprite = Resources.Load<Sprite>(gameModes[2].GetImageURL());
