@@ -295,8 +295,6 @@ public class TweenUIManager : MonoBehaviour {
         FindObjectOfType<NextButton>().Initialize();
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1.2f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
-
-        GMSP_Options.GetComponentInChildren<Button>().Select();
     }
 
     private void InitializeGameModeOptionsPositions() {
@@ -304,6 +302,7 @@ public class TweenUIManager : MonoBehaviour {
             osh.enabled = true;
             osh.InitializePositionAndScale();
         }
+        GMSP_Options.GetComponentInChildren<Button>().Select();
     }
 
     private void DeactivateGameModeOptionsSelectionHandlers() {

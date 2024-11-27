@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GameModeOption : MonoBehaviour {
+public class GameModeOption : MonoBehaviour, ISelectHandler, IDeselectHandler {
     [SerializeField]
     private int _index;
 
@@ -36,6 +37,20 @@ public class GameModeOption : MonoBehaviour {
         }
     }
 
+    public void OnSelect(BaseEventData eventData) {
+        _frame.SetActive(true);
+        if (selectedGameModes.IndexOf(_index) == -1) {
+            _frame.GetComponent<Image>().color = Color.yellow;
+        }
+    }
+
+    public void OnDeselect(BaseEventData eventData) {
+        if (selectedGameModes.IndexOf(_index) == -1) {
+            _frame.SetActive(false);
+        }
+    }
+
+
     private void OnGameModeSelected() {
 
         if (selectedGameModes.Count >= 2) {
@@ -47,6 +62,8 @@ public class GameModeOption : MonoBehaviour {
         selectedGameModes.Add(_index);
 
         _frame.SetActive(true);
+        _frame.GetComponent<Image>().color = Color.green;
+
 
         var colors = GetComponent<Button>().colors;
         //colors.normalColor = _selectedColor;
