@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PaddleOption : MonoBehaviour
-{
+public class PaddleOption : MonoBehaviour, ISelectHandler, IDeselectHandler {
     [SerializeField]
     private int _index;
 
@@ -13,6 +13,9 @@ public class PaddleOption : MonoBehaviour
 
     [SerializeField]
     private PaddleOption[] _paddleOptions;
+
+    [SerializeField]
+    private GameObject _frame;
 
     private bool clicked;
 
@@ -32,22 +35,39 @@ public class PaddleOption : MonoBehaviour
         }
     }
 
+    public void OnSelect(BaseEventData eventData) {
+        _frame.SetActive(true);
+        if (selectedOption == 0) {
+            _frame.GetComponent<Image>().color = Color.yellow;
+        }
+    }
+
+    public void OnDeselect(BaseEventData eventData) {
+        if (selectedOption != _index) {
+            _frame.SetActive(false);
+        }
+    }
+
     private void OnPaddleOptionSelected() {
         selectedOption = _index;
-        var colors = GetComponent<Button>().colors;
-        colors.normalColor = _selectedColor;
-        colors.selectedColor = _selectedColor;
-        colors.highlightedColor = _selectedColor;
-        GetComponent<Button>().colors = colors;
+        _frame.SetActive(true);
+        _frame.GetComponent<Image>().color = Color.green;
+
+        //var colors = GetComponent<Button>().colors;
+        //colors.normalColor = _selectedColor;
+        //colors.selectedColor = _selectedColor;
+        //colors.highlightedColor = _selectedColor;
+        //GetComponent<Button>().colors = colors;
     }
 
     private void OnPaddleOptionDeselected() {
         selectedOption = 0;
-        var colors = GetComponent<Button>().colors;
-        colors.normalColor = _deselectedColor;
-        colors.selectedColor = _hoveredColor;
-        colors.highlightedColor = _deselectedColor;
-        GetComponent<Button>().colors = colors;
+        _frame.SetActive(false);
+        //var colors = GetComponent<Button>().colors;
+        //colors.normalColor = _deselectedColor;
+        //colors.selectedColor = _hoveredColor;
+        //colors.highlightedColor = _deselectedColor;
+        //GetComponent<Button>().colors = colors;
     }
 
     public void ClearOptions() {

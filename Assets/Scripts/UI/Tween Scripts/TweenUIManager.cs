@@ -317,17 +317,28 @@ public class TweenUIManager : MonoBehaviour {
         PaddleSelectorPanel.SetActive(true);
         LeanTween.scale(PSP_InRoomText, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(PSP_GameModeText, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
-        LeanTween.scale(PSP_Options, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(PSP_Options, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC).setOnComplete(() => { InitializePaddleOptionsPositions(); });
         LeanTween.scale(PSP_ReadyButton, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         if(PlayMode.IsOnline)
             FindObjectOfType<ReadyButton>().Initialize();
 
         LeanTween.scale(PSP_BackButton, Vector3.one, 0.6f).setDelay(1f).setEase(EASE_OUT_CIRC);
         gameStarted = false;
+    }
 
+    private void InitializePaddleOptionsPositions() {
+        foreach (var osh in PSP_Options.GetComponentsInChildren<OptionSelectionHandler>()) {
+            osh.enabled = true;
+            osh.InitializePositionAndScale();
+        }
         PSP_Options.GetComponentInChildren<Button>().Select();
     }
 
+    private void DeactivatePaddleOptionsSelectionHandlers() {
+        foreach (var osh in GMSP_Options.GetComponentsInChildren<OptionSelectionHandler>()) {
+            osh.enabled = false;
+        }
+    }
 
 
     void ShowGameOverButtons() {
@@ -396,6 +407,7 @@ public class TweenUIManager : MonoBehaviour {
     }
 
     public void HidePaddleSelectorButtons() {
+        DeactivatePaddleOptionsSelectionHandlers();
         LeanTween.scale(PSP_InRoomText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_GameModeText, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(PSP_Options, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
