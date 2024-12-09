@@ -7105,7 +7105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -158.7}
+  m_AnchoredPosition: {x: 0, y: -175}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &923069611
@@ -8519,12 +8519,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relaxedMusic:
-  - {fileID: 8300000, guid: 9c65c6a78327d6147b0cabd017eec631, type: 3}
+  - {fileID: 8300000, guid: e745ce7f13d05e649aca8bb47b927a9a, type: 3}
   intenseMusic:
-  - {fileID: 8300000, guid: 40dfd2ad5e3c7024dbb70136e5b3cdb8, type: 3}
+  - {fileID: 8300000, guid: b839d76975012f44f8e5acb1e7ab8580, type: 3}
   superIntenseMusic:
-  - {fileID: 8300000, guid: 55b73e5d6ed4cb74c987cab2cb3abc48, type: 3}
-  - {fileID: 8300000, guid: d7cf1d9613fa40a4aafd38d92a033de0, type: 3}
+  - {fileID: 8300000, guid: 3d3710a4816134240999cea1025b8cce, type: 3}
   _relaxedAudioSource: {fileID: 1069034529}
   _intenseAudioSource: {fileID: 1069034531}
   _superIntenseAudioSource: {fileID: 1069034530}
@@ -13573,6 +13572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1554297968}
+  - component: {fileID: 1554297969}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -13599,9 +13599,21 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -11}
+  m_AnchoredPosition: {x: 0, y: -35}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1554297969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554297967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99ad8f6473e9a1448ccdea42d6f647c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1564689455
 GameObject:
   m_ObjectHideFlags: 0
@@ -13751,7 +13763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1579765833
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13887,7 +13899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 22}
+  m_AnchoredPosition: {x: 0, y: 10}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1598425440

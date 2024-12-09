@@ -59,6 +59,32 @@ public class TweenUIManager : MonoBehaviour {
         //_multiplayer.OnRoomJoined.AddListener(JoinedRoom);
     }
 
+
+    public void Update() {
+        if (Input.GetKeyUp(KeyCode.Escape)) {
+            int activePanels = 0;
+            if(OptionsPanel.activeSelf) {
+                activePanels++;
+            }
+            if (PlayPanel.activeSelf) {
+                activePanels++;
+            }
+            if (RoomListPanel.activeSelf) {
+                activePanels++;
+            }
+            if (WaitingForPlayerPanel.activeSelf) {
+                activePanels++;
+            }
+            if (GameModeSelectionPanel.activeSelf) {
+                activePanels++;
+            }
+            if (PaddleSelectorPanel.activeSelf) {
+                activePanels++;
+            }
+            Debug.Log("There are " + activePanels + " active panels");
+        }
+    }
+
     void InitializeVolumeSliders() {
         float musicVolume = PlayerPrefs.GetFloat("musicVolume");
         float sfxVolume = PlayerPrefs.GetFloat("sfxVolume");

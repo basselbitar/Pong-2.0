@@ -20,7 +20,7 @@ public class MusicAudioManager : MonoBehaviour {
     public AudioSource _superIntenseAudioSource;
     private int _intensityLevel; // 0 for normal gameplay, 1 for intense game, 2 for super intense game
 
-    void Start() {
+    public void Start() {
         _musicVolume = PlayerPrefs.GetFloat("musicVolume");
         //Debug.Log("Initially, Music volume was: " + _musicVolume);
     }
@@ -48,20 +48,23 @@ public class MusicAudioManager : MonoBehaviour {
 
     public void PlayRelaxedMusic() {
         PlayRandomSong(_relaxedAudioSource, relaxedMusic, _musicVolume);
-        PlayRandomSong(_intenseAudioSource, intenseMusic, 0);
-        PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, 0);
+        //PlayRandomSong(_intenseAudioSource, intenseMusic, 0);
+        //PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, 0);
     }
 
     public void PlayIntenseMusic() {
         //PlayRandomSong(intenseMusic);
-        _intenseAudioSource.volume = _musicVolume;
-        _superIntenseAudioSource.volume = 0;
+        PlayRandomSong(_intenseAudioSource, intenseMusic, _musicVolume);
+        _relaxedAudioSource.Stop();
+        _superIntenseAudioSource.Stop();
     }
 
     public void PlaySuperIntenseMusic() {
         //PlayRandomSong(superIntenseMusic);
-        _intenseAudioSource.volume = _musicVolume;
+        PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, _musicVolume);
         _superIntenseAudioSource.volume = _musicVolume;
+        _relaxedAudioSource.Stop();
+        _intenseAudioSource.Stop();
     }
 
     private void PlayRandomSong(AudioSource audioSource,  List<AudioClip> songs, float volume) {
