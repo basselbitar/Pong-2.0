@@ -8518,6 +8518,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b970d0334e071ba4cbb747e92c203330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: cec8db87-0c2e-44a9-9aad-8096becdd358
+  Reliability: 1
+  LocalMethodBehavior: 1
   relaxedMusic:
   - {fileID: 8300000, guid: e745ce7f13d05e649aca8bb47b927a9a, type: 3}
   intenseMusic:
@@ -8527,6 +8531,8 @@ MonoBehaviour:
   _relaxedAudioSource: {fileID: 1069034529}
   _intenseAudioSource: {fileID: 1069034531}
   _superIntenseAudioSource: {fileID: 1069034530}
+  _intensityLevel: -1
+  isGamePlaying: 0
 --- !u!82 &1069034529
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8637,7 +8643,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -8733,7 +8739,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

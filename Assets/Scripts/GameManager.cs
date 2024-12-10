@@ -36,9 +36,12 @@ public class GameManager : MonoBehaviour {
     private bool _intenseGame;
     private bool _superIntenseGame;
 
+    private const int LOW_LIVES_LIMIT = 3;
     public void Start() {
         _multiplayer = FindObjectOfType<Multiplayer>();
         _gameStarted = false;
+        _musicAudioManager.BroadcastRemoteMethod(nameof(_musicAudioManager.SetIsGamePlaying), false);
+
         _ballSpawner = GetComponent<BallSpawner>();
         _scoreManager = FindObjectOfType<ScoreManager>();
         debugMode = false;
@@ -51,7 +54,6 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.P)) {
             Debug.LogError("I AM THE HOST: " + AmITheHost());
             Debug.LogError("My index is: " + _multiplayer.Me.Index);
-            Debug.Log("Hello");
         }
 
 
@@ -65,7 +67,8 @@ public class GameManager : MonoBehaviour {
         // spawn the ball
         if (!_gameStarted) {
             _gameStarted = true;
-            _musicAudioManager.PlayRelaxedMusic();
+            _musicAudioManager.BroadcastRemoteMethod(nameof(_musicAudioManager.SetIsGamePlaying), true);
+            //_musicAudioManager.PlayRelaxedMusic();
             StartCoroutine(ResetRound());
         }
 
@@ -123,9 +126,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CalculateMusicIntensity() {
-        _intenseGame = _p1Score <= 2 || _p2Score <= 2;
-        _superIntenseGame = _p1Score <= 2 && _p2Score <= 2;
-        _musicAudioManager.UpdateSoundtrack(_intenseGame, _superIntenseGame);
+        _intenseGame = _p1Score <= LOW_LIVES_LIMIT || _p2Score <= LOW_LIVES_LIMIT;
+        _superIntenseGame = _p1Score <= LOW_LIVES_LIMIT && _p2Score <= LOW_LIVES_LIMIT;
+        _musicAudioManager.BroadcastRemoteMethod(nameof(_musicAudioManager.UpdateSoundtrack), _intenseGame, _superIntenseGame);
+
     }
 
     private bool IsHostAndReadyToPlay() {
@@ -161,7 +165,8 @@ public class GameManager : MonoBehaviour {
         // when game finishes, reset players Readiness
         if (_gameFinished) {
             ResetGame();
-            _musicAudioManager.Stop();
+            _musicAudioManager.BroadcastRemoteMethod(nameof(_musicAudioManager.StopAllMusic));
+
             return false;
         }
 
@@ -301,6 +306,8 @@ public class GameManager : MonoBehaviour {
         DestroyRemainingBalls();
         DestroyRemainingUpgrades();
         _gameStarted = false;
+        _musicAudioManager.BroadcastRemoteMethod(nameof(_musicAudioManager.SetIsGamePlaying), false);
+
         _gameFinished = false;
         _initialValuesAssigned = false;
         p1Paddle.SetReady(false);
@@ -333,7 +340,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void OnLeaveRoom() {
-        _musicAudioManager.Stop();
+        _musicAudioManager.BroadcastRemoteMethod(nameof(_musicAudioManager.StopAllMusic));
         if (!AmITheHost() && PlayMode.IsOnline) {
             return;
         }

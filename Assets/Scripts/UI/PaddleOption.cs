@@ -62,6 +62,7 @@ public class PaddleOption : MonoBehaviour, ISelectHandler, IDeselectHandler {
 
     private void OnPaddleOptionDeselected() {
         selectedOption = 0;
+        _frame.GetComponent<Image>().color = Color.yellow;
         _frame.SetActive(false);
         //var colors = GetComponent<Button>().colors;
         //colors.normalColor = _deselectedColor;

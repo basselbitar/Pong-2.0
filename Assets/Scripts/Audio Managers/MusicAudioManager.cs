@@ -1,8 +1,9 @@
+using Alteruna;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicAudioManager : MonoBehaviour {
+public class MusicAudioManager : AttributesSync {
 
     [SerializeField]
     private List<AudioClip> relaxedMusic;
@@ -18,42 +19,64 @@ public class MusicAudioManager : MonoBehaviour {
     public AudioSource _relaxedAudioSource;
     public AudioSource _intenseAudioSource;
     public AudioSource _superIntenseAudioSource;
-    private int _intensityLevel; // 0 for normal gameplay, 1 for intense game, 2 for super intense game
+    [SerializeField]
+    private int _intensityLevel = -1; // 0 for normal gameplay, 1 for intense game, 2 for super intense game
+
+    [SerializeField]
+    private bool isGamePlaying = false;
 
     public void Start() {
         _musicVolume = PlayerPrefs.GetFloat("musicVolume");
         //Debug.Log("Initially, Music volume was: " + _musicVolume);
     }
 
-    private void Update() {
+    public void Update() {
         //Debug.Log("Intensity Level is: " + _intensityLevel);
+        Debug.Log("is game playing: " + isGamePlaying);
+        Debug.Log("relaxed source is playing: " + _relaxedAudioSource.isPlaying);
+        Debug.Log("intense source is playing: " + _intenseAudioSource.isPlaying);
+        Debug.Log("super intense source is playing: " + _superIntenseAudioSource.isPlaying);
     }
 
-    public void UpdateSoundtrack(bool intenseGame, bool superIntenseGame) {
+    [SynchronizableMethod]
+    public void SetIsGamePlaying(bool b) {
+        Debug.LogError("Setting IsGamePlaying to " + b);
+        isGamePlaying = b;
+    }
 
+    [SynchronizableMethod]
+    public void UpdateSoundtrack(bool intenseGame, bool superIntenseGame) {
+        if(!isGamePlaying) {
+            StopAllMusic();
+            return;
+        }
         if(superIntenseGame) {
             if(_intensityLevel != 2) {
                 _intensityLevel = 2;
                 PlaySuperIntenseMusic();
             }
-        } else if(intenseGame) {
+        } else if(intenseGame && _intensityLevel != 1) {
             _intensityLevel = 1;
             PlayIntenseMusic();
-        } else {
+        } else if(!intenseGame && !superIntenseGame && _intensityLevel != 0) {
             _intensityLevel = 0;
-            _intenseAudioSource.volume = 0;
-            _superIntenseAudioSource.volume = 0;
+            PlayRelaxedMusic();
         }
     }
 
     public void PlayRelaxedMusic() {
+        Debug.Log("Starting Relaxed Music");
         PlayRandomSong(_relaxedAudioSource, relaxedMusic, _musicVolume);
+        _intenseAudioSource.Stop();
+        _superIntenseAudioSource.Stop();
         //PlayRandomSong(_intenseAudioSource, intenseMusic, 0);
         //PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, 0);
     }
 
     public void PlayIntenseMusic() {
         //PlayRandomSong(intenseMusic);
+        Debug.Log("Starting Intense Music");
+
         PlayRandomSong(_intenseAudioSource, intenseMusic, _musicVolume);
         _relaxedAudioSource.Stop();
         _superIntenseAudioSource.Stop();
@@ -61,6 +84,8 @@ public class MusicAudioManager : MonoBehaviour {
 
     public void PlaySuperIntenseMusic() {
         //PlayRandomSong(superIntenseMusic);
+        Debug.Log("Starting Super Intense Music");
+
         PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, _musicVolume);
         _superIntenseAudioSource.volume = _musicVolume;
         _relaxedAudioSource.Stop();
@@ -87,7 +112,8 @@ public class MusicAudioManager : MonoBehaviour {
         uIAudioManager.PlaySoundAfterDelay(_musicVolume);
     }
 
-    public void Stop() {
+    [SynchronizableMethod]
+    public void StopAllMusic() {
         _relaxedAudioSource.Stop();
         _intenseAudioSource.Stop();
         _superIntenseAudioSource.Stop();

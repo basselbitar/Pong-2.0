@@ -15,15 +15,16 @@ public class OptionSelectionHandler : MonoBehaviour, IPointerEnterHandler, IPoin
 
     public void InitializePositionAndScale() {
         if (!_initialized) {
-            _initialized = true;
             _startPos = transform.position;
             _startScale = transform.localScale;
 
             Debug.Log("Start pos is: " + _startPos.x);
+            _initialized = true;
         }
     }
 
     private IEnumerator MoveCard(bool startingAnimation) {
+        
         Vector3 endPosition;
         Vector3 endScale;
 
@@ -53,20 +54,32 @@ public class OptionSelectionHandler : MonoBehaviour, IPointerEnterHandler, IPoin
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
+        if (!_initialized) {
+            return;
+        }
         // Select the card
         eventData.selectedObject = gameObject;
     }
 
     public void OnPointerExit(PointerEventData eventData) {
+        if (!_initialized) {
+            return;
+        }
         // Deselect the card
         eventData.selectedObject = null;
     }
 
     public void OnSelect(BaseEventData eventData) {
+        if (!_initialized) {
+            return;
+        }
         StartCoroutine(MoveCard(true));
     }
 
     public void OnDeselect(BaseEventData eventData) {
+        if (!_initialized) {
+            return;
+        }
         StartCoroutine(MoveCard(false));
     }
 }
