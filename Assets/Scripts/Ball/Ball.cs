@@ -26,6 +26,9 @@ public class Ball : AttributesSync {
     [SerializeField]
     private List<Sprite> _ballSprites;
 
+    [SerializeField]
+    private float _magnusEffectFactor;
+
     public int GetLastTouchedBy() { return _lastTouchedBy; }
 
     public void SetLastTouchedBy(int lastTouchedIndex) { _lastTouchedBy = lastTouchedIndex; }
@@ -43,6 +46,9 @@ public class Ball : AttributesSync {
         ResetPosition();
     }
 
+    public void SetMagnusEffectFactor(float magnusEffectFactor) {
+        _magnusEffectFactor = magnusEffectFactor;
+    }
     public void ResetPosition() {
         _rigidbody.position = Vector3.zero;
         _rigidbody.velocity = Vector3.zero;
@@ -90,6 +96,8 @@ public class Ball : AttributesSync {
             SetBallSkin(skinIndex);
         }
 
+        // Magnus Effect
+        AddForce( new Vector2(0,_magnusEffectFactor / 100));
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {

@@ -32,15 +32,14 @@ public class MusicAudioManager : AttributesSync {
 
     public void Update() {
         //Debug.Log("Intensity Level is: " + _intensityLevel);
-        Debug.Log("is game playing: " + isGamePlaying);
-        Debug.Log("relaxed source is playing: " + _relaxedAudioSource.isPlaying);
-        Debug.Log("intense source is playing: " + _intenseAudioSource.isPlaying);
-        Debug.Log("super intense source is playing: " + _superIntenseAudioSource.isPlaying);
+        //Debug.Log("is game playing: " + isGamePlaying);
+        //Debug.Log("relaxed source is playing: " + _relaxedAudioSource.isPlaying);
+        //Debug.Log("intense source is playing: " + _intenseAudioSource.isPlaying);
+        //Debug.Log("super intense source is playing: " + _superIntenseAudioSource.isPlaying);
     }
 
     [SynchronizableMethod]
     public void SetIsGamePlaying(bool b) {
-        Debug.LogError("Setting IsGamePlaying to " + b);
         isGamePlaying = b;
     }
 

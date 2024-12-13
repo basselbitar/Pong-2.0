@@ -162,11 +162,11 @@ public class Paddle : AttributesSync {
             Rigidbody2D ballRigidBody = ballTransform.GetComponent<Rigidbody2D>();
             float velocityX = ballRigidBody.velocity.x;
             float velocityY = ballRigidBody.velocity.y;
+
             //float velocityBefore = new Vector2(velocityX, velocityY).magnitude;
             float dist = ballTransform.position.y - transform.position.y;
             float normalizedDist = (dist / (length * 10f / 2f)); //due to number of pixels
             Vector2 direction = new(0f, normalizedDist);
-            collision.collider.GetComponent<Rigidbody2D>().AddForce(direction * 40);
             //Debug.Log("Velocity before = " + ballRigidBody.velocity.x + ", " + ballRigidBody.velocity.y);
             //Debug.Log("Multiplying by a factor of " + (1 + (_defaultBounceMultiplier * _bounceMultiplierFactor) / 100));
 
@@ -182,6 +182,8 @@ public class Paddle : AttributesSync {
             float paddleVelocityY = this.transform.GetComponent<Rigidbody2D>().velocity.y;
             float paddlePositionX = this.transform.position.x;
             float ballPositionX = ballTransform.position.x;
+            
+            //Debug.Log("Paddle velocity upon impact was " + paddleVelocityY);
 
             float torqueAmount = Mathf.Clamp(10f * paddleVelocityY, -20, 20);
 
@@ -192,6 +194,10 @@ public class Paddle : AttributesSync {
             else {
                 ballRigidBody.AddTorque(torqueAmount, ForceMode2D.Force);
             }
+
+            collision.collider.GetComponent<Rigidbody2D>().AddForce((1 + (-paddleVelocityY/ 2f)) * 40 * direction);
+            // add magnus effect to the ball
+            collision.collider.GetComponent<Ball>().SetMagnusEffectFactor(-1 * paddleVelocityY);
 
             //Debug.Log("Paddle coordinate is: " + transform.position.y);
             //Debug.Log("Normalized dist: " + (dist / (length * 10f / 2f))); //due to number of pixels
