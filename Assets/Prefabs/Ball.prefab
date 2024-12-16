@@ -5029,6 +5029,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ef90acb8abf4e1a4a881ca68f76d4ad3, type: 3}
   - {fileID: 21300000, guid: c73c137331f9fde48bd03e434cf4d40e, type: 3}
   - {fileID: 21300000, guid: fb6e97c3d196e004788be92b723e3e01, type: 3}
+  _magnusEffectFactor: 0
 --- !u!114 &3134867329255799469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5059,9 +5060,9 @@ MonoBehaviour:
   - Name: Max
     NetLOD: 4
     Frequency: 120
-  SyncEveryNUpdates: 2
-  FullSyncEveryNSync: 4
-  SendData: 1
+  SyncEveryNUpdates: 1
+  FullSyncEveryNSync: 1
+  SendData: 0
   ApplyAsTransform: 0
   AllowCollisionToAssumeOwner: 1
   Rigidbody: {fileID: 885168837573172310}
