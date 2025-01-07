@@ -51,7 +51,9 @@ public class Upgrade : AttributesSync
 
     public void OnTriggerEnter2D(Collider2D collision) {
         if (collision.CompareTag("Ball")) {
-            PickupUpgrade(collision.GetComponent<Ball>());
+            if(collision.GetComponent<Ball>().GetLastTouchedBy() >= 0) {
+                PickupUpgrade(collision.GetComponent<Ball>());
+            }
         }
     }
 

@@ -40,6 +40,7 @@ public class Ball : AttributesSync {
         _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
         _bounceAudioManager = FindObjectOfType<BounceAudioManager>();
         _trailRenderer = GetComponent<TrailRenderer>();
+        _lastTouchedBy = -1;
     }
 
     private void Start() {

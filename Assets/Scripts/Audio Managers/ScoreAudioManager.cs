@@ -31,6 +31,7 @@ public class ScoreAudioManager : MonoBehaviour
     }
 
     private void PlayRandomClip(List<AudioClip> sounds) {
+        _scoreVolume = PlayerPrefs.GetFloat("sfxVolume");
         if (sounds.Count == 0)
             return;
         int randIndex = Random.Range(0, sounds.Count);
