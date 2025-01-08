@@ -22,6 +22,7 @@ public class Ball : AttributesSync {
     private int _lastTouchedBy;
 
     private TrailRenderer _trailRenderer;
+    private SpriteRenderer _spriteRenderer;
 
     [SerializeField]
     private List<Sprite> _ballSprites;
@@ -33,6 +34,9 @@ public class Ball : AttributesSync {
 
     public void SetLastTouchedBy(int lastTouchedIndex) { _lastTouchedBy = lastTouchedIndex; }
 
+    private bool _flashing = false;
+    private float _flashDuration = 15f;
+    private int _flashNumber = 25;
 
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -40,11 +44,14 @@ public class Ball : AttributesSync {
         _r2Ds = GetComponent<Rigidbody2DSynchronizable>();
         _bounceAudioManager = FindObjectOfType<BounceAudioManager>();
         _trailRenderer = GetComponent<TrailRenderer>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _lastTouchedBy = -1;
     }
 
     private void Start() {
         ResetPosition();
+        //flash the ball
+        StartCoroutine(FlashBall(_flashDuration, _flashNumber));
     }
 
     public void SetMagnusEffectFactor(float magnusEffectFactor) {
@@ -99,6 +106,12 @@ public class Ball : AttributesSync {
 
         // Magnus Effect
         AddForce( new Vector2(0,_magnusEffectFactor / 100));
+
+        //flash the ball at the start (to not collect any upgrades before touching a paddle)
+        if(_lastTouchedBy >=0) {
+            _flashing = false;
+            transform.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -140,5 +153,28 @@ public class Ball : AttributesSync {
         }
         this.skinIndex = skinIndex;
         GetComponent<SpriteRenderer>().sprite = _ballSprites[skinIndex];
+    }
+
+    public IEnumerator FlashBall(float flashDuration, int numberOfFlashes) {
+        Color startColor = new(1, 1, 1, 1);
+        Color flashColor = new(1, 1, 1, 0.25f);
+        float elapsedFlashTime = 0;
+        float elapsedFlashPercentage = 0;
+        _flashing = true;
+
+        while (elapsedFlashTime < flashDuration && _flashing) {
+            elapsedFlashTime += Time.deltaTime;
+            elapsedFlashPercentage = elapsedFlashTime / flashDuration;
+
+            if(elapsedFlashPercentage > 1 ) {
+                elapsedFlashPercentage = 1;
+            }
+
+            float pingPongPercentage = Mathf.PingPong(elapsedFlashPercentage * 2 * numberOfFlashes, 1);
+            _spriteRenderer.color = Color.Lerp(startColor, flashColor, pingPongPercentage);
+            yield return null;
+        }
+        _flashing = false;
+
     }
 }
