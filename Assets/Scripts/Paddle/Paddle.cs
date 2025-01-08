@@ -27,7 +27,10 @@ public class Paddle : AttributesSync {
     public float length;
     [SynchronizableField]
     public bool isInvertedControls;
-
+    [SynchronizableField]
+    public bool isFlashing;
+    [SynchronizableField]
+    public int numberOfInvertedControls;
 
     public int id;
     private readonly float _tweenTime = 1.2f;
@@ -57,6 +60,7 @@ public class Paddle : AttributesSync {
             transform.localScale = new Vector3(transform.localScale.x, length, 1f);
         }
         _selectedGameModes = new();
+        numberOfInvertedControls = 0;
         Initialize();
     }
 
@@ -89,7 +93,7 @@ public class Paddle : AttributesSync {
         }
 
         int skinIndex = GetSkinIndex();
-        if (skinIndex != currentSkinIndex) {
+        if (skinIndex != currentSkinIndex && !isFlashing) {
             currentSkinIndex = skinIndex;
             this.BroadcastRemoteMethod(nameof(ModifySkin), skinIndex);
         }

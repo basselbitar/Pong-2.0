@@ -18,7 +18,7 @@ public class OptionSelectionHandler : MonoBehaviour, IPointerEnterHandler, IPoin
             _startPos = transform.position;
             _startScale = transform.localScale;
 
-            Debug.Log("Start pos is: " + _startPos.x);
+            //Debug.Log("Start pos is: " + _startPos.x);
             _initialized = true;
         }
     }

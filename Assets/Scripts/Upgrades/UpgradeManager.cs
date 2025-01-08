@@ -157,7 +157,7 @@ public class UpgradeManager : MonoBehaviour {
             upgradeIndex = 7;
         }
         if (Input.GetKeyDown(KeyCode.Alpha9)) {
-            upgradeIndex = 8;
+            upgradeIndex = 9;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha0)) {
@@ -384,9 +384,22 @@ public class UpgradeManager : MonoBehaviour {
     }
 
     private IEnumerator FlipControls(Paddle p, float duration) {
-        FlipControls(p);
-        yield return new WaitForSeconds(duration);
-        FlipControls(p);
+        p.numberOfInvertedControls++;
+        if(p.numberOfInvertedControls == 1) {
+            yield return FlashPaddle(p, 1f, 5);
+        }
+        
+        Debug.Log("Number of inversions is now: " + p.numberOfInvertedControls);
+        p.isInvertedControls = true;
+        yield return new WaitForSeconds(duration - 1f);
+
+        p.numberOfInvertedControls--;
+        Debug.Log("Number of inversions is now: " + p.numberOfInvertedControls);
+
+        if (p.numberOfInvertedControls == 0) {
+            yield return FlashPaddle(p, 1f, 5);
+            p.isInvertedControls = false;
+        }
     }
 
     private IEnumerator ActivateWind(Paddle p, float duration) {
@@ -448,8 +461,28 @@ public class UpgradeManager : MonoBehaviour {
 
     }
 
-    public void FlipControls(Paddle p) {
-        p.isInvertedControls = !p.isInvertedControls;
-    }
+    private IEnumerator FlashPaddle(Paddle p, float flashDuration, int numberOfFlashes) {
+        Color startColor = new(1, 1, 1, 1);
+        Color flashColor = new(0.58f, 0.87f, 0.043f);
+        float elapsedFlashTime = 0;
+        float elapsedFlashPercentage = 0;
+        p.isFlashing = true;
 
+        SpriteRenderer spriteRenderer = p.GetComponent<SpriteRenderer>();
+
+        while (elapsedFlashTime < flashDuration) {
+            elapsedFlashTime += Time.deltaTime;
+            elapsedFlashPercentage = elapsedFlashTime / flashDuration;
+
+            if (elapsedFlashPercentage > 1) {
+                elapsedFlashPercentage = 1;
+            }
+
+            float pingPongPercentage = Mathf.PingPong(elapsedFlashPercentage * 2 * numberOfFlashes, 1);
+            spriteRenderer.color = Color.Lerp(startColor, flashColor, pingPongPercentage);
+            yield return null;
+        }
+        p.isFlashing = false;
+
+    }
 }

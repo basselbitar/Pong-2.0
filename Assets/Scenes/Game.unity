@@ -12409,7 +12409,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9a5e0b2da6ed259449be2c0d102f929b, type: 3}
   windEffect: {fileID: 1735648768}
   upgradeIndex: 0
-  _debugMode: 0
+  _debugMode: 1
   _upgradeOccurancesCount: 
 --- !u!4 &962463224
 Transform:
