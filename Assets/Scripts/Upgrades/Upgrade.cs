@@ -18,6 +18,7 @@ public class Upgrade : AttributesSync
         _upgradeManager = FindObjectOfType<UpgradeManager>();
     }
 
+
     [SynchronizableMethod]
     public void ColorUpgrade() {
         //Color color;

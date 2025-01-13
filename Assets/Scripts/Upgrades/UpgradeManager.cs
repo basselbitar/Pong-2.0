@@ -389,12 +389,10 @@ public class UpgradeManager : MonoBehaviour {
             yield return FlashPaddle(p, 1f, 5);
         }
         
-        Debug.Log("Number of inversions is now: " + p.numberOfInvertedControls);
         p.isInvertedControls = true;
         yield return new WaitForSeconds(duration - 1f);
 
         p.numberOfInvertedControls--;
-        Debug.Log("Number of inversions is now: " + p.numberOfInvertedControls);
 
         if (p.numberOfInvertedControls == 0) {
             yield return FlashPaddle(p, 1f, 5);
@@ -464,6 +462,11 @@ public class UpgradeManager : MonoBehaviour {
     private IEnumerator FlashPaddle(Paddle p, float flashDuration, int numberOfFlashes) {
         Color startColor = new(1, 1, 1, 1);
         Color flashColor = new(0.58f, 0.87f, 0.043f);
+
+        if(p.numberOfInvertedControls == 0) {
+            flashColor = new(0.47f, 0.47f, 0.47f);
+        }
+
         float elapsedFlashTime = 0;
         float elapsedFlashPercentage = 0;
         p.isFlashing = true;
@@ -482,6 +485,7 @@ public class UpgradeManager : MonoBehaviour {
             spriteRenderer.color = Color.Lerp(startColor, flashColor, pingPongPercentage);
             yield return null;
         }
+        spriteRenderer.color = new(1, 1, 1, 1);
         p.isFlashing = false;
 
     }
