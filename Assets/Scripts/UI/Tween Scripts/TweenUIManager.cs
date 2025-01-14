@@ -12,7 +12,7 @@ public class TweenUIManager : MonoBehaviour {
 
     // How to Play Panel
     [SerializeField]
-    GameObject HowToPlayPanel, HTPP_ObjectiveButton, HTPP_ControlsButton, HTPP_PowerUpsButton, HTPP_GameModesButton, HTPP_BackButton;
+    GameObject HowToPlayPanel, HTPP_ObjectiveButton, HTPP_ControlsButton, HTPP_PowerUpsButton, HTPP_GameModesButton, HTPP_Explanation, HTPP_BackButton;
 
     // Play Panel
     [SerializeField]
@@ -50,7 +50,7 @@ public class TweenUIManager : MonoBehaviour {
         InitializeVolumeSliders();
         Deactivate(HowToPlayPanel, OptionsPanel, PlayPanel, RoomListPanel, WaitingForPlayerPanel, GameModeSelectionPanel, PaddleSelectorPanel, GameOverPanel);
         SetScaleToZero(PlayButton, OptionsButton, HowToPlayButton, QuitButton, MusicSlider, SFXSlider, UpgradeSlider, AIDifficulty, BackButton, BackPanel,
-            HTPP_ObjectiveButton, HTPP_ControlsButton, HTPP_PowerUpsButton, HTPP_GameModesButton, HTPP_BackButton,
+            HTPP_ObjectiveButton, HTPP_ControlsButton, HTPP_PowerUpsButton, HTPP_GameModesButton, HTPP_Explanation, HTPP_BackButton,
             PP_PlayVsPc, PP_LocalPvP, PP_PlayOnline, PP_BackButton,
             RLP_ScrollView, RLP_TitleText, RLP_CreateRoom, RLP_BackButton, WFPP_JoinedRoomText, WFPP_WaitingText, WFPP_BackButton,
             GMSP_InRoomText, GMSP_Options, GMSP_PromptText, GMSP_NextButton,
@@ -161,6 +161,11 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(UpgradeSlider, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
         LeanTween.scale(AIDifficulty, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART);
         LeanTween.scale(BackButton, Vector3.zero, 0.6f).setDelay(.5f).setEase(EASE_IN_QUART).setOnComplete(DisableOptionsPanel);
+        ShowMainMenuButtons();
+    }
+
+    public void BackFromHowToPlay() {
+        HideHowToPlayButtons();
         ShowMainMenuButtons();
     }
 
@@ -279,9 +284,10 @@ public class TweenUIManager : MonoBehaviour {
         LeanTween.scale(HTPP_ControlsButton, Vector3.one, 0.6f).setDelay(.6f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(HTPP_PowerUpsButton, Vector3.one, 0.6f).setDelay(.7f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(HTPP_GameModesButton, Vector3.one, 0.6f).setDelay(.8f).setEase(EASE_OUT_CIRC);
+        LeanTween.scale(HTPP_Explanation, Vector3.one, 0.6f).setDelay(.9f).setEase(EASE_OUT_CIRC);
         LeanTween.scale(HTPP_BackButton, Vector3.one, 0.6f).setDelay(1.1f).setEase(EASE_OUT_CIRC);
         FindObjectOfType<HowToPlayManager>().ShowCurrentPanel();
-
+        HTPP_ObjectiveButton.GetComponent<Button>().Select();
     }
 
     void ShowOptionsButtons() {
@@ -426,9 +432,10 @@ public class TweenUIManager : MonoBehaviour {
     void HideHowToPlayButtons() {
         LeanTween.scale(HTPP_ObjectiveButton, Vector3.zero, 0.6f).setEase(EASE_IN_QUART);
         LeanTween.scale(HTPP_ControlsButton, Vector3.zero, 0.6f).setDelay(.1f).setEase(EASE_IN_QUART);
-        LeanTween.scale(HTPP_PowerUpsButton, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART);
+        LeanTween.scale(HTPP_PowerUpsButton, Vector3.zero, 0.6f).setDelay(.2f).setEase(EASE_IN_QUART); 
         LeanTween.scale(HTPP_GameModesButton, Vector3.zero, 0.6f).setDelay(.3f).setEase(EASE_IN_QUART);
-        LeanTween.scale(HTPP_BackButton, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART)
+        LeanTween.scale(HTPP_Explanation, Vector3.zero, 0.6f).setDelay(.4f).setEase(EASE_IN_QUART);
+        LeanTween.scale(HTPP_BackButton, Vector3.zero, 0.6f).setDelay(.5f).setEase(EASE_IN_QUART)
         .setOnComplete(DisableHowToPlayPanel);
     }
 
