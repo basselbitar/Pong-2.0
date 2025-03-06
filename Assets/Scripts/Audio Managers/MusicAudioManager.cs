@@ -64,7 +64,7 @@ public class MusicAudioManager : AttributesSync {
     }
 
     public void PlayRelaxedMusic() {
-        Debug.Log("Starting Relaxed Music");
+        _musicVolume = PlayerPrefs.GetFloat("musicVolume");
         PlayRandomSong(_relaxedAudioSource, relaxedMusic, _musicVolume);
         _intenseAudioSource.Stop();
         _superIntenseAudioSource.Stop();
@@ -74,8 +74,7 @@ public class MusicAudioManager : AttributesSync {
 
     public void PlayIntenseMusic() {
         //PlayRandomSong(intenseMusic);
-        Debug.Log("Starting Intense Music");
-
+        _musicVolume = PlayerPrefs.GetFloat("musicVolume");
         PlayRandomSong(_intenseAudioSource, intenseMusic, _musicVolume);
         _relaxedAudioSource.Stop();
         _superIntenseAudioSource.Stop();
@@ -83,8 +82,7 @@ public class MusicAudioManager : AttributesSync {
 
     public void PlaySuperIntenseMusic() {
         //PlayRandomSong(superIntenseMusic);
-        Debug.Log("Starting Super Intense Music");
-
+        _musicVolume = PlayerPrefs.GetFloat("musicVolume");
         PlayRandomSong(_superIntenseAudioSource, superIntenseMusic, _musicVolume);
         _superIntenseAudioSource.volume = _musicVolume;
         _relaxedAudioSource.Stop();

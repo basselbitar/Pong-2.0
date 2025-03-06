@@ -67,8 +67,6 @@ public class PCController : MonoBehaviour {
                 Debug.LogError("Difficulty not set");
                 break;
         }
-
-        Debug.Log("Parameters have been set to: " + _actionThreshold + ", " + _drunkDuration + ", " + _drunkResetThreshold + ", " + _messUpProbability);
     }
 
     void Update() {

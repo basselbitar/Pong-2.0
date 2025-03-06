@@ -69,24 +69,38 @@ public class TweenUIManager : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.Escape)) {
             int activePanels = 0;
             if(OptionsPanel.activeSelf) {
+                BackFromOptions();
                 activePanels++;
             }
             if (PlayPanel.activeSelf) {
+                BackFromPlayPanel();
+                activePanels++;
+            }
+            if(HowToPlayPanel.activeSelf) {
+                BackFromHowToPlay();
                 activePanels++;
             }
             if (RoomListPanel.activeSelf) {
+                BackFromRoomList();
                 activePanels++;
             }
             if (WaitingForPlayerPanel.activeSelf) {
+                BackFromWaitingForPlayer();
+                FindObjectOfType<RoomHandler>().OnLeaveRoomClicked();
                 activePanels++;
             }
             if (GameModeSelectionPanel.activeSelf) {
+                BackFromGameModeSelection();
                 activePanels++;
             }
             if (PaddleSelectorPanel.activeSelf) {
+                BackFromPaddleSelector();
                 activePanels++;
             }
             Debug.Log("There are " + activePanels + " active panels");
+            if(activePanels == 0) {
+                ShowMainMenuButtons();
+            }
         }
     }
 

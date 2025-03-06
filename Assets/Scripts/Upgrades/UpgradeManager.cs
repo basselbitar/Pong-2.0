@@ -126,7 +126,6 @@ public class UpgradeManager : MonoBehaviour {
         upgrades.Add(slowerBothPaddles);
         upgrades.Add(flipBothControls);
         upgrades.Add(splitBall);
-
     }
 
     private void Update() {
@@ -262,6 +261,7 @@ public class UpgradeManager : MonoBehaviour {
 
     public void SetUpgradeWeights(int[] weights) {
         _upgradeWeights = weights;
+        totalWeight = 0;
         PopulateUpgrades();
     }
 
