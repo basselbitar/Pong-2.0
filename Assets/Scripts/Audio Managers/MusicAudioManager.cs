@@ -27,7 +27,19 @@ public class MusicAudioManager : AttributesSync {
 
     public void Start() {
         _musicVolume = PlayerPrefs.GetFloat("musicVolume");
+        PopulateSources();
         //Debug.Log("Initially, Music volume was: " + _musicVolume);
+    }
+
+    public void PopulateSources() {
+        int randIndex = Random.Range(0, relaxedMusic.Count);
+        _relaxedAudioSource.clip = relaxedMusic[randIndex];
+
+        randIndex = Random.Range(0, intenseMusic.Count);
+        _intenseAudioSource.clip = intenseMusic[randIndex];
+
+        randIndex = Random.Range(0, superIntenseMusic.Count);
+        _superIntenseAudioSource.clip = superIntenseMusic[randIndex];
     }
 
     public void Update() {
@@ -93,7 +105,10 @@ public class MusicAudioManager : AttributesSync {
         if (songs.Count == 0)
             return;
         int randIndex = Random.Range(0, songs.Count);
-        audioSource.clip = songs[randIndex];
+        if (audioSource.clip == null) {
+            Debug.Log("Setting clip for the first time");
+            audioSource.clip = songs[randIndex];
+        }
         audioSource.volume = volume;
         //_audioSource.pitch = Random.Range(0.8f, 1.2f);
         audioSource.Play();
