@@ -94,15 +94,15 @@ public class Ball : AttributesSync {
             _trailRenderer.enabled = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.F)) {
-            _rigidbody.velocity = new Vector2(0f, 0f);
-        }
+        //if (Input.GetKeyDown(KeyCode.F)) {
+        //    _rigidbody.velocity = new Vector2(0f, 0f);
+        //}
 
-        if (Input.GetKeyDown(KeyCode.M)) {
-            skinIndex++;
-            skinIndex %= _ballSprites.Count;
-            SetBallSkin(skinIndex);
-        }
+        //if (Input.GetKeyDown(KeyCode.M)) {
+        //    skinIndex++;
+        //    skinIndex %= _ballSprites.Count;
+        //    SetBallSkin(skinIndex);
+        //}
 
         // Magnus Effect
         AddForce( new Vector2(0,_magnusEffectFactor / 100));

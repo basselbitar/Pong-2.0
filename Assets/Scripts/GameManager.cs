@@ -72,17 +72,20 @@ public class GameManager : MonoBehaviour {
             StartCoroutine(ResetRound());
         }
 
-        if (Input.GetKeyDown(KeyCode.U)) {
-            debugMode = !debugMode;
-            SetDebugWalls();
-        }
+        if (debugMode) {
 
-        if (Input.GetKeyDown(KeyCode.V)) {
-            Player1Scores();
-        }
+            if (Input.GetKeyDown(KeyCode.U)) {
+                debugMode = !debugMode;
+                SetDebugWalls();
+            }
 
-        if (Input.GetKeyDown(KeyCode.B)) {
-            Player2Scores();
+            if (Input.GetKeyDown(KeyCode.V)) {
+                Player1Scores();
+            }
+
+            if (Input.GetKeyDown(KeyCode.B)) {
+                Player2Scores();
+            }
         }
     }
 
@@ -96,7 +99,7 @@ public class GameManager : MonoBehaviour {
         if (_p2Score <= 0) {
             _gameFinished = true;
         }
-        
+
         StartCoroutine(ResetRound());
     }
 

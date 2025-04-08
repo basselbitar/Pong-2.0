@@ -50,7 +50,7 @@ public class UpgradeManager : MonoBehaviour {
         _spawner = FindObjectOfType<Spawner>();
         spawnUpgradeThreshold = initialSpawnUpgradeThreshold;
         _upgradeAudioManager = FindObjectOfType<UpgradeAudioManager>();
-       
+
         _upgradeWeights = new int[17];
         _upgradeOccurancesCount = new();
         for (int i = 0; i < 17; i++) {
@@ -67,7 +67,7 @@ public class UpgradeManager : MonoBehaviour {
         if (windsActiveCount > 0) {
             _balls = FindObjectsOfType<Ball>();
             foreach (var _ball in _balls) {
-                _ball.AddForce(new Vector2(windDirection * ( 1 + windsActiveCount*1.0f/10f) * 5, 0)); // wind power stacks slowly when taking multiple wind upgrades
+                _ball.AddForce(new Vector2(windDirection * (1 + windsActiveCount * 1.0f / 10f) * 5, 0)); // wind power stacks slowly when taking multiple wind upgrades
             }
         }
     }
@@ -81,7 +81,7 @@ public class UpgradeManager : MonoBehaviour {
         upgrades = new List<UpgradeData>();
 
         for (int i = 0; i < _upgradeWeights.Length; i++) {
-         //   Debug.Log("Upgrade | index: " + i + ", weight = " + _upgradeWeights[i]);
+            //   Debug.Log("Upgrade | index: " + i + ", weight = " + _upgradeWeights[i]);
         }
 
         //buffs                                                                amount, duration, weight, iconIndex
@@ -131,40 +131,43 @@ public class UpgradeManager : MonoBehaviour {
     private void Update() {
         if (!_gameManager.IsGamePlaying())
             return;
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            upgradeIndex = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            upgradeIndex = 1;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            upgradeIndex = 2;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            upgradeIndex = 3;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            upgradeIndex = 4;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) {
-            upgradeIndex = 5;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7)) {
-            upgradeIndex = 6;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha8)) {
-            upgradeIndex = 7;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha9)) {
-            upgradeIndex = 9;
-        }
+        if (_debugMode) {
 
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            upgradeIndex += 10;
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+                upgradeIndex = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2)) {
+                upgradeIndex = 1;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3)) {
+                upgradeIndex = 2;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4)) {
+                upgradeIndex = 3;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5)) {
+                upgradeIndex = 4;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6)) {
+                upgradeIndex = 5;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+                upgradeIndex = 6;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                upgradeIndex = 7;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha9)) {
+                upgradeIndex = 9;
+            }
 
-        if (Input.GetKeyDown(KeyCode.J)) {
-            SpawnUpgrade();
+            if (Input.GetKeyDown(KeyCode.Alpha0)) {
+                upgradeIndex += 10;
+            }
+
+            if (Input.GetKeyDown(KeyCode.J)) {
+                SpawnUpgrade();
+            }
         }
         if (_gameManager.IsGamePlaying()) {
             CheckSpawnUpgrade();
@@ -385,10 +388,10 @@ public class UpgradeManager : MonoBehaviour {
 
     private IEnumerator FlipControls(Paddle p, float duration) {
         p.numberOfInvertedControls++;
-        if(p.numberOfInvertedControls == 1) {
+        if (p.numberOfInvertedControls == 1) {
             yield return FlashPaddle(p, 1f, 5);
         }
-        
+
         p.isInvertedControls = true;
         yield return new WaitForSeconds(duration - 1f);
 
@@ -446,7 +449,7 @@ public class UpgradeManager : MonoBehaviour {
         //Spawn a ball
         GameObject newBallGO = _spawner.Spawn(0, ballPosition, Quaternion.identity, new Vector3(0.3f, 0.3f, 1f));
         newBallGO.GetComponent<Rigidbody2DSynchronizable>().enabled = enabled;
-        
+
         Ball newBall = newBallGO.GetComponent<Ball>();
         newBall.BroadcastRemoteMethod(nameof(newBall.SetBallSkin), ball.skinIndex);
 
@@ -463,7 +466,7 @@ public class UpgradeManager : MonoBehaviour {
         Color startColor = new(1, 1, 1, 1);
         Color flashColor = new(0.58f, 0.87f, 0.043f);
 
-        if(p.numberOfInvertedControls == 0) {
+        if (p.numberOfInvertedControls == 0) {
             flashColor = new(0.47f, 0.47f, 0.47f);
         }
 

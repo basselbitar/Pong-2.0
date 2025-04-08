@@ -34,12 +34,17 @@ public class MusicAudioManager : AttributesSync {
     public void PopulateSources() {
         int randIndex = Random.Range(0, relaxedMusic.Count);
         _relaxedAudioSource.clip = relaxedMusic[randIndex];
+        _relaxedAudioSource.Play();
 
         randIndex = Random.Range(0, intenseMusic.Count);
         _intenseAudioSource.clip = intenseMusic[randIndex];
+        _intenseAudioSource.Play();
 
         randIndex = Random.Range(0, superIntenseMusic.Count);
         _superIntenseAudioSource.clip = superIntenseMusic[randIndex];
+        _superIntenseAudioSource.Play();
+
+        StopAllMusic(); //playing and stopping the music to pre-load the songs into the clips. This eliminates the glitch
     }
 
     public void Update() {
